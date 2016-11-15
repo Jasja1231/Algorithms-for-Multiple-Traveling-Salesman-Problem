@@ -20,11 +20,11 @@ public class MapMarkerDot implements MapMarker {
 
     double lat;
     double lon;
-    Color color;
-
-    public MapMarkerDot(double lat, double lon) {
+    Color color;public MapMarkerDot(double lat, double lon) {
         this(Color.YELLOW, lat, lon);
     }
+
+    
 
     public MapMarkerDot(Color color, double lat, double lon) {
         super();

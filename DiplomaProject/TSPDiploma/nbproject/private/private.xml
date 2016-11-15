@@ -3,15 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/K/Desktop/DiplomaProject/TSPDiploma/src/org/openstreetmap/gui/jmapviewer/tilesources/OfflineOsmTileSource.java</file>
-            <file>file:/C:/Users/K/Desktop/DiplomaProject/TSPDiploma/src/org/openstreetmap/gui/jmapviewer/TileController.java</file>
-            <file>file:/C:/Users/K/Desktop/DiplomaProject/TSPDiploma/src/tspdiploma/TSPDiploma.java</file>
-            <file>file:/C:/Users/K/Desktop/DiplomaProject/TSPDiploma/src/org/openstreetmap/gui/jmapviewer/JMapViewer.java</file>
-            <file>file:/C:/Users/K/Desktop/DiplomaProject/TSPDiploma/src/Model/Model.java</file>
-            <file>file:/C:/Users/K/Desktop/DiplomaProject/TSPDiploma/src/View/MainView.java</file>
-            <file>file:/C:/Users/K/Desktop/DiplomaProject/TSPDiploma/src/Controller/Controller.java</file>
-            <file>file:/C:/Users/K/Desktop/DiplomaProject/TSPDiploma/src/View/MapPanel.java</file>
-            <file>file:/C:/Users/K/Desktop/DiplomaProject/TSPDiploma/src/org/openstreetmap/gui/jmapviewer/tilesources/AbstractOsmTileSource.java</file>
+            <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/View/MainView.java</file>
+            <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/View/MapPanel.java</file>
+            <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/View/OptionsPanel.java</file>
+            <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/View/AlgorithmChoicesPanel.java</file>
         </group>
     </open-files>
 </project-private>

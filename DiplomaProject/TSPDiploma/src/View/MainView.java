@@ -24,6 +24,8 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
     //elements
     private MapPanel mapPanel;
     private JMenu fileMenu;
+    private OptionsPanel optionsPanel;
+    
     //MVC
     public  final Model model;
     private final Controller controller;
@@ -34,10 +36,12 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
     public MainView(Model model, Controller controller) {
         initComponents();
         init();
+        
         //set window parameters
         this.setSize(new Dimension(500,500));
         this.setLocationRelativeTo(null);
         this.setMinimumSize(new Dimension(500,500));
+        
          //connect to model and controller 
         this.model = model;
         this.controller = controller; 
@@ -55,16 +59,18 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
      */
     private void init(){
         mapPanel = new MapPanel(this);
+        optionsPanel = new OptionsPanel(this);
         
         
+   
         //Add Map in the centre
         this.add(mapPanel,BorderLayout.CENTER);
+        this.add(optionsPanel,BorderLayout.WEST);
     }
     
     
     private void constructMenu(){
       fileMenu = new JMenu("File");
-      
     }
     
     
