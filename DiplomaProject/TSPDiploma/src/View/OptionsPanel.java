@@ -19,6 +19,7 @@ public class OptionsPanel extends javax.swing.JPanel {
 
     MainView parentView; 
     AlgorithmChoicesPanel algPanel;
+    InputDataPanel inputDataPanel;
     JScrollPane algOptionsScrollPane;
     
     /**
@@ -29,20 +30,15 @@ public class OptionsPanel extends javax.swing.JPanel {
         init();
         
         this.parentView = pV; 
-        this.setBackground(Color.WHITE);
         this.setPreferredSize(new Dimension(400,300));
     }
 
     private void init(){
         algPanel = new AlgorithmChoicesPanel(parentView);
-        algOptionsScrollPane = new JScrollPane();
-        algOptionsScrollPane.add(algPanel);
-        
-        algPanel.setVisible(true);
-        algOptionsScrollPane.setVisible(true);
-        
-        this.add(algPanel);
-        
+        inputDataPanel = new InputDataPanel(parentView);
+
+        this.contentjPanel.add(inputDataPanel);
+        this.contentjPanel.add(algPanel); 
     }
     
     /**
@@ -54,12 +50,41 @@ public class OptionsPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        contentjPanel = new javax.swing.JPanel();
+        ButtonjPanel = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+
         setBackground(new java.awt.Color(255, 255, 255));
         setBorder(javax.swing.BorderFactory.createMatteBorder(2, 2, 2, 2, new java.awt.Color(0, 204, 204)));
-        setLayout(new java.awt.GridLayout(5, 0, 10, 10));
+        setLayout(new java.awt.BorderLayout());
+
+        contentjPanel.setBackground(new java.awt.Color(255, 255, 255));
+        contentjPanel.setLayout(new javax.swing.BoxLayout(contentjPanel, javax.swing.BoxLayout.Y_AXIS));
+        jScrollPane1.setViewportView(contentjPanel);
+
+        add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        ButtonjPanel.setBackground(new java.awt.Color(0, 204, 204));
+        ButtonjPanel.setBorder(javax.swing.BorderFactory.createMatteBorder(10, 10, 10, 10, new java.awt.Color(0, 204, 204)));
+        ButtonjPanel.setLayout(new java.awt.GridLayout(0, 2, 20, 40));
+
+        jButton1.setText("Save");
+        ButtonjPanel.add(jButton1);
+
+        jButton2.setText("Cancel");
+        ButtonjPanel.add(jButton2);
+
+        add(ButtonjPanel, java.awt.BorderLayout.PAGE_END);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel ButtonjPanel;
+    private javax.swing.JPanel contentjPanel;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

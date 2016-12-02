@@ -12,5 +12,9 @@ import java.util.Observable;
  * @author K
  */
 public class Model extends Observable {
-    
+    HeuristicAlgorithm ha = new HeuristicAlgorithm();
+    SCIPAlgorithm sA = new SCIPAlgorithm();
+    BruteForceAlgorithm bA = new BruteForceAlgorithm();
+    ApproximationAlgorithm aA = new ApproximationAlgorithm();
+    DynamicAlgorithm dynamicAlgorithm = new DynamicAlgorithm();
 }

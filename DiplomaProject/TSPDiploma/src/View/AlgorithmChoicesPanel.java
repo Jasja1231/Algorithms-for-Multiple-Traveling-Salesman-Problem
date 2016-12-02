@@ -33,6 +33,7 @@ public class AlgorithmChoicesPanel extends javax.swing.JPanel {
         initComponents();
        
         this.setBackground(Color.WHITE);
+        this.setMaximumSize(new Dimension(400,150));
         createCheckBoxes();
         addCheckBoxes();
     }

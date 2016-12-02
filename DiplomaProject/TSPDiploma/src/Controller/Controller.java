@@ -15,6 +15,7 @@ import View.MainView;
 public class Controller {
 
     private MainView view;
+    private Model model;
 
     public Controller(Model model) {
        
