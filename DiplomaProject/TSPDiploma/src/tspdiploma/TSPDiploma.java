@@ -8,6 +8,7 @@ package tspdiploma;
 import Controller.Controller;
 import Model.Model;
 import View.MainView;
+import de.cm.osm2po.errors.Osm2poException;
 
 /**
  *
@@ -18,7 +19,7 @@ public class TSPDiploma {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Osm2poException {
         Model model  = new Model();
         Controller controller = new Controller(model);
         MainView mainView = new MainView(model, controller);
