@@ -7,6 +7,7 @@ package View;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.util.ArrayList;
 import javax.swing.JCheckBox;
 
 /**
@@ -24,13 +25,13 @@ public class AlgorithmChoicesPanel extends javax.swing.JPanel {
     };
     
     JCheckBox[] checkBoxes = new JCheckBox[algorithmNames.length]; 
-    
+    MainView parentView;
     /**
      * Creates new form AlgorithmChoicesPanel
      */
     public AlgorithmChoicesPanel(MainView mainView) {
         initComponents();
-       
+       this.parentView = mainView;
         this.setBackground(Color.WHITE);
         this.setMaximumSize(new Dimension(400,150));
         createCheckBoxes();
@@ -56,6 +57,8 @@ public class AlgorithmChoicesPanel extends javax.swing.JPanel {
     }
     
     
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -73,4 +76,13 @@ public class AlgorithmChoicesPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
+
+    void readSelectedAlgorithms() {
+       for(int i = 0; i < checkBoxes.length; i++){
+           if(checkBoxes[i].isSelected()){
+               this.parentView.addAlgorithm(i);
+           }
+       }
+    }
+
 }

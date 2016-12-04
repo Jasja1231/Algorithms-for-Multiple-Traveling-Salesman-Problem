@@ -1,6 +1,5 @@
+// License: GPL. For details, see Readme.txt file.
 package org.openstreetmap.gui.jmapviewer;
-
-//License: GPL. Copyright 2008 by Jan Peter Stotz
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -8,6 +7,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.util.Locale;
 
 /**
  * Default map controller which implements map moving by pressing the right
@@ -23,13 +23,10 @@ MouseWheelListener {
     | MouseEvent.BUTTON2_DOWN_MASK;
 
     private static final int MAC_MOUSE_BUTTON3_MASK = MouseEvent.CTRL_DOWN_MASK | MouseEvent.BUTTON1_DOWN_MASK;
-    public DefaultMapController(JMapViewer map) {
-        super(map);
-    }
 
     private Point lastDragPoint;
 
-    private boolean isMoving = false;
+    private boolean isMoving;
 
     private boolean movementEnabled = true;
 
@@ -39,11 +36,21 @@ MouseWheelListener {
     private boolean wheelZoomEnabled = true;
     private boolean doubleClickZoomEnabled = true;
 
+    /**
+     * Constructs a new {@code DefaultMapController}.
+     * @param map map panel
+     */
+    public DefaultMapController(JMapViewer map) {
+        super(map);
+    }
+
+    @Override
     public void mouseDragged(MouseEvent e) {
         if (!movementEnabled || !isMoving)
             return;
         // Is only the selected mouse button pressed?
-        if ((e.getModifiersEx() & MOUSE_BUTTONS_MASK) == movementMouseButtonMask) {
+        if ((e.getModifiersEx() & MOUSE_BUTTONS_MASK) == movementMouseButtonMask
+                || (isPlatformOsx() && e.getModifiersEx() == MAC_MOUSE_BUTTON3_MASK)) {
             Point p = e.getPoint();
             if (lastDragPoint != null) {
                 int diffx = lastDragPoint.x - p.x;
@@ -54,32 +61,41 @@ MouseWheelListener {
         }
     }
 
+    @Override
     public void mouseClicked(MouseEvent e) {
         if (doubleClickZoomEnabled && e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
             map.zoomIn(e.getPoint());
         }
     }
 
+    @Override
     public void mousePressed(MouseEvent e) {
-        if (e.getButton() == movementMouseButton || isPlatformOsx() && e.getModifiersEx() == MAC_MOUSE_BUTTON3_MASK) {
+        if (e.getButton() == movementMouseButton || (isPlatformOsx() && e.getModifiersEx() == MAC_MOUSE_BUTTON3_MASK)) {
             lastDragPoint = null;
             isMoving = true;
         }
     }
 
+    @Override
     public void mouseReleased(MouseEvent e) {
-        if (e.getButton() == movementMouseButton || isPlatformOsx() && e.getButton() == MouseEvent.BUTTON1) {
+        if (e.getButton() == movementMouseButton || (isPlatformOsx() && e.getButton() == MouseEvent.BUTTON1)) {
             lastDragPoint = null;
             isMoving = false;
         }
     }
 
+    @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         if (wheelZoomEnabled) {
-            map.setZoom(map.getZoom() - e.getWheelRotation(), e.getPoint());
+            int rotation = JMapViewer.zoomReverseWheel ? -e.getWheelRotation() : e.getWheelRotation();
+            map.setZoom(map.getZoom() - rotation, e.getPoint());
         }
     }
 
+    /**
+     * Determines if the map pane is allowed to be moved using the mouse
+     * @return {@code true} to allow the map pane to be moved using the mouse
+     */
     public boolean isMovementEnabled() {
         return movementEnabled;
     }
@@ -87,7 +103,7 @@ MouseWheelListener {
     /**
      * Enables or disables that the map pane can be moved using the mouse.
      *
-     * @param movementEnabled
+     * @param movementEnabled {@code true} to allow the map pane to be moved using the mouse
      */
     public void setMovementEnabled(boolean movementEnabled) {
         this.movementEnabled = movementEnabled;
@@ -98,15 +114,14 @@ MouseWheelListener {
     }
 
     /**
-     * Sets the mouse button that is used for moving the map. Possible values
-     * are:
+     * Sets the mouse button that is used for moving the map. Possible values are:
      * <ul>
      * <li>{@link MouseEvent#BUTTON1} (left mouse button)</li>
      * <li>{@link MouseEvent#BUTTON2} (middle mouse button)</li>
      * <li>{@link MouseEvent#BUTTON3} (right mouse button)</li>
      * </ul>
      *
-     * @param movementMouseButton
+     * @param movementMouseButton the mouse button that is used for moving the map
      */
     public void setMovementMouseButton(int movementMouseButton) {
         this.movementMouseButton = movementMouseButton;
@@ -141,12 +156,17 @@ MouseWheelListener {
         this.doubleClickZoomEnabled = doubleClickZoomEnabled;
     }
 
+    @Override
     public void mouseEntered(MouseEvent e) {
+        // do nothing
     }
 
+    @Override
     public void mouseExited(MouseEvent e) {
+        // do nothing
     }
 
+    @Override
     public void mouseMoved(MouseEvent e) {
         // Mac OSX simulates with  ctrl + mouse 1  the second mouse button hence no dragging events get fired.
         //
@@ -163,9 +183,7 @@ MouseWheelListener {
                 }
                 lastDragPoint = p;
             }
-
         }
-
     }
 
     /**
@@ -175,6 +193,6 @@ MouseWheelListener {
      */
     public static boolean isPlatformOsx() {
         String os = System.getProperty("os.name");
-        return os != null && os.toLowerCase().startsWith("mac os x");
+        return os != null && os.toLowerCase(Locale.ENGLISH).startsWith("mac os x");
     }
 }

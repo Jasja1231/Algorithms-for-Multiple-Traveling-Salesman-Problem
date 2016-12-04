@@ -1,6 +1,5 @@
+// License: GPL. For details, see Readme.txt file.
 package org.openstreetmap.gui.jmapviewer;
-
-//License: GPL. Copyright 2008 by Jan Peter Stotz
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -10,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import javax.imageio.ImageIO;
 
@@ -25,20 +25,14 @@ import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
 public class Tile {
 
     /**
-     * Hourglass image that is displayed until a map tile has been loaded
+     * Hourglass image that is displayed until a map tile has been loaded, except for overlay sources
      */
-    public static BufferedImage LOADING_IMAGE;
-    public static BufferedImage ERROR_IMAGE;
+    public static final BufferedImage LOADING_IMAGE = loadImage("images/hourglass.png");
 
-    static {
-        try {
-            LOADING_IMAGE = ImageIO.read(JMapViewer.class.getResourceAsStream("images/hourglass.png"));
-            ERROR_IMAGE = ImageIO.read(JMapViewer.class.getResourceAsStream("images/error.png"));
-        } catch (Exception e1) {
-            LOADING_IMAGE = null;
-            ERROR_IMAGE = null;
-        }
-    }
+    /**
+     * Red cross image that is displayed after a loading error, except for overlay sources
+     */
+    public static final BufferedImage ERROR_IMAGE = loadImage("images/error.png");
 
     protected TileSource source;
     protected int xtile;
@@ -46,9 +40,9 @@ public class Tile {
     protected int zoom;
     protected BufferedImage image;
     protected String key;
-    protected boolean loaded = false;
-    protected boolean loading = false;
-    protected boolean error = false;
+    protected volatile boolean loaded; // field accessed by multiple threads without any monitors, needs to be volatile
+    protected volatile boolean loading;
+    protected volatile boolean error;
     protected String error_message;
 
     /** TileLoader-specific tile metadata */
@@ -57,76 +51,148 @@ public class Tile {
     /**
      * Creates a tile with empty image.
      *
-     * @param source
-     * @param xtile
-     * @param ytile
-     * @param zoom
+     * @param source Tile source
+     * @param xtile X coordinate
+     * @param ytile Y coordinate
+     * @param zoom Zoom level
      */
     public Tile(TileSource source, int xtile, int ytile, int zoom) {
-        super();
+        this(source, xtile, ytile, zoom, LOADING_IMAGE);
+    }
+
+    /**
+     * Creates a tile with specified image.
+     *
+     * @param source Tile source
+     * @param xtile X coordinate
+     * @param ytile Y coordinate
+     * @param zoom Zoom level
+     * @param image Image content
+     */
+    public Tile(TileSource source, int xtile, int ytile, int zoom, BufferedImage image) {
         this.source = source;
         this.xtile = xtile;
         this.ytile = ytile;
         this.zoom = zoom;
-        this.image = LOADING_IMAGE;
+        this.image = image;
         this.key = getTileKey(source, xtile, ytile, zoom);
     }
 
-    public Tile(TileSource source, int xtile, int ytile, int zoom, BufferedImage image) {
-        this(source, xtile, ytile, zoom);
-        this.image = image;
+    private static BufferedImage loadImage(String path) {
+        try {
+            return ImageIO.read(JMapViewer.class.getResourceAsStream(path));
+        } catch (IOException | IllegalArgumentException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    private static class CachedCallable<V> implements Callable<V> {
+        private V result;
+        private Callable<V> callable;
+
+        /**
+         * Wraps callable so it is evaluated only once
+         * @param callable to cache
+         */
+        CachedCallable(Callable<V> callable) {
+            this.callable = callable;
+        }
+
+        @Override
+        public synchronized V call() {
+            try {
+                if (result == null) {
+                    result = callable.call();
+                }
+                return result;
+            } catch (Exception e) {
+                // this should not happen here
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     /**
      * Tries to get tiles of a lower or higher zoom level (one or two level
-     * difference) from cache and use it as a placeholder until the tile has
-     * been loaded.
+     * difference) from cache and use it as a placeholder until the tile has been loaded.
+     * @param cache Tile cache
      */
     public void loadPlaceholderFromCache(TileCache cache) {
-        BufferedImage tmpImage = new BufferedImage(source.getTileSize(), source.getTileSize(), BufferedImage.TYPE_INT_RGB);
-        Graphics2D g = (Graphics2D) tmpImage.getGraphics();
-        // g.drawImage(image, 0, 0, null);
+        /*
+         *  use LazyTask as creation of BufferedImage is very expensive
+         *  this way we can avoid object creation until we're sure it's needed
+         */
+        final CachedCallable<BufferedImage> tmpImage = new CachedCallable<>(new Callable<BufferedImage>() {
+            @Override
+            public BufferedImage call() throws Exception {
+                return new BufferedImage(source.getTileSize(), source.getTileSize(), BufferedImage.TYPE_INT_RGB);
+            }
+        });
+
         for (int zoomDiff = 1; zoomDiff < 5; zoomDiff++) {
             // first we check if there are already the 2^x tiles
             // of a higher detail level
-            int zoom_high = zoom + zoomDiff;
-            if (zoomDiff < 3 && zoom_high <= JMapViewer.MAX_ZOOM) {
+            int zoomHigh = zoom + zoomDiff;
+            if (zoomDiff < 3 && zoomHigh <= JMapViewer.MAX_ZOOM) {
                 int factor = 1 << zoomDiff;
-                int xtile_high = xtile << zoomDiff;
-                int ytile_high = ytile << zoomDiff;
-                double scale = 1.0 / factor;
-                g.setTransform(AffineTransform.getScaleInstance(scale, scale));
+                int xtileHigh = xtile << zoomDiff;
+                int ytileHigh = ytile << zoomDiff;
+                final double scale = 1.0 / factor;
+
+                /*
+                 * use LazyTask for graphics to avoid evaluation of tmpImage, until we have
+                 * something to draw
+                 */
+                CachedCallable<Graphics2D> graphics = new CachedCallable<>(new Callable<Graphics2D>() {
+                    @Override
+                    public Graphics2D call() throws Exception {
+                        Graphics2D g = (Graphics2D) tmpImage.call().getGraphics();
+                        g.setTransform(AffineTransform.getScaleInstance(scale, scale));
+                        return g;
+                    }
+                });
+
                 int paintedTileCount = 0;
                 for (int x = 0; x < factor; x++) {
                     for (int y = 0; y < factor; y++) {
-                        Tile tile = cache.getTile(source, xtile_high + x, ytile_high + y, zoom_high);
+                        Tile tile = cache.getTile(source, xtileHigh + x, ytileHigh + y, zoomHigh);
                         if (tile != null && tile.isLoaded()) {
                             paintedTileCount++;
-                            tile.paint(g, x * source.getTileSize(), y * source.getTileSize());
+                            tile.paint(graphics.call(), x * source.getTileSize(), y * source.getTileSize());
                         }
                     }
                 }
                 if (paintedTileCount == factor * factor) {
-                    image = tmpImage;
+                    image = tmpImage.call();
                     return;
                 }
             }
 
-            int zoom_low = zoom - zoomDiff;
-            if (zoom_low >= JMapViewer.MIN_ZOOM) {
-                int xtile_low = xtile >> zoomDiff;
-                int ytile_low = ytile >> zoomDiff;
-                int factor = (1 << zoomDiff);
-                double scale = factor;
-                AffineTransform at = new AffineTransform();
-                int translate_x = (xtile % factor) * source.getTileSize();
-                int translate_y = (ytile % factor) * source.getTileSize();
-                at.setTransform(scale, 0, 0, scale, -translate_x, -translate_y);
-                g.setTransform(at);
-                Tile tile = cache.getTile(source, xtile_low, ytile_low, zoom_low);
+            int zoomLow = zoom - zoomDiff;
+            if (zoomLow >= JMapViewer.MIN_ZOOM) {
+                int xtileLow = xtile >> zoomDiff;
+                int ytileLow = ytile >> zoomDiff;
+                final int factor = 1 << zoomDiff;
+                final double scale = factor;
+                CachedCallable<Graphics2D> graphics = new CachedCallable<>(new Callable<Graphics2D>() {
+                    @Override
+                    public Graphics2D call() throws Exception {
+                        Graphics2D g = (Graphics2D) tmpImage.call().getGraphics();
+                        AffineTransform at = new AffineTransform();
+                        int translateX = (xtile % factor) * source.getTileSize();
+                        int translateY = (ytile % factor) * source.getTileSize();
+                        at.setTransform(scale, 0, 0, scale, -translateX, -translateY);
+                        g.setTransform(at);
+                        return g;
+                    }
+
+                });
+
+                Tile tile = cache.getTile(source, xtileLow, ytileLow, zoomLow);
                 if (tile != null && tile.isLoaded()) {
-                    tile.paint(g, 0, 0);
-                    image = tmpImage;
+                    tile.paint(graphics.call(), 0, 0);
+                    image = tmpImage.call();
                     return;
                 }
             }
@@ -138,6 +204,7 @@ public class Tile {
     }
 
     /**
+     * Returns the X coordinate.
      * @return tile number on the x axis of this tile
      */
     public int getXtile() {
@@ -145,6 +212,7 @@ public class Tile {
     }
 
     /**
+     * Returns the Y coordinate.
      * @return tile number on the y axis of this tile
      */
     public int getYtile() {
@@ -152,10 +220,18 @@ public class Tile {
     }
 
     /**
+     * Returns the zoom level.
      * @return zoom level of this tile
      */
     public int getZoom() {
         return zoom;
+    }
+
+    /**
+     * @return tile indexes as TileXY object
+     */
+    public TileXY getTileXY() {
+        return new TileXY(xtile, ytile);
     }
 
     public BufferedImage getImage() {
@@ -197,16 +273,30 @@ public class Tile {
      * Paints the tile-image on the {@link Graphics} <code>g</code> at the
      * position <code>x</code>/<code>y</code>.
      *
-     * @param g
-     * @param x
-     *            x-coordinate in <code>g</code>
-     * @param y
-     *            y-coordinate in <code>g</code>
+     * @param g the Graphics object
+     * @param x x-coordinate in <code>g</code>
+     * @param y y-coordinate in <code>g</code>
      */
     public void paint(Graphics g, int x, int y) {
         if (image == null)
             return;
         g.drawImage(image, x, y, null);
+    }
+
+    /**
+     * Paints the tile-image on the {@link Graphics} <code>g</code> at the
+     * position <code>x</code>/<code>y</code>.
+     *
+     * @param g the Graphics object
+     * @param x x-coordinate in <code>g</code>
+     * @param y y-coordinate in <code>g</code>
+     * @param width width that tile should have
+     * @param height height that tile should have
+     */
+    public void paint(Graphics g, int x, int y, int width, int height) {
+        if (image == null)
+            return;
+        g.drawImage(image, x, y, width, height, null);
     }
 
     @Override
@@ -250,6 +340,9 @@ public class Tile {
             return false;
         if (zoom != other.zoom)
             return false;
+        if (!getTileSource().equals(other.getTileSource())) {
+            return false;
+        }
         return true;
     }
 
@@ -275,31 +368,89 @@ public class Tile {
         return error_message;
     }
 
+    public void setError(Exception e) {
+        setError(e.toString());
+    }
+
     public void setError(String message) {
         error = true;
         setImage(ERROR_IMAGE);
         error_message = message;
     }
 
+    /**
+     * Puts the given key/value pair to the metadata of the tile.
+     * If value is null, the (possibly existing) key/value pair is removed from
+     * the meta data.
+     *
+     * @param key Key
+     * @param value Value
+     */
     public void putValue(String key, String value) {
-        if (value == null || "".equals(value)) {
+        if (value == null || value.isEmpty()) {
             if (metadata != null) {
                 metadata.remove(key);
             }
             return;
         }
         if (metadata == null) {
-            metadata = new HashMap<String,String>();
+            metadata = new HashMap<>();
         }
         metadata.put(key, value);
     }
 
+    /**
+     * returns the metadata of the Tile
+     *
+     * @param key metadata key that should be returned
+     * @return null if no such metadata exists, or the value of the metadata
+     */
     public String getValue(String key) {
         if (metadata == null) return null;
         return metadata.get(key);
     }
 
-    public Map<String,String> getMetadata() {
+    /**
+     *
+     * @return metadata of the tile
+     */
+    public Map<String, String> getMetadata() {
+        if (metadata == null) {
+            metadata = new HashMap<>();
+        }
         return metadata;
     }
+
+    /**
+     * indicate that loading process for this tile has started
+     */
+    public void initLoading() {
+        error = false;
+        loading = true;
+    }
+
+    /**
+     * indicate that loading process for this tile has ended
+     */
+    public void finishLoading() {
+        loading = false;
+        loaded = true;
+    }
+
+    /**
+     *
+     * @return TileSource from which this tile comes
+     */
+    public TileSource getTileSource() {
+        return source;
+    }
+
+    /**
+     * indicate that loading process for this tile has been canceled
+     */
+    public void loadingCanceled() {
+        loading = false;
+        loaded = false;
+    }
+
 }

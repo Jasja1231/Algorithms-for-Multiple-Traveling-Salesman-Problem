@@ -1,8 +1,8 @@
+// License: GPL. For details, see Readme.txt file.
 package org.openstreetmap.gui.jmapviewer;
 
-//License: GPL. Copyright 2008 by Jan Peter Stotz
-
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.openstreetmap.gui.jmapviewer.interfaces.TileCache;
@@ -22,56 +22,68 @@ public class MemoryTileCache implements TileCache {
     /**
      * Default cache size
      */
-    protected int cacheSize = 200;
+    protected int cacheSize;
 
-    protected Hashtable<String, CacheEntry> hashtable;
+    protected final Map<String, CacheEntry> hash;
 
     /**
      * List of all tiles in their last recently used order
      */
-    protected CacheLinkedListElement lruTiles;
+    protected final CacheLinkedListElement lruTiles;
 
+    /**
+     * Constructs a new {@code MemoryTileCache}.
+     */
     public MemoryTileCache() {
-        hashtable = new Hashtable<String, CacheEntry>(cacheSize);
+        this(200);
+    }
+
+    /**
+     * Constructs a new {@code MemoryTileCache}.
+     * @param cacheSize size of the cache
+     */
+    public MemoryTileCache(int cacheSize) {
+        this.cacheSize = cacheSize;
+        hash = new HashMap<>(cacheSize);
         lruTiles = new CacheLinkedListElement();
     }
 
-    public void addTile(Tile tile) {
+    @Override
+    public synchronized void addTile(Tile tile) {
         CacheEntry entry = createCacheEntry(tile);
-        hashtable.put(tile.getKey(), entry);
-        lruTiles.addFirst(entry);
-        if (hashtable.size() > cacheSize)
-            removeOldEntries();
+        if (hash.put(tile.getKey(), entry) == null) {
+            // only if hash hadn't had the element, add it to LRU
+            lruTiles.addFirst(entry);
+            if (hash.size() > cacheSize || lruTiles.getElementCount() > cacheSize) {
+                removeOldEntries();
+            }
+        }
     }
 
-    public Tile getTile(TileSource source, int x, int y, int z) {
-        CacheEntry entry = hashtable.get(Tile.getTileKey(source, x, y, z));
+    @Override
+    public synchronized Tile getTile(TileSource source, int x, int y, int z) {
+        CacheEntry entry = hash.get(Tile.getTileKey(source, x, y, z));
         if (entry == null)
             return null;
-        // We don't care about placeholder tiles and hourglass image tiles, the
-        // important tiles are the loaded ones
-        if (entry.tile.isLoaded())
-            lruTiles.moveElementToFirstPos(entry);
+        lruTiles.moveElementToFirstPos(entry);
         return entry.tile;
     }
 
     /**
      * Removes the least recently used tiles
      */
-    protected void removeOldEntries() {
-        synchronized (lruTiles) {
-            try {
-                while (lruTiles.getElementCount() > cacheSize) {
-                    removeEntry(lruTiles.getLastElement());
-                }
-            } catch (Exception e) {
-                log.warning(e.getMessage());
+    protected synchronized void removeOldEntries() {
+        try {
+            while (lruTiles.getElementCount() > cacheSize) {
+                removeEntry(lruTiles.getLastElement());
             }
+        } catch (NullPointerException e) {
+            log.warning(e.getMessage());
         }
     }
 
-    protected void removeEntry(CacheEntry entry) {
-        hashtable.remove(entry.tile.getKey());
+    protected synchronized void removeEntry(CacheEntry entry) {
+        hash.remove(entry.tile.getKey());
         lruTiles.removeEntry(entry);
     }
 
@@ -79,21 +91,19 @@ public class MemoryTileCache implements TileCache {
         return new CacheEntry(tile);
     }
 
-    /**
-     * Clears the cache deleting all tiles from memory
-     */
-    public void clear() {
-        synchronized (lruTiles) {
-            hashtable.clear();
-            lruTiles.clear();
-        }
+    @Override
+    public synchronized void clear() {
+        hash.clear();
+        lruTiles.clear();
     }
 
-    public int getTileCount() {
-        return hashtable.size();
+    @Override
+    public synchronized int getTileCount() {
+        return hash.size();
     }
 
-    public int getCacheSize() {
+    @Override
+    public synchronized int getCacheSize() {
         return cacheSize;
     }
 
@@ -103,9 +113,9 @@ public class MemoryTileCache implements TileCache {
      * @param cacheSize
      *            new maximum number of tiles
      */
-    public void setCacheSize(int cacheSize) {
+    public synchronized void setCacheSize(int cacheSize) {
         this.cacheSize = cacheSize;
-        if (hashtable.size() > cacheSize)
+        if (hash.size() > cacheSize)
             removeOldEntries();
     }
 
@@ -114,27 +124,18 @@ public class MemoryTileCache implements TileCache {
      * {@link #next} and {@link #prev} item in the list.
      */
     protected static class CacheEntry {
-        Tile tile;
-
-        CacheEntry next;
-        CacheEntry prev;
+        private Tile tile;
+        private CacheEntry next;
+        private CacheEntry prev;
 
         protected CacheEntry(Tile tile) {
             this.tile = tile;
         }
 
-        public Tile getTile() {
-            return tile;
+        @Override
+        public String toString() {
+            return tile.toString();
         }
-
-        public CacheEntry getNext() {
-            return next;
-        }
-
-        public CacheEntry getPrev() {
-            return prev;
-        }
-
     }
 
     /**
@@ -145,15 +146,18 @@ public class MemoryTileCache implements TileCache {
      * @author Jan Peter Stotz
      */
     protected static class CacheLinkedListElement {
-        protected CacheEntry firstElement = null;
+        protected CacheEntry firstElement;
         protected CacheEntry lastElement;
         protected int elementCount;
 
+        /**
+         * Constructs a new {@code CacheLinkedListElement}.
+         */
         public CacheLinkedListElement() {
             clear();
         }
 
-        public synchronized void clear() {
+        public void clear() {
             elementCount = 0;
             firstElement = null;
             lastElement = null;
@@ -162,9 +166,10 @@ public class MemoryTileCache implements TileCache {
         /**
          * Add the element to the head of the list.
          *
-         * @param new element to be added
+         * @param element new element to be added
          */
-        public synchronized void addFirst(CacheEntry element) {
+        public void addFirst(CacheEntry element) {
+            if (element == null) return;
             if (elementCount == 0) {
                 firstElement = element;
                 lastElement = element;
@@ -180,12 +185,12 @@ public class MemoryTileCache implements TileCache {
         }
 
         /**
-         * Removes the specified elemntent form the list.
+         * Removes the specified element from the list.
          *
-         * @param element
-         *            to be removed
+         * @param element element to be removed
          */
-        public synchronized void removeEntry(CacheEntry element) {
+        public void removeEntry(CacheEntry element) {
+            if (element == null) return;
             if (element.next != null) {
                 element.next.prev = element.prev;
             }
@@ -201,7 +206,7 @@ public class MemoryTileCache implements TileCache {
             elementCount--;
         }
 
-        public synchronized void moveElementToFirstPos(CacheEntry entry) {
+        public void moveElementToFirstPos(CacheEntry entry) {
             if (firstElement == entry)
                 return;
             removeEntry(entry);
@@ -219,6 +224,5 @@ public class MemoryTileCache implements TileCache {
         public CacheEntry getFirstElement() {
             return firstElement;
         }
-
     }
 }

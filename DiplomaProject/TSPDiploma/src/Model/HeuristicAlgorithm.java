@@ -12,7 +12,7 @@ import Algorithms.Greedy;
  *
  * @author Krzysztof
  */
-public class HeuristicAlgorithm {
+public class HeuristicAlgorithm implements Algorithm {
     public static int [] solveProblem (float [][]adjacencyMatrix)
     {
         int [] solution = null;

@@ -18,6 +18,7 @@ import de.cm.osm2po.tsp.TspDefaultMatrix;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Observable;
 import java.util.Properties;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
@@ -28,11 +29,14 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
  * @author K
  */
 public class Model extends Observable {
-    HeuristicAlgorithm ha = new HeuristicAlgorithm();
-    SCIPAlgorithm sA = new SCIPAlgorithm();
-    BruteForceAlgorithm bA = new BruteForceAlgorithm();
-    ApproximationAlgorithm aA = new ApproximationAlgorithm();
-    DynamicAlgorithm dynamicAlgorithm = new DynamicAlgorithm();
+    
+    //Algorithms
+    final HeuristicAlgorithm heuristicAlgorithm = new HeuristicAlgorithm();
+    final SCIPAlgorithm SCIPAlgorithm = new SCIPAlgorithm();
+    final BruteForceAlgorithm bruteForceAlgorithm = new BruteForceAlgorithm();
+    final ApproximationAlgorithm approximationAlgorithm = new ApproximationAlgorithm();
+    final DynamicAlgorithm dynamicAlgorithm = new DynamicAlgorithm();
+    
     Graph graph;
     PoiRouter  router;
     Properties params;
@@ -40,24 +44,57 @@ public class Model extends Observable {
     int [][][] shortestPaths;
     float[][] shortestPathCostMatrix;
     
+    /***
+     * Table with all possible algorithms
+     */
+    List<Algorithm> allAlgorithms;
     
-   public Model() throws Osm2poException
-           
-   {
-   File graphFile = new File("warsaw.gph");
-   graph = new Graph(graphFile);
-   router = new PoiRouter();
-   timeMatrix = new TspDefaultMatrix();
+    /***
+     * List of coordinates algorithms will calculate for.
+     */
+    List<Coordinate> coordinates;
+    
+    /***
+     * List of involved algorithms
+     */
+    List<Algorithm> algorithms;
+    
 
-   // additional params for DefaultRouter
-   Properties params = new Properties();
-   params.setProperty("findShortestPath", "true");
-   params.setProperty("ignoreRestrictions", "false");
-   params.setProperty("ignoreOneWays", "false");
-   params.setProperty("heuristicFactor", "1.0"); // 0.0 Dijkstra, 1.0 good A*
-   params.setProperty("matrix.fullSearchLoops", "5");
-   test();
+   public Model(){
+    init();
+    File graphFile = new File("warsaw.gph");
+    graph = new Graph(graphFile);
+    router = new PoiRouter();
+    timeMatrix = new TspDefaultMatrix();
+
+    // additional params for DefaultRouter
+    Properties params = new Properties();
+    params.setProperty("findShortestPath", "true");
+    params.setProperty("ignoreRestrictions", "false");
+    params.setProperty("ignoreOneWays", "false");
+    params.setProperty("heuristicFactor", "1.0"); // 0.0 Dijkstra, 1.0 good A*
+    params.setProperty("matrix.fullSearchLoops", "5");
+        try {
+             test();
+        } catch (Osm2poException e) {
+        }
+     
+  
    }
+   
+   public void init(){
+       coordinates = new ArrayList<>();
+       //KEEP THE ORDER
+       allAlgorithms.add(SCIPAlgorithm);
+       allAlgorithms.add(dynamicAlgorithm);
+       allAlgorithms.add(bruteForceAlgorithm);
+       allAlgorithms.add(heuristicAlgorithm);
+       allAlgorithms.add(approximationAlgorithm);
+   }
+
+   public void addCoordinate(Coordinate coo){
+       this.coordinates.add(coo);
+   }   
    
    public void buildTimeMatrix(ArrayList<Coordinate>coords) throws Osm2poException
    {
@@ -191,5 +228,13 @@ public class Model extends Observable {
        }
        return extended;
    }
+
+    public void addAlgorithm(int i) {
+        this.algorithms.add(this.allAlgorithms.get(i));
+    }
+
+    public void clearAlgorithms() {
+       this.algorithms.clear();
+    }
 }
 

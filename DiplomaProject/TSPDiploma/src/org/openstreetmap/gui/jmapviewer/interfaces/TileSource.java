@@ -1,44 +1,20 @@
+// License: GPL. For details, see Readme.txt file.
 package org.openstreetmap.gui.jmapviewer.interfaces;
 
-import java.awt.Image;
+import java.awt.Point;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
-import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
-
-//License: GPL. Copyright 2008 by Jan Peter Stotz
+import org.openstreetmap.gui.jmapviewer.Tile;
+import org.openstreetmap.gui.jmapviewer.TileXY;
 
 /**
  *
  * @author Jan Peter Stotz
  */
-public interface TileSource {
-
-    /**
-     * Specifies the different mechanisms for detecting updated tiles
-     * respectively only download newer tiles than those stored locally.
-     *
-     * <ul>
-     * <li>{@link #IfNoneMatch} Server provides ETag header entry for all tiles
-     * and <b>supports</b> conditional download via <code>If-None-Match</code>
-     * header entry.</li>
-     * <li>{@link #ETag} Server provides ETag header entry for all tiles but
-     * <b>does not support</b> conditional download via
-     * <code>If-None-Match</code> header entry.</li>
-     * <li>{@link #IfModifiedSince} Server provides Last-Modified header entry
-     * for all tiles and <b>supports</b> conditional download via
-     * <code>If-Modified-Since</code> header entry.</li>
-     * <li>{@link #LastModified} Server provides Last-Modified header entry for
-     * all tiles but <b>does not support</b> conditional download via
-     * <code>If-Modified-Since</code> header entry.</li>
-     * <li>{@link #None} The server does not support any of the listed
-     * mechanisms.</li>
-     * </ul>
-     *
-     */
-    public enum TileUpdate {
-        IfNoneMatch, ETag, IfModifiedSince, LastModified, None
-    }
+public interface TileSource extends Attributed {
 
     /**
      * Specifies the maximum zoom value. The number of zoom levels is [0..
@@ -47,7 +23,7 @@ public interface TileSource {
      * @return maximum zoom value that has to be smaller or equal to
      *         {@link JMapViewer#MAX_ZOOM}
      */
-    public int getMaxZoom();
+    int getMaxZoom();
 
     /**
      * Specifies the minimum zoom value. This value is usually 0.
@@ -56,79 +32,181 @@ public interface TileSource {
      *
      * @return minimum zoom value - usually 0
      */
-    public int getMinZoom();
+    int getMinZoom();
 
     /**
-     * @return The supported tile update mechanism
-     * @see TileUpdate
-     */
-    public TileUpdate getTileUpdate();
-
-    /**
-     * A tile layer name has to be unique and has to consist only of characters
-     * valid for filenames.
+     * A tile layer name as displayed to the user.
      *
      * @return Name of the tile layer
      */
-    public String getName();
+    String getName();
+
+    /**
+     * A unique id for this tile source.
+     *
+     * Unlike the name it has to be unique and has to consist only of characters
+     * valid for filenames.
+     *
+     * @return the id
+     */
+    String getId();
 
     /**
      * Constructs the tile url.
      *
-     * @param zoom
-     * @param tilex
-     * @param tiley
+     * @param zoom zoom level
+     * @param tilex X coordinate
+     * @param tiley Y coordinate
      * @return fully qualified url for downloading the specified tile image
+     * @throws IOException if any I/O error occurs
      */
-    public String getTileUrl(int zoom, int tilex, int tiley) throws IOException;
+    String getTileUrl(int zoom, int tilex, int tiley) throws IOException;
 
     /**
-     * Specifies the tile image type. For tiles rendered by Mapnik or
-     * Osmarenderer this is usually <code>"png"</code>.
+     * Creates tile identifier that is unique among all tile sources, but the same tile will always
+     * get the same identifier. Used for creation of cache key.
      *
-     * @return file extension of the tile image type
+     * @param zoom zoom level
+     * @param tilex X coordinate
+     * @param tiley Y coordinate
+     * @return tile identifier
      */
-    public String getTileType();
+    String getTileId(int zoom, int tilex, int tiley);
 
     /**
      * Specifies how large each tile is.
-     * @return The size of a single tile in pixels.
+     * @return The size of a single tile in pixels. -1 if default size should be used
      */
-    public int getTileSize();
+    int getTileSize();
 
     /**
-     * @return True if the tile source requires attribution in text or image form.
+     * @return default tile size, for this tile source
+     * TODO: @since
      */
-    public boolean requiresAttribution();
+    int getDefaultTileSize();
 
     /**
-     * @param zoom The optional zoom level for the view.
-     * @param botRight The bottom right of the bounding box for attribution.
-     * @param topLeft The top left of the bounding box for attribution.
-     * @return Attribution text for the image source.
+     * Gets the distance using Spherical law of cosines.
+     * @param la1 latitude of first point
+     * @param lo1 longitude of first point
+     * @param la2 latitude of second point
+     * @param lo2 longitude of second point
+     * @return the distance betwen first and second point, in m.
      */
-    public String getAttributionText(int zoom, Coordinate topLeft, Coordinate botRight);
+    double getDistance(double la1, double lo1, double la2, double lo2);
 
     /**
-     * @return The URL for the attribution image. Null if no image should be displayed.
+     * @param lon longitude
+     * @param lat latitude
+     * @param zoom zoom level
+     * @return transforms longitude and latitude to pixel space (as if all tiles at specified zoom level where joined)
      */
-    public Image getAttributionImage();
+    Point latLonToXY(double lat, double lon, int zoom);
 
     /**
-     * @return The URL to open when the user clicks the attribution image.
+     * @param point point
+     * @param zoom zoom level
+     * @return transforms longitude and latitude to pixel space (as if all tiles at specified zoom level where joined)
      */
-    public String getAttributionLinkURL();
+    Point latLonToXY(ICoordinate point, int zoom);
 
     /**
-     * @return The URL to open when the user clicks the attribution "Terms of Use" text.
+     * @param point point
+     * @param zoom zoom level
+     * @return WGS84 Coordinates of given point
      */
-    public String getTermsOfUseURL();
+    ICoordinate xyToLatLon(Point point, int zoom);
 
-    public double latToTileY(double lat, int zoom);
+    /**
+     *
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param zoom zoom level
+     * @return WGS84 Coordinates of given point
+     */
+    ICoordinate xyToLatLon(int x, int y, int zoom);
 
-    public double lonToTileX(double lon, int zoom);
+    /**
+     * @param lon longitude
+     * @param lat latitude
+     * @param zoom zoom level
+     * @return x and y tile indices
+     */
+    TileXY latLonToTileXY(double lat, double lon, int zoom);
 
-    public double tileYToLat(int y, int zoom);
+    /**
+     *
+     * @param point point
+     * @param zoom zoom level
+     * @return x and y tile indices
+     */
+    TileXY latLonToTileXY(ICoordinate point, int zoom);
 
-    public double tileXToLon(int x, int zoom);
+    /**
+     * @param xy X/Y coordinates
+     * @param zoom zoom level
+     * @return WGS84 coordinates of given tile
+     */
+    ICoordinate tileXYToLatLon(TileXY xy, int zoom);
+
+    /**
+     *
+     * @param tile Tile
+     * @return WGS84 coordinates of given tile
+     */
+    ICoordinate tileXYToLatLon(Tile tile);
+
+    /**
+     *
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param zoom zoom level
+     * @return WGS84 coordinates of given tile
+     */
+    ICoordinate tileXYToLatLon(int x, int y, int zoom);
+
+    /**
+     * @param zoom zoom level
+     * @return maximum X index of tile for specified zoom level
+     */
+    int getTileXMax(int zoom);
+
+    /**
+     *
+     * @param zoom zoom level
+     * @return minimum X index of tile for specified zoom level
+     */
+    int getTileXMin(int zoom);
+
+    /**
+     *
+     * @param zoom zoom level
+     * @return maximum Y index of tile for specified zoom level
+     */
+    int getTileYMax(int zoom);
+
+    /**
+     * @param zoom zoom level
+     * @return minimum Y index of tile for specified zoom level
+     */
+    int getTileYMin(int zoom);
+
+    /**
+     * Determines, if the returned data from TileSource represent "no tile at this zoom level" situation. Detection
+     * algorithms differ per TileSource, so each TileSource should implement each own specific way.
+     *
+     * @param headers HTTP headers from response from TileSource server
+     * @param statusCode HTTP status code
+     * @param content byte array representing the data returned from the server
+     * @return true, if "no tile at this zoom level" situation detected
+     */
+    boolean isNoTileAtZoom(Map<String, List<String>> headers, int statusCode, byte[] content);
+
+    /**
+     * Extracts metadata about the tile based on HTTP headers
+     *
+     * @param headers HTTP headers from Tile Source server
+     * @return tile metadata
+     */
+    Map<String, String> getMetadata(Map<String, List<String>> headers);
 }

@@ -1,114 +1,69 @@
-/**
- * 
- */
+// License: GPL. For details, see Readme.txt file.
 package org.openstreetmap.gui.jmapviewer.tilesources;
 
 import java.awt.Image;
-import java.io.IOException;
 
-import javax.swing.ImageIcon;
+import org.openstreetmap.gui.jmapviewer.interfaces.ICoordinate;
 
-import org.openstreetmap.gui.jmapviewer.Coordinate;
-import org.openstreetmap.gui.jmapviewer.interfaces.TileSource;
-
-public abstract class AbstractOsmTileSource implements TileSource {
-
-    protected String name;
-    protected String baseUrl;
-    protected String attrImgUrl;
-
-    public AbstractOsmTileSource(String name, String base_url) {
-        this(name, base_url, null);
-    }
-
-    public AbstractOsmTileSource(String name, String base_url, String attr_img_url) {
-        this.name = name;
-        this.baseUrl = base_url;
-        attrImgUrl = attr_img_url;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getMaxZoom() {
-        return 18;
-    }
-
-    public int getMinZoom() {
-        return 0;
-    }
-
-    public String getExtension() {
-        return "png";
-    }
+/**
+ * Abstract class for OSM Tile sources
+ */
+public abstract class AbstractOsmTileSource extends TMSTileSource {
 
     /**
-     * @throws IOException when subclass cannot return the tile URL
+     * The OSM attribution. Must be always in line with
+     * <a href="https://www.openstreetmap.org/copyright/en">https://www.openstreetmap.org/copyright/en</a>
      */
-    public String getTilePath(int zoom, int tilex, int tiley) throws IOException {
-        return "/" + zoom + "/" + tilex + "/" + tiley + "." + getExtension();
-    }
+    public static final String DEFAULT_OSM_ATTRIBUTION = "\u00a9 OpenStreetMap contributors";
 
-    public String getBaseUrl() {
-        return this.baseUrl;
-    }
-
-    public String getTileUrl(int zoom, int tilex, int tiley) throws IOException {
-        return this.getBaseUrl() + getTilePath(zoom, tilex, tiley);
+    /**
+     * Constructs a new OSM tile source
+     * @param name Source name as displayed in GUI
+     * @param baseUrl Source URL
+     * @param id unique id for the tile source; contains only characters that
+     * are safe for file names; can be null
+     */
+    public AbstractOsmTileSource(String name, String baseUrl, String id) {
+        super(new TileSourceInfo(name, baseUrl, id));
     }
 
     @Override
-    public String toString() {
-        return getName();
+    public int getMaxZoom() {
+        return 19;
     }
 
-    public String getTileType() {
-        return "png";
-    }
-
-    public int getTileSize() {
-        return 256;
-    }
-
-    public Image getAttributionImage() {
-        if (attrImgUrl != null)
-            return new ImageIcon(attrImgUrl).getImage();
-        else
-            return null;
-    }
-
+    @Override
     public boolean requiresAttribution() {
         return true;
     }
 
-    public String getAttributionText(int zoom, Coordinate topLeft, Coordinate botRight) {
-        return "© OpenStreetMap contributors, CC-BY-SA ";
+    @Override
+    public String getAttributionText(int zoom, ICoordinate topLeft, ICoordinate botRight) {
+        return DEFAULT_OSM_ATTRIBUTION;
     }
 
+    @Override
     public String getAttributionLinkURL() {
-        return "http://openstreetmap.org/";
+        return "https://openstreetmap.org/";
     }
 
+    @Override
+    public Image getAttributionImage() {
+        return null;
+    }
+
+    @Override
+    public String getAttributionImageURL() {
+        return null;
+    }
+
+    @Override
+    public String getTermsOfUseText() {
+        return null;
+    }
+
+    @Override
     public String getTermsOfUseURL() {
-        return "http://www.openstreetmap.org/copyright";
-    }
-
-    public double latToTileY(double lat, int zoom) {
-        double l = lat / 180 * Math.PI;
-        double pf = Math.log(Math.tan(l) + (1 / Math.cos(l)));
-        return Math.pow(2.0, zoom - 1) * (Math.PI - pf) / Math.PI;
-    }
-
-    public double lonToTileX(double lon, int zoom) {
-        return Math.pow(2.0, zoom - 3) * (lon + 180.0) / 45.0;
-    }
-
-    public double tileYToLat(int y, int zoom) {
-        return Math.atan(Math.sinh(Math.PI - (Math.PI * y / Math.pow(2.0, zoom - 1)))) * 180 / Math.PI;
-    }
-
-    public double tileXToLon(int x, int zoom) {
-        return x * 45.0 / Math.pow(2.0, zoom - 3) - 180.0;
+        return "https://www.openstreetmap.org/copyright";
     }
 }

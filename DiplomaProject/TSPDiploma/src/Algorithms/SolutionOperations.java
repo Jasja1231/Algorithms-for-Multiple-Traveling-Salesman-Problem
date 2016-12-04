@@ -17,7 +17,7 @@ public class SolutionOperations {
     {
         ArrayList<ArrayList<Integer>> result = new ArrayList<>(numSalesmen);
         for (int x =0 ; x < numSalesmen ; x++)
-            result.add(new ArrayList<>());
+            result.add(new ArrayList<Integer>());
         
         for(int i=0,j=0;i<solution.length;i++)
         {

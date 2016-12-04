@@ -7,6 +7,7 @@ package Controller;
 
 import Model.Model;
 import View.MainView;
+import org.openstreetmap.gui.jmapviewer.Coordinate;
 
 /**
  *
@@ -18,11 +19,28 @@ public class Controller {
     private Model model;
 
     public Controller(Model model) {
-       
+       this.model = model;
+               
     }
 
     public void setMainView(MainView mv) {
       this.view = mv;
+    }
+
+    public void addCoordinate(Coordinate coo) {
+       this.model.addCoordinate(coo);
+    }
+
+    public void startComputation() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void addAlgorithm(int i) {
+        this.model.addAlgorithm(i);
+    }
+
+    public void clearAlgorithms() {
+      this.model.clearAlgorithms();
     }
     
 }

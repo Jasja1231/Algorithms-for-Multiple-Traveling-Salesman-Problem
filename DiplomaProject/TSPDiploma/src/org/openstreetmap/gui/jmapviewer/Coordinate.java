@@ -1,12 +1,13 @@
+// License: GPL. For details, see Readme.txt file.
 package org.openstreetmap.gui.jmapviewer;
-
-//License: GPL. Copyright 2009 by Stefan Zeller
 
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.util.Objects;
+
+import org.openstreetmap.gui.jmapviewer.interfaces.ICoordinate;
 
 /**
  * This class encapsulates a Point2D.Double and provide access
@@ -15,25 +16,29 @@ import java.io.Serializable;
  * @author Jan Peter Stotz
  *
  */
-public class Coordinate implements Serializable {
+public class Coordinate implements ICoordinate {
     private transient Point2D.Double data;
 
     public Coordinate(double lat, double lon) {
         data = new Point2D.Double(lon, lat);
     }
 
+    @Override
     public double getLat() {
         return data.y;
     }
 
+    @Override
     public void setLat(double lat) {
         data.y = lat;
     }
 
+    @Override
     public double getLon() {
         return data.x;
     }
 
+    @Override
     public void setLon(double lon) {
         data.x = lon;
     }
@@ -49,7 +54,30 @@ public class Coordinate implements Serializable {
         data.y = (Double) in.readObject();
     }
 
+    @Override
     public String toString() {
-        return "Coordinate[" + data.y + ", " + data.x + "]";
+        return "Coordinate[" + data.y + ", " + data.x + ']';
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 61 * hash + Objects.hashCode(this.data);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Coordinate other = (Coordinate) obj;
+        if (!Objects.equals(this.data, other.data)) {
+            return false;
+        }
+        return true;
     }
 }

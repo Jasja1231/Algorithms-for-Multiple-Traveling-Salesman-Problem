@@ -1,18 +1,20 @@
+// License: GPL. For details, see Readme.txt file.
 package org.openstreetmap.gui.jmapviewer.interfaces;
 
 import org.openstreetmap.gui.jmapviewer.Tile;
 
-//License: GPL. Copyright 2008 by Jan Peter Stotz
-
+/**
+ * This listener listens to successful tile loads.
+ */
+//@FunctionalInterface
 public interface TileLoaderListener {
 
     /**
      * Will be called if a new {@link Tile} has been loaded successfully.
      * Loaded can mean downloaded or loaded from file cache.
      *
-     * @param tile
+     * @param tile The tile
+     * @param success {@code true} if the tile has been loaded successfully, {@code false} otherwise
      */
-    public void tileLoadingFinished(Tile tile, boolean success);
-
-    public TileCache getTileCache();
+    void tileLoadingFinished(Tile tile, boolean success);
 }

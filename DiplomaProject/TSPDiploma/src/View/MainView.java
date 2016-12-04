@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JMenu;
+import org.openstreetmap.gui.jmapviewer.Coordinate;
 
 /**
  *
@@ -60,9 +61,6 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
     private void init(){
         mapPanel = new MapPanel(this);
         optionsPanel = new OptionsPanel(this);
-        
-        
-   
         //Add Map in the centre
         this.add(mapPanel,BorderLayout.CENTER);
         this.add(optionsPanel,BorderLayout.WEST);
@@ -87,7 +85,9 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
         FileMenu = new javax.swing.JMenu();
         loadFilejMenuItem = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
-        jMenu3 = new javax.swing.JMenu();
+        EditMenu = new javax.swing.JMenu();
+        EditInputMenuItem = new javax.swing.JMenuItem();
+        startComputationMenu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -118,8 +118,25 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
 
         jMenuBar1.add(FileMenu);
 
-        jMenu3.setText("Edit");
-        jMenuBar1.add(jMenu3);
+        EditMenu.setText("Edit");
+
+        EditInputMenuItem.setText("Edit input data");
+        EditInputMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EditInputMenuItemActionPerformed(evt);
+            }
+        });
+        EditMenu.add(EditInputMenuItem);
+
+        jMenuBar1.add(EditMenu);
+
+        startComputationMenu.setText("Start Computation");
+        startComputationMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startComputationMenuActionPerformed(evt);
+            }
+        });
+        jMenuBar1.add(startComputationMenu);
 
         setJMenuBar(jMenuBar1);
 
@@ -137,6 +154,22 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void EditInputMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditInputMenuItemActionPerformed
+        this.optionsPanel.setVisible(true);
+    }//GEN-LAST:event_EditInputMenuItemActionPerformed
+
+    private void startComputationMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startComputationMenuActionPerformed
+       //Started calculation 
+        //Clear previous algorithms
+        this.controller.clearAlgorithms();
+       //Read selected algorithms
+        this.optionsPanel.readSelectedAlgorithms();
+       //Check if algorithm is selected 
+        
+       //if yes 
+        this.controller.startComputation();
+    }//GEN-LAST:event_startComputationMenuActionPerformed
 
     @Override
     public void update(Observable o, Object arg) {
@@ -156,10 +189,22 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem EditInputMenuItem;
+    private javax.swing.JMenu EditMenu;
     private javax.swing.JMenu FileMenu;
-    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem loadFilejMenuItem;
+    private javax.swing.JMenu startComputationMenu;
     // End of variables declaration//GEN-END:variables
+
+    void addCoordinate(Coordinate coo) {
+       this.controller.addCoordinate(coo);
+    }
+
+    void addAlgorithm(int i) {
+        this.controller.addAlgorithm(i);
+    }
+
+    
 }
