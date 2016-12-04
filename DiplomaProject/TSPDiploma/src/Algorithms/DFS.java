@@ -9,7 +9,7 @@ package Algorithms;
  *
  * @author Krzysztof
  */
-public class Dfs2 {
+public class DFS {
    
 public static void DFS(int[][] adjMatrix, boolean [] visited, int [] results, int n, int i, int idx){
         results[idx++] = i;

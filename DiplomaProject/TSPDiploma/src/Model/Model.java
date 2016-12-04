@@ -6,8 +6,9 @@
 package Model;
 
 import Algorithms.DFS;
-import Algorithms.Dfs2;
+import Algorithms.DFS;
 import Algorithms.Kruskal;
+import Algorithms.SolutionOperations;
 import de.cm.osm2po.errors.Osm2poException;
 import de.cm.osm2po.logging.Log;
 import de.cm.osm2po.routing.Graph;
@@ -145,11 +146,10 @@ public class Model extends Observable {
        k.readInGraphData(matrixxx);
        k.performKruskal();
        int[][]arr = k.getResultAdjacencyMatrix();
-       DFS dfs = new DFS(arr);
-       int [] dfresult = dfs.getResults();
        int[] order = new int [arr.length];
        int idx = 0;
-       Dfs2.DFS(arr, new boolean[arr.length], order, arr.length, 0, idx);
+       DFS.DFS(arr, new boolean[arr.length], order, arr.length, 0, idx);
+        ArrayList<ArrayList<Integer>> res = SolutionOperations.getCyclesFromSolution(4, new int []{0,4,5,6,1,7,8,9,2,10,11,3,12,13});
    }
    
    float [][] getExtendedMatrixForMultipleSalesmen (int salesmen, float[][]matrix)
