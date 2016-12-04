@@ -31,6 +31,7 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
 public class Model extends Observable {
     
     //Algorithms
+    //TODO: change that caz these classes are static with one static method
     final HeuristicAlgorithm heuristicAlgorithm = new HeuristicAlgorithm();
     final SCIPAlgorithm SCIPAlgorithm = new SCIPAlgorithm();
     final BruteForceAlgorithm bruteForceAlgorithm = new BruteForceAlgorithm();
@@ -84,6 +85,7 @@ public class Model extends Observable {
    
    public void init(){
        coordinates = new ArrayList<>();
+       allAlgorithms = new ArrayList<Algorithm>();
        //KEEP THE ORDER
        allAlgorithms.add(SCIPAlgorithm);
        allAlgorithms.add(dynamicAlgorithm);
