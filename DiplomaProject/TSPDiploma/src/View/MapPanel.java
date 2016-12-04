@@ -8,12 +8,16 @@ package View;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Timer;
@@ -21,6 +25,8 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.DefaultMapController;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
+import org.openstreetmap.gui.jmapviewer.MapPolygonImpl;
+import org.openstreetmap.gui.jmapviewer.interfaces.ICoordinate;
 import org.openstreetmap.gui.jmapviewer.tilesources.OfflineOsmTileSource;
 
 /**
@@ -56,22 +62,22 @@ public class MapPanel extends javax.swing.JPanel {
         try {
             // map.setTileSource(new OfflineOsmTileSource("file:///C:/Users/K/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/Tiles",10,14));
             //corrected
-            map.setTileSource(new OfflineOsmTileSource((new File("C:\\Users\\Krzysztof\\Desktop\\DiplomaProject\\DiplomaProject\\TSPDiploma\\Tiles").toURI().toURL()).toString(), 10, 14)); 
+            map.setDisplayPosition(new Coordinate(52.2297,21.0122), 10); //center in warsaw 
+            map.getPosition();
+           
+            map.setTileSource(new OfflineOsmTileSource((new File("C:\\Users\\Yaryna\\Documents\\WUT 2015-16\\Diploma\\MTSP\\DiplomaProject\\TSPDiploma\\Tiles").toURI().toURL()).toString(), 10, 14)); 
         } catch (MalformedURLException ex) {
             Logger.
                     getLogger(MapPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
         map.setVisible(true);
-        //map.setZoom(10); // set some zoom level (1-18 are valid)
         map.setSize(new Dimension(500,500));
-        map.setBackground(Color.YELLOW);
-        map.setDisplayPositionByLatLon(52.2297,21.0122, 10); //center in warsaw 
         
         
         //override mouse clicked method
         new DefaultMapController(map) {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mouseClicked(final MouseEvent e) {
                 if (e.getClickCount()== 2 ) {
                        System.out.println("double click");
                        wasDoubleClick = true;
@@ -84,13 +90,15 @@ public class MapPanel extends javax.swing.JPanel {
                             if (wasDoubleClick) {
                                 wasDoubleClick = false; // reset flag
                             } else {
+                                Coordinate coo = (Coordinate) map.getPosition(e.getPoint());
+                                
                                 System.out.println( "  and it's a simple click!");
                                 System.out.println(e.getPoint());
-                                Coordinate coo = map.getPosition(e.getPoint());
                                 System.out.println(coo);
 
-                                MapMarkerDot marker = new MapMarkerDot(Color.CYAN,coo.getLat(),coo.getLon());
-                                MapPanel.this.map.addMapMarker(marker);
+                                MapPanel.this.parentView.addCoordinate(coo);
+                                MapMarkerDot marker = new MapMarkerDot(Color.RED,coo.getLat(),coo.getLon());
+                                MapPanel.this.map.addMapMarker(marker);                                                                                   
                             }
                         }    
                     });
@@ -100,8 +108,14 @@ public class MapPanel extends javax.swing.JPanel {
             }
         };
     }
+   
     
     
+    public void drawLines(List<Coordinate> route){
+       //  Coordinate one = new Coordinate(52.208606008998416, 20.951871871948242);
+       // Coordinate two = new Coordinate(52.20813264205301, 20.95770835876465);
+        map.addMapPolygon(new MapPolygonImpl(route));
+    }
 
     
     

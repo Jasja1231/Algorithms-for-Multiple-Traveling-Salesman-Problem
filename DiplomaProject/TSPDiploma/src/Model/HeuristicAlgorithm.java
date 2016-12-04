@@ -9,6 +9,6 @@ package Model;
  *
  * @author Krzysztof
  */
-public class HeuristicAlgorithm {
+public class HeuristicAlgorithm  implements Algorithm {
     
 }

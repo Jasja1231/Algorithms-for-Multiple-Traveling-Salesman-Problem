@@ -9,6 +9,6 @@ package Model;
  *
  * @author Krzysztof
  */
-public class DynamicAlgorithm {
+public class DynamicAlgorithm  implements Algorithm{
     
 }

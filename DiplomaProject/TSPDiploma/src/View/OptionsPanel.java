@@ -9,6 +9,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 
 /**
@@ -21,6 +23,7 @@ public class OptionsPanel extends javax.swing.JPanel {
     AlgorithmChoicesPanel algPanel;
     InputDataPanel inputDataPanel;
     JScrollPane algOptionsScrollPane;
+    JLabel algorithmChooseLabel;
     
     /**
      * Creates new form OptionsPanel
@@ -30,17 +33,19 @@ public class OptionsPanel extends javax.swing.JPanel {
         init();
         
         this.parentView = pV; 
-        this.setPreferredSize(new Dimension(400,300));
+        this.setPreferredSize(new Dimension(260,150));
     }
 
     private void init(){
+        algorithmChooseLabel = new JLabel("Choose algorithms : ");
         algPanel = new AlgorithmChoicesPanel(parentView);
         inputDataPanel = new InputDataPanel(parentView);
-
         this.contentjPanel.add(inputDataPanel);
+        this.contentjPanel.add(algorithmChooseLabel);
         this.contentjPanel.add(algPanel); 
     }
     
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -74,10 +79,20 @@ public class OptionsPanel extends javax.swing.JPanel {
         ButtonjPanel.add(jButton1);
 
         jButton2.setText("Cancel");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
         ButtonjPanel.add(jButton2);
 
         add(ButtonjPanel, java.awt.BorderLayout.PAGE_END);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+      //Cancel Button
+        this.setVisible(false);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -87,4 +102,8 @@ public class OptionsPanel extends javax.swing.JPanel {
     private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+
+    void readSelectedAlgorithms() {
+        this.algPanel.readSelectedAlgorithms();
+    }
 }

@@ -9,6 +9,6 @@ package Model;
  *
  * @author Krzysztof
  */
-public class BruteForceAlgorithm {
+public class BruteForceAlgorithm  implements Algorithm {
     
 }

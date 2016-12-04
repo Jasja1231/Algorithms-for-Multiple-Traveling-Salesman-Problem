@@ -1,10 +1,10 @@
+// License: GPL. For details, see Readme.txt file.
 package org.openstreetmap.gui.jmapviewer.interfaces;
-
-//License: GPL. Copyright 2008 by Jan Peter Stotz
 
 import java.awt.Graphics;
 import java.awt.Point;
 
+import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
 
 /**
@@ -14,24 +14,47 @@ import org.openstreetmap.gui.jmapviewer.JMapViewer;
  * @see JMapViewer#addMapMarker(MapMarker)
  * @see JMapViewer#getMapMarkerList()
  */
-public interface MapMarker {
+public interface MapMarker extends MapObject, ICoordinate {
+
+    enum STYLE {
+        FIXED,
+        VARIABLE
+    }
+
+    /**
+     * @return Latitude and Longitude of the map marker position
+     */
+    Coordinate getCoordinate();
 
     /**
      * @return Latitude of the map marker position
      */
-    public double getLat();
+    @Override
+    double getLat();
 
     /**
      * @return Longitude of the map marker position
      */
-    public double getLon();
+    @Override
+    double getLon();
+
+    /**
+     * @return Radius of the map marker position
+     */
+    double getRadius();
+
+    /**
+     * @return Style of the map marker
+     */
+    STYLE getMarkerStyle();
 
     /**
      * Paints the map marker on the map. The <code>position</code> specifies the
      * coordinates within <code>g</code>
      *
-     * @param g
-     * @param position
+     * @param g graphics
+     * @param position coordinates
+     * @param radius radius
      */
-    public void paint(Graphics g, Point position);
+    void paint(Graphics g, Point position, int radius);
 }

@@ -9,6 +9,6 @@ package Model;
  *
  * @author Krzysztof
  */
-public class SCIPAlgorithm {
+public class SCIPAlgorithm  implements Algorithm {
     
 }

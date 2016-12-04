@@ -6,7 +6,7 @@ public class OfflineOsmTileSource extends AbstractOsmTileSource {
 	private final int maxZoom;
 	
 	public OfflineOsmTileSource(String path, int minZoom, int maxZoom) {
-		super("Offline from "+path, path);
+		super("Offline from "+path, path,null);
 		this.minZoom = minZoom;
 		this.maxZoom = maxZoom;
 	}
@@ -21,9 +21,9 @@ public class OfflineOsmTileSource extends AbstractOsmTileSource {
 		return minZoom;
 	}
 	
-	@Override
-	public TileUpdate getTileUpdate() {
-		return TileUpdate.None;
+	//@Override
+	public int getTileUpdate() {
+		return 0;
 	}
 
 }

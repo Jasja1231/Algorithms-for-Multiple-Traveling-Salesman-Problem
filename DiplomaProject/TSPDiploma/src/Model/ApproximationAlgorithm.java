@@ -9,6 +9,6 @@ package Model;
  *
  * @author Krzysztof
  */
-public class ApproximationAlgorithm {
+public class ApproximationAlgorithm implements Algorithm {
     
 }
