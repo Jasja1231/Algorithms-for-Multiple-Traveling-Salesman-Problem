@@ -4,9 +4,16 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/View/MainView.java</file>
+            <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/Model/ApproximationAlgorithm.java</file>
             <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/View/MapPanel.java</file>
+            <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/Algorithms/DFS.java</file>
             <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/View/OptionsPanel.java</file>
+            <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/Algorithms/SolutionOperations.java</file>
+            <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/Model/Model.java</file>
+            <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/Model/HeuristicAlgorithm.java</file>
             <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/View/AlgorithmChoicesPanel.java</file>
+            <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/Algorithms/Kruskal.java</file>
+            <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/Algorithms/Greedy.java</file>
         </group>
     </open-files>
 </project-private>

@@ -8,6 +8,7 @@ package Model;
 import Algorithms.DFS;
 import Algorithms.DFS;
 import Algorithms.Kruskal;
+import Model.ApproximationAlgorithm;
 import Algorithms.SolutionOperations;
 import de.cm.osm2po.errors.Osm2poException;
 import de.cm.osm2po.logging.Log;
@@ -141,7 +142,12 @@ public class Model extends Observable {
        
        matrixxx[0][2] = 1f;
        matrixxx[2][1] = 1f;
-       matrixxx[1][3] = 1f;
+       //matrixxx[1][3] = 1f;
+       
+       //matrixxx[2][0] = 1f;
+       matrixxx [1][0] = 1f;
+       matrixxx[0][3] = 1f;
+       matrixxx[3][0] = 1f;
        Kruskal k = new Kruskal();
        k.readInGraphData(matrixxx);
        k.performKruskal();
@@ -149,7 +155,13 @@ public class Model extends Observable {
        int[] order = new int [arr.length];
        int idx = 0;
        DFS.DFS(arr, new boolean[arr.length], order, arr.length, 0, idx);
-        ArrayList<ArrayList<Integer>> res = SolutionOperations.getCyclesFromSolution(4, new int []{0,4,5,6,1,7,8,9,2,10,11,3,12,13});
+       float[][]ext = getExtendedMatrixForMultipleSalesmen(2,matrixxx);
+       int [] ress = ApproximationAlgorithm.solveProblem(ext);
+       int [] ressg = HeuristicAlgorithm.solveProblem(ext);
+       
+       ArrayList<ArrayList<Integer>>resapproximate = SolutionOperations.getCyclesFromSolution(2, ress);
+      ArrayList<ArrayList<Integer>>resgreedy = SolutionOperations.getCyclesFromSolution(2, ressg);
+        //ArrayList<ArrayList<Integer>> res = SolutionOperations.getCyclesFromSolution(4, new int []{0,4,5,6,1,7,8,9,2,10,11,3,12,13});
    }
    
    float [][] getExtendedMatrixForMultipleSalesmen (int salesmen, float[][]matrix)

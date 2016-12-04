@@ -28,7 +28,7 @@ public class Greedy {
           {
             int from = x;
             int to   = y;
-            int cost = (int)(1000*matrix[y][x]);
+            int cost = (int)(1000*matrix[x][y]);
             allEdges.add(new Edge(from, to, cost));  // Update priority queue
             if (nodes[from] == null) {
               // Create set of connect components [singleton] for this node
@@ -52,7 +52,7 @@ public class Greedy {
       if (allEdges.remove(curEdge)) {
         // successful removal from priority queue: allEdges
 
-        if (nodesAreInDifferentSets(curEdge.from, curEdge.to) && noThirdDegree(curEdge.from, curEdge.to)) {
+        if (nodesAreInDifferentSets(curEdge.from, curEdge.to)/*||allNewEdges.size()!= vertexCount -2) */&& noThirdDegree(curEdge.from, curEdge.to)) {
           // System.out.println("Nodes are in different sets ...");
           HashSet src, dst;
           int dstHashSetIndex;
@@ -120,22 +120,115 @@ public class Greedy {
    for (Object e : allNewEdges)
    {
        Edge edge = (Edge)e;
-       edges [edge.to][edge.from] = 1;
+       edges [edge.from][edge.to] = 1;
    }
    return edges;
   }
   
-  public int[] getSolutionVertices()
+ /* public int[] getSolutionVertices()
   {
      int i=0;
-     int [] solution = new int [vertexCount - 1];
+     int [] solution = new int [vertexCount];
      for (Object e : allNewEdges)
     {
         Edge edge = (Edge)e;
         solution [i++] = edge.from;
     }       
      return solution;
+  }*/
+  
+  public int[] getSolutionVertices()
+  {
+      int [] solution;
+      int [][]adj = getResultAdjacencyMatrix();
+        for (int y=0;y<adj.length;y++)
+        {
+            for (int x=0;x<adj[y].length;x++)
+            {
+                if (adj[x][y] == 1 || adj[y][x] ==1)
+                {
+                    adj[x][y] = 1;
+                    adj[y][x] = 1;
+                }    
+            }
+        }
+        solution = new int [adj.length+1];
+        int idx = 0;
+        DFS.DFS(adj, new boolean[adj.length], solution, adj.length, 0, idx);
+        return solution;
   }
+   /* public int[] getSolutionVertices() {
+        /*int[] solution = null;
+        Object[] edges = allNewEdges.toArray();
+        Arrays.sort(edges, new Comparator<Object>() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                Edge e1 = (Edge) o1;
+                Edge e2 = (Edge) o2;
+                if (e1.from < e2.from) {
+                    return -1;
+                }
+                if (e1.from == e2.from) {
+                    return 0;
+                }
+                return 1;
+            }
+        });
+        solution = new int[edges.length];
+        int [] orderedEdges = new int[vertexCount];
+        */
+        //int k=0;
+        /*
+        for (int i = 0; i < edges.length; i++) 
+        {
+             Edge edgei = (Edge)edges[i];
+             int from = edgei.from;
+             int to = edgei.to;
+             orderedEdges[k++]=from;
+             orderedEdges[k++]=to;
+            
+            for (int j = i + 1; j < edges.length; j++) 
+            {
+               Edge edgej = (Edge)edges[i];
+               
+             }
+        }*/
+        
+      //  Edge edge0 = (Edge)edges[0];
+        // int from = edge0.from;
+        // int to = edge0.to;
+      //   orderedEdges[k++]=from;
+       //  orderedEdges[k++]=to;
+        // edge0.from = -1;
+         //edge0.to = -1;
+        /*
+        for (int x = 0 ; x<edges.length;x++)
+        {
+             Edge edgex = (Edge)edges[x];
+             int from = edgex.from;
+             int to = edgex.to;
+             //orderedEdges[k++]=from;
+             //orderedEdges[k++]=to;
+             edgex.from = -1;
+             edgex.to = -1;
+            
+            for (int y=0;y<edges.length;y++)
+            {
+                Edge edgey = (Edge)edges[y];
+                if (edgey.from == to)
+                {
+                
+                }
+            }
+        
+        }
+        for (int i = 0; i < solution.length; i++) 
+        {
+            Edge edgei = (Edge) edges[i];
+            solution[i] = edgei.from;
+        }
+        return solution;*/
+   // }
 
   //return true if there is no second degree from / to vertex in allNewEdges
     private boolean noThirdDegree(int from, int to)
@@ -194,5 +287,5 @@ public class Greedy {
       return (cost==e.cost && from==e.from && to==e.to);
     }
   }
-
+  
 }

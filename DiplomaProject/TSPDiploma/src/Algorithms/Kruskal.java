@@ -28,7 +28,7 @@ public class Kruskal {
           {
             int from = x;
             int to   = y;
-            int cost = (int)(1000*matrix[y][x]);
+            int cost = (int)(1000*matrix[x][y]);
             allEdges.add(new Edge(from, to, cost));  // Update priority queue
             if (nodes[from] == null) {
               // Create set of connect components [singleton] for this node
