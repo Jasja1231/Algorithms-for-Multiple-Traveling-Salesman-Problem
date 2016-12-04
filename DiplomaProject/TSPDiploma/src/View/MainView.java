@@ -11,6 +11,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JMenu;
@@ -54,6 +55,7 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
         this.pack();
     }
 
+  
 
     /**
      * Initiates elements of MainView Class 
@@ -160,20 +162,15 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
     }//GEN-LAST:event_EditInputMenuItemActionPerformed
 
     private void startComputationMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startComputationMenuActionPerformed
-       //Started calculation 
-        //Clear previous algorithms
-        this.controller.clearAlgorithms();
-       //Read selected algorithms
-        this.optionsPanel.readSelectedAlgorithms();
-       //Check if algorithm is selected 
-        
-       //if yes 
-        this.controller.startComputation();
+      
     }//GEN-LAST:event_startComputationMenuActionPerformed
 
     @Override
     public void update(Observable o, Object arg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(arg instanceof ArrayList<?>){
+            ArrayList<ArrayList<Integer>> cycles = (ArrayList<ArrayList<Integer>>) arg;
+            this.mapPanel.drawCycles(cycles);
+        }
     }
 
     @Override
@@ -204,6 +201,18 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
 
     void addAlgorithm(int i) {
         this.controller.addAlgorithm(i);
+    }
+
+    void clearAlgorithms() {
+       controller.clearAlgorithms();
+    }
+
+    void setSalesmenCount(int salesmanCount) {
+        this.controller.setSalesmen(salesmanCount);
+    }
+
+    void startComputation() {
+       controller.startComputation();
     }
 
     

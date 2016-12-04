@@ -32,7 +32,7 @@ public class Controller {
     }
 
     public void startComputation() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.model.startComputation();
     }
 
     public void addAlgorithm(int i) {
@@ -41,6 +41,10 @@ public class Controller {
 
     public void clearAlgorithms() {
       this.model.clearAlgorithms();
+    }
+
+    public void setSalesmen(int salesmanCount) {
+       this.model.setSalesmenCount(salesmanCount);
     }
     
 }

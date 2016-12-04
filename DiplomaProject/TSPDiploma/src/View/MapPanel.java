@@ -84,7 +84,8 @@ public class MapPanel extends javax.swing.JPanel {
                 }
                 else {
                     Integer timerinterval = (Integer)Toolkit.getDefaultToolkit().getDesktopProperty("awt.multiClickInterval");
-                    mouseTimer = new Timer(timerinterval.intValue(), new ActionListener() {
+                  
+                    mouseTimer = new Timer(timerinterval, new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent evt) {
                             if (wasDoubleClick) {
@@ -112,11 +113,19 @@ public class MapPanel extends javax.swing.JPanel {
     
     
     public void drawLines(List<Coordinate> route){
-       //  Coordinate one = new Coordinate(52.208606008998416, 20.951871871948242);
-       // Coordinate two = new Coordinate(52.20813264205301, 20.95770835876465);
         map.addMapPolygon(new MapPolygonImpl(route));
     }
 
+    public void drawCycles (ArrayList<ArrayList<Integer>>cycles)
+    {
+        for(ArrayList<Integer>l : cycles)
+        {
+            List<Coordinate>ac = new ArrayList<>();
+            for(int i : l)
+                ac.add(this.parentView.model.getCoordinates().get(i));
+            drawLines(ac);
+        }
+    }
     
     
     /**

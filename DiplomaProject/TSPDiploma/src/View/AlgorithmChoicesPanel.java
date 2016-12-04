@@ -31,7 +31,7 @@ public class AlgorithmChoicesPanel extends javax.swing.JPanel {
      */
     public AlgorithmChoicesPanel(MainView mainView) {
         initComponents();
-       this.parentView = mainView;
+        this.parentView = mainView;
         this.setBackground(Color.WHITE);
         this.setMaximumSize(new Dimension(400,150));
         createCheckBoxes();

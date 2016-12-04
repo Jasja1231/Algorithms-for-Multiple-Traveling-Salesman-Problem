@@ -13,7 +13,7 @@ import Algorithms.Kruskal;
  * @author Krzysztof
  */
 public class ApproximationAlgorithm implements Algorithm {
-     public static int [] solveProblem (float [][]adjacencyMatrix)
+     public int [] solveProblem (float [][]adjacencyMatrix)
     {
         int [] solution;
         Kruskal k = new Kruskal();

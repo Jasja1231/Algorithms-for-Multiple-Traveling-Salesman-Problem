@@ -30,9 +30,10 @@ public class OptionsPanel extends javax.swing.JPanel {
      */
     public OptionsPanel(MainView pV) {
         initComponents();
+         this.parentView = pV; 
         init();
         
-        this.parentView = pV; 
+      
         this.setPreferredSize(new Dimension(260,150));
     }
 
@@ -58,7 +59,7 @@ public class OptionsPanel extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         contentjPanel = new javax.swing.JPanel();
         ButtonjPanel = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        computeButton = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
@@ -75,8 +76,13 @@ public class OptionsPanel extends javax.swing.JPanel {
         ButtonjPanel.setBorder(javax.swing.BorderFactory.createMatteBorder(10, 10, 10, 10, new java.awt.Color(0, 204, 204)));
         ButtonjPanel.setLayout(new java.awt.GridLayout(0, 2, 20, 40));
 
-        jButton1.setText("Save");
-        ButtonjPanel.add(jButton1);
+        computeButton.setText("Compute");
+        computeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                computeButtonActionPerformed(evt);
+            }
+        });
+        ButtonjPanel.add(computeButton);
 
         jButton2.setText("Cancel");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -94,11 +100,24 @@ public class OptionsPanel extends javax.swing.JPanel {
         this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void computeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_computeButtonActionPerformed
+
+        //Clear previous algorithms
+        this.parentView.clearAlgorithms();
+       //Read selected algorithms
+        this.readSelectedAlgorithms();
+       //Check if algorithm is selected 
+        //Read salesman
+        this.parentView.setSalesmenCount(this.getSalesmanCount());
+       //if yes 
+        this.parentView.startComputation();
+    }//GEN-LAST:event_computeButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel ButtonjPanel;
+    private javax.swing.JButton computeButton;
     private javax.swing.JPanel contentjPanel;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
@@ -106,4 +125,8 @@ public class OptionsPanel extends javax.swing.JPanel {
     void readSelectedAlgorithms() {
         this.algPanel.readSelectedAlgorithms();
     }
+    
+     public int  getSalesmanCount(){
+       return this.inputDataPanel.getSalesmanCount();
+   }
 }

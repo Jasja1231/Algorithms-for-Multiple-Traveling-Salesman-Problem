@@ -10,5 +10,10 @@ package Model;
  * @author Krzysztof
  */
 public class SCIPAlgorithm  implements Algorithm {
+
+    @Override
+    public int[] solveProblem(float[][] adjacencyMatrix) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
     
 }

@@ -14,6 +14,7 @@ import de.cm.osm2po.errors.Osm2poException;
 import de.cm.osm2po.logging.Log;
 import de.cm.osm2po.routing.Graph;
 import de.cm.osm2po.routing.PoiRouter;
+import de.cm.osm2po.routing.RoutingResultSegment;
 import de.cm.osm2po.tsp.TspDefaultMatrix;
 import java.io.File;
 import java.util.ArrayList;
@@ -21,7 +22,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
+import sun.nio.cs.ext.Big5_HKSCS_2001;
 
 
 /**
@@ -44,6 +48,8 @@ public class Model extends Observable {
     TspDefaultMatrix timeMatrix;
     int [][][] shortestPaths;
     float[][] shortestPathCostMatrix;
+    float[][] extendedShortestPathMatrix;
+    float[][]extendedTimeMatrix;
     
     /***
      * Table with all possible algorithms
@@ -54,6 +60,8 @@ public class Model extends Observable {
      * List of coordinates algorithms will calculate for.
      */
     List<Coordinate> coordinates;
+    
+    int salesmanCount = 0 ;
     
     /***
      * List of involved algorithms
@@ -85,6 +93,7 @@ public class Model extends Observable {
    
    public void init(){
        coordinates = new ArrayList<>();
+       algorithms = new ArrayList<Algorithm>();
        allAlgorithms = new ArrayList<Algorithm>();
        //KEEP THE ORDER
        allAlgorithms.add(SCIPAlgorithm);
@@ -195,8 +204,8 @@ public class Model extends Observable {
        int idx = 0;
        DFS.DFS(arr, new boolean[arr.length], order, arr.length, 0, idx);
        float[][]ext = getExtendedMatrixForMultipleSalesmen(2,matrixxx);
-       int [] ress = ApproximationAlgorithm.solveProblem(ext);
-       int [] ressg = HeuristicAlgorithm.solveProblem(ext);
+       int [] ress = this.approximationAlgorithm.solveProblem(ext);
+       int [] ressg = this.heuristicAlgorithm.solveProblem(ext);
        
        ArrayList<ArrayList<Integer>>resapproximate = SolutionOperations.getCyclesFromSolution(2, ress);
       ArrayList<ArrayList<Integer>>resgreedy = SolutionOperations.getCyclesFromSolution(2, ressg);
@@ -237,6 +246,46 @@ public class Model extends Observable {
 
     public void clearAlgorithms() {
        this.algorithms.clear();
+    }
+
+    public void startComputation() {
+        try {
+            this.buildTimeMatrix((ArrayList)this.coordinates);
+        } catch (Osm2poException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        if(salesmanCount>1)
+        {
+            extendedTimeMatrix = getExtendedMatrixForMultipleSalesmen(salesmanCount, timeMatrix.getCosts());
+            extendedShortestPathMatrix = getExtendedMatrixForMultipleSalesmen(salesmanCount, shortestPathCostMatrix);
+        }
+        
+        for(Algorithm a : this.algorithms)
+        {
+           int [] result = a.solveProblem(extendedTimeMatrix);
+           ArrayList<ArrayList<Integer>> cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result);
+           for (ArrayList<Integer> list : cycles)
+           {
+               for(int i=0;i<list.size()-1;i++)
+               {
+                   double lat = coordinates.get(i).getLat();
+                   double lon = coordinates.get(i).getLon();
+                   double lat2 = coordinates.get(i+1).getLat();
+                   double lon2 = coordinates.get(i+1).getLon();
+                   
+                   this.setChanged();
+                   this.notifyObservers(cycles);
+               }
+               
+           }
+        }
+    }
+
+    public List<Coordinate> getCoordinates(){return this.coordinates;}
+    
+    public void setSalesmenCount(int salesmanCount) {
+       this.salesmanCount = salesmanCount;
     }
 }
 
