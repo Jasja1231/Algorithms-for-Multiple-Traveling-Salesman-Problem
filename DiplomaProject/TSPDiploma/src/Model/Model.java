@@ -45,6 +45,7 @@ public class Model extends Observable {
     float[][] shortestPathCostMatrix;
     float[][] extendedShortestPathMatrix;
     float[][]extendedTimeMatrix;
+    float[][]euclideanDistanceMatrix;
     
     
     /***
@@ -115,6 +116,25 @@ public class Model extends Observable {
        timeMatrix.build(graph, vertexIDs, Float.MAX_VALUE, Log.stdout(Log.LEVEL_LOG), params);
    }
     
+   public void buildEuclideanMatrix(ArrayList<Coordinate>coords)
+   {
+       int [] vertexIDs = new int [coords.size()];
+       this.euclideanDistanceMatrix = new float[coords.size()][coords.size()];
+       for (int i=0;i<coords.size();i++)
+       {
+           for (int j=0;j<coords.size();j++)
+           {
+               double x1 = coords.get(i).getLat();
+               double x2 = coords.get(j).getLat();
+               double y1 = coords.get(i).getLon();;
+               double y2 = coords.get(j).getLon();
+               
+               double distance = Math.sqrt(Math.pow((x1-x2), 2) + Math.pow((y1-y2), 2));
+               
+               euclideanDistanceMatrix[i][j] =(float) distance;
+           }
+       }
+   }
     public void buildShortestPaths(ArrayList<Coordinate>coords)
     {
        int [] vertexIDs = new int [coords.size()];
@@ -259,7 +279,12 @@ public class Model extends Observable {
         
         for(Algorithm a : this.algorithms)
         {
-           int [] result = a.solveProblem(extendedTimeMatrix,this.salesmanCount);
+            int [] result;
+           if(!(a instanceof BruteForceAlgorithm))
+                result = a.solveProblem(extendedTimeMatrix,this.salesmanCount);
+           else 
+                result = a.solveProblem(this.timeMatrix.getCosts(),this.salesmanCount);
+           
            ArrayList<ArrayList<Integer>> cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result);
             this.setChanged();
             this.notifyObservers(cycles);
