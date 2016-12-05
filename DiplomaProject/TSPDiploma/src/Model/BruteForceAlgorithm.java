@@ -5,6 +5,7 @@
  */
 package Model;
 
+import Algorithms.Permutations;
 import java.util.ArrayList;
 import java.util.List;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
@@ -19,14 +20,66 @@ public class BruteForceAlgorithm  implements Algorithm {
     public int[] solveProblem(float[][] adjacencyMatrix, Object... o) {
         //read optional parameter
          int salesmenCount = (int)o[0];
-         int [] bestResult = null;
+         int numOfDestinations = adjacencyMatrix.length-1;
          
-        ArrayList<ArrayList<Integer>> partitions = generatePartitions(adjacencyMatrix.length-1, salesmenCount, salesmenCount);
+         //best path
+         int [] bestResult = null;
+         double bestLength = Double.MAX_VALUE;
+         
+        ArrayList<ArrayList<Integer>> partitions = generatePartitions(adjacencyMatrix.length-1, salesmenCount, adjacencyMatrix.length-1);
+        Integer[] indexes = new Integer[numOfDestinations];
+        for(int i=0; i < numOfDestinations ;i++)
+            indexes[i] = i+1;
         
+        Permutations<Integer> perm = new Permutations<Integer>(indexes);
+        
+        
+        while(perm.next()!=null)
+        {
+            Integer [] permutation = perm.currentPerm;
+             
+            for (int i=0;i<partitions.size();i++)
+            {
+                //ignore partitions into less than (salesmen count) parts
+               
+                ArrayList<Integer> currentPartition = partitions.get(i);
+                if (!(currentPartition.contains(0)&&currentPartition.size()<salesmenCount))
+                {
+                    ArrayList<Integer>currentPath = new ArrayList<>();
+                                
+                    int sum =0;
+                    
+                    for (int x=0;x<currentPartition.size();x++)
+                    {
+                       currentPath.add(0,sum+currentPartition.get(x));
+                       sum +=currentPartition.get(x)+1;
+                    }
+                    currentPath.add(0,0); //add to begining
+                    currentPath.add(0); //add to end
+                    
+                    double length = calcLength(currentPath,adjacencyMatrix);
+                    if (length < bestLength)
+                    {
+                        bestLength = length;
+                        bestResult = BruteForceAlgorithm.convertIntegers(currentPath);
+                    }
+                }
+            }
+        }
+    
         
         return bestResult;
     }
     
+    public static int[] convertIntegers(List<Integer> integers)
+    {
+        int[] ret = new int[integers.size()];
+        for (int i=0; i < ret.length; i++)
+        {
+            ret[i] = integers.get(i).intValue();
+        }
+        return ret;
+    }
 
     /**
      * TODO: do not generate where 0 is detected 
@@ -35,7 +88,8 @@ public class BruteForceAlgorithm  implements Algorithm {
      * @param max
      * @return
      */
-    public static  ArrayList<ArrayList<Integer>> generatePartitions(int total, int stacks, int max){
+    public static  ArrayList<ArrayList<Integer>> generatePartitions(int total, int stacks, int max)
+    {
             ArrayList<ArrayList<Integer>> partitions = new ArrayList<>();
 
             if (total <= 1 || stacks == 1)
@@ -59,5 +113,15 @@ public class BruteForceAlgorithm  implements Algorithm {
             }
             return partitions;
         }   
+
+    private double calcLength(ArrayList<Integer> currentPath, float[][] adjacencyMatrix) {
+        double result =0.0;
+        for (int i=0;i<currentPath.size()-1;i++)
+        {
+            result += adjacencyMatrix[i][i+1];
+        }
+        return result==0? Double.MAX_VALUE : result;
+    }
+
     
 }
