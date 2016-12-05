@@ -50,14 +50,6 @@
             </MenuItem>
           </SubComponents>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="startComputationMenu">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Start Computation"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="startComputationMenuActionPerformed"/>
-          </Events>
-        </Menu>
       </SubComponents>
     </Menu>
   </NonVisualComponents>

@@ -34,7 +34,7 @@ public class OptionsPanel extends javax.swing.JPanel {
         init();
         
       
-        this.setPreferredSize(new Dimension(260,150));
+        this.setPreferredSize(new Dimension(260,400));
     }
 
     private void init(){
@@ -109,6 +109,9 @@ public class OptionsPanel extends javax.swing.JPanel {
        //Check if algorithm is selected 
         //Read salesman
         this.parentView.setSalesmenCount(this.getSalesmanCount());
+        
+        //read metric type
+        this.parentView.setSelectedMetric(this.inputDataPanel.getSelectedMetric());
        //if yes 
         this.parentView.startComputation();
     }//GEN-LAST:event_computeButtonActionPerformed

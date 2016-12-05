@@ -18,9 +18,16 @@ public class InputDataPanel extends javax.swing.JPanel {
      */
     public InputDataPanel(MainView parentView) {
         initComponents();
-        this.setMaximumSize(new Dimension(400,70));
+        this.setMaximumSize(new Dimension(400,90));
     }
 
+    public int getSelectedMetric(){
+        return this.metricCombobox.getSelectedIndex();
+        /* 0 eucledian
+           1 distance 
+           2 time
+        */
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -34,28 +41,37 @@ public class InputDataPanel extends javax.swing.JPanel {
         jComboBox1 = new javax.swing.JComboBox();
         jLabel7 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        metricCombobox = new javax.swing.JComboBox();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(0, 204, 204)));
-        setLayout(new java.awt.GridLayout(2, 1, 0, 10));
+        setLayout(new java.awt.GridLayout(3, 1, 0, 10));
 
         jLabel1.setText("Starting point :");
         add(jLabel1);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         add(jComboBox1);
 
         jLabel7.setText("Number of salesmen :");
         add(jLabel7);
         add(jTextField1);
+
+        jLabel2.setText("Used metric : ");
+        add(jLabel2);
+
+        metricCombobox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Eucledian", "Distance", "Time" }));
+        add(metricCombobox);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JComboBox metricCombobox;
     // End of variables declaration//GEN-END:variables
 
     public int getSalesmanCount() {

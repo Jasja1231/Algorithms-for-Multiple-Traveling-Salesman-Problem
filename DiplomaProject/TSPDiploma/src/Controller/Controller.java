@@ -46,5 +46,9 @@ public class Controller {
     public void setSalesmen(int salesmanCount) {
        this.model.setSalesmenCount(salesmanCount);
     }
+
+    public void setSelectedMetric(int selectedMetric) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
     
 }

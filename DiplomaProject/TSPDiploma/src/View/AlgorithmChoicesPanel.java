@@ -18,8 +18,8 @@ public class AlgorithmChoicesPanel extends javax.swing.JPanel {
 
     String[] algorithmNames= {   
                 "mixed integer programming algorithm",
-                "dynamic programming algprithm",
-                "burute-force algorithm",
+                "dynamic programming algorithm",
+                "brute-force algorithm",
                 "heuristic",
                 "approximation algorithm"
     };

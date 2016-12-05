@@ -89,7 +89,6 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
         jMenuItem1 = new javax.swing.JMenuItem();
         EditMenu = new javax.swing.JMenu();
         EditInputMenuItem = new javax.swing.JMenuItem();
-        startComputationMenu = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -132,14 +131,6 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
 
         jMenuBar1.add(EditMenu);
 
-        startComputationMenu.setText("Start Computation");
-        startComputationMenu.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                startComputationMenuActionPerformed(evt);
-            }
-        });
-        jMenuBar1.add(startComputationMenu);
-
         setJMenuBar(jMenuBar1);
 
         pack();
@@ -160,10 +151,6 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
     private void EditInputMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditInputMenuItemActionPerformed
         this.optionsPanel.setVisible(true);
     }//GEN-LAST:event_EditInputMenuItemActionPerformed
-
-    private void startComputationMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startComputationMenuActionPerformed
-      
-    }//GEN-LAST:event_startComputationMenuActionPerformed
 
     @Override
     public void update(Observable o, Object arg) {
@@ -192,7 +179,6 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem loadFilejMenuItem;
-    private javax.swing.JMenu startComputationMenu;
     // End of variables declaration//GEN-END:variables
 
     void addCoordinate(Coordinate coo) {
@@ -213,6 +199,10 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
 
     void startComputation() {
        controller.startComputation();
+    }
+
+    void setSelectedMetric(int selectedMetric) {
+        this.controller.setSelectedMetric(selectedMetric);
     }
 
     
