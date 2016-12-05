@@ -5,6 +5,8 @@
  */
 package View;
 
+import de.cm.osm2po.model.LatLon;
+import de.cm.osm2po.routing.RoutingResultSegment;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -122,6 +124,8 @@ public class MapPanel extends javax.swing.JPanel {
          map.addMapPolygon(mapPoly);
     }
     
+    
+    int last_used_color = 0;
     public Color generateRandomColor(){
         Random rand = new Random();
         int r = rand.nextInt(120);
@@ -129,22 +133,23 @@ public class MapPanel extends javax.swing.JPanel {
         int b =  rand.nextInt(120);
        
         Color randomColor = new Color(r, g, b);
-        return randomColor;
+        if(last_used_color == 6)
+            last_used_color = 0;
+        
+        ArrayList<Color> colors  = new ArrayList<>();
+        colors.add(Color.RED);
+        colors.add(Color.YELLOW);
+        colors.add(Color.CYAN);
+        colors.add(Color.MAGENTA);
+        colors.add(Color.BLACK);
+        colors.add(Color.GREEN);
+        
+        
+        return colors.get(++last_used_color);
     }
 
-    public void drawCycles (ArrayList<ArrayList<Integer>>cycles)
-    {
-        for(ArrayList<Integer>l : cycles)
-        {
-            List<Coordinate>ac = new ArrayList<>();
-            for(int i : l)
-                ac.add(this.parentView.model.getCoordinates().get(i));
-            drawLines(ac);
-        }
-    }
     
-    /*
-       public void drawCycles (ArrayList<ArrayList<Integer>>cycles)
+    public void drawCycles (ArrayList<ArrayList<Integer>>cycles)
     {
         for(ArrayList<Integer>l : cycles)
         {
@@ -152,11 +157,11 @@ public class MapPanel extends javax.swing.JPanel {
             for(int i=0; i<l.size()-1; i++){
                // ac.add(this.parentView.model.getCoordinates().get(i));
                 try{
-                    int [] path = this.parentView.model.getShortestPaths()[i][i+1];
+                    int [] path = this.parentView.model.getTimeMatrix()[i][i+1];
                     for (int x=0;x<path.length;x++)
                     {
 
-                        RoutingResultSegment rrs = this.parentView.model.getGraph().lookupSegment(x);
+                        RoutingResultSegment rrs = this.parentView.model.getGraph().lookupSegment(path[x]);
                         int from = rrs.getSourceId();
                         int to = rrs.getTargetId();
                         LatLon[] lons = rrs.getLatLons();     
@@ -174,7 +179,6 @@ public class MapPanel extends javax.swing.JPanel {
         }
     }
     
-    */
     
     /**
      * This method is called from within the constructor to initialize the form.

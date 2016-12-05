@@ -157,7 +157,6 @@ public class Model extends Observable {
                 }
             }
         }
-
     }
    
  public void test () throws Osm2poException
@@ -259,7 +258,7 @@ public class Model extends Observable {
         
         if(salesmanCount>1)
         {
-            extendedTimeMatrix = getExtendedMatrixForMultipleSalesmen(salesmanCount, shortestPathCostMatrix);
+            extendedTimeMatrix = getExtendedMatrixForMultipleSalesmen(salesmanCount, timeMatrix.getCosts());
             //extendedShortestPathMatrix = getExtendedMatrixForMultipleSalesmen(salesmanCount, shortestPathCostMatrix);
         }
         
@@ -286,6 +285,10 @@ public class Model extends Observable {
     
       public int [][][] getShortestPaths(){
         return this.shortestPaths;
+    }
+      
+    public int[][][] getTimeMatrix(){
+         return this.timeMatrix.getPaths();
     }
     
 }
