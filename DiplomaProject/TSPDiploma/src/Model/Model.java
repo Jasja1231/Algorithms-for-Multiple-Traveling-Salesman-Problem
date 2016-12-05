@@ -51,6 +51,7 @@ public class Model extends Observable {
     float[][] extendedShortestPathMatrix;
     float[][]extendedTimeMatrix;
     
+    
     /***
      * Table with all possible algorithms
      */
@@ -159,9 +160,9 @@ public class Model extends Observable {
 
     }
    
-   public void test () throws Osm2poException
+ public void test () throws Osm2poException
    {
-          Coordinate coord = new Coordinate(52.216500, 20.988080);
+      /*      Coordinate coord = new Coordinate(52.216500, 20.988080);
           Coordinate coord2 = new Coordinate(52.131412, 21.065748);
           Coordinate coord3 = new Coordinate(52.178953, 21.005037);
           Coordinate coord4 = new Coordinate (52.202217, 20.954812);
@@ -210,7 +211,7 @@ public class Model extends Observable {
        ArrayList<ArrayList<Integer>>resapproximate = SolutionOperations.getCyclesFromSolution(2, ress);
       ArrayList<ArrayList<Integer>>resgreedy = SolutionOperations.getCyclesFromSolution(2, ressg);
         //ArrayList<ArrayList<Integer>> res = SolutionOperations.getCyclesFromSolution(4, new int []{0,4,5,6,1,7,8,9,2,10,11,3,12,13});
-   }
+   */}
    
    float [][] getExtendedMatrixForMultipleSalesmen (int salesmen, float[][]matrix)
    {
@@ -251,41 +252,41 @@ public class Model extends Observable {
     public void startComputation() {
         try {
             this.buildTimeMatrix((ArrayList)this.coordinates);
+            this.buildShortestPaths((ArrayList)coordinates);
         } catch (Osm2poException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         if(salesmanCount>1)
         {
-            extendedTimeMatrix = getExtendedMatrixForMultipleSalesmen(salesmanCount, timeMatrix.getCosts());
-            extendedShortestPathMatrix = getExtendedMatrixForMultipleSalesmen(salesmanCount, shortestPathCostMatrix);
+            extendedTimeMatrix = getExtendedMatrixForMultipleSalesmen(salesmanCount, shortestPathCostMatrix);
+            //extendedShortestPathMatrix = getExtendedMatrixForMultipleSalesmen(salesmanCount, shortestPathCostMatrix);
         }
         
         for(Algorithm a : this.algorithms)
         {
            int [] result = a.solveProblem(extendedTimeMatrix);
            ArrayList<ArrayList<Integer>> cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result);
-           for (ArrayList<Integer> list : cycles)
-           {
-               for(int i=0;i<list.size()-1;i++)
-               {
-                   double lat = coordinates.get(i).getLat();
-                   double lon = coordinates.get(i).getLon();
-                   double lat2 = coordinates.get(i+1).getLat();
-                   double lon2 = coordinates.get(i+1).getLon();
-                   
-                   this.setChanged();
-                   this.notifyObservers(cycles);
-               }
-               
-           }
+            this.setChanged();
+            this.notifyObservers(cycles);
         }
     }
 
-    public List<Coordinate> getCoordinates(){return this.coordinates;}
+    public List<Coordinate> getCoordinates(){
+        return this.coordinates;
+    }
     
     public void setSalesmenCount(int salesmanCount) {
        this.salesmanCount = salesmanCount;
     }
+
+    public Graph getGraph() {
+       return this.graph;
+    }
+    
+      public int [][][] getShortestPaths(){
+        return this.shortestPaths;
+    }
+    
 }
 

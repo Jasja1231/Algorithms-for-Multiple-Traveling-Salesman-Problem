@@ -29,6 +29,7 @@ public class Greedy {
             int from = x;
             int to   = y;
             int cost = (int)(1000*matrix[x][y]);
+            if(cost!=0 && from != to)
             allEdges.add(new Edge(from, to, cost));  // Update priority queue
             if (nodes[from] == null) {
               // Create set of connect components [singleton] for this node
@@ -153,8 +154,10 @@ public class Greedy {
             }
         }
         solution = new int [adj.length+1];
-        int idx = 0;
-        DFS.DFS(adj, new boolean[adj.length], solution, adj.length, 0, idx);
+        ArrayList<Integer> dupa = new ArrayList<Integer>();
+        DFS.DFS(adj, new boolean[adj.length], solution, adj.length, 0, dupa);
+        for (int i=0;i<dupa.size();i++)
+            solution[i]=dupa.get(i);
         return solution;
   }
    /* public int[] getSolutionVertices() {

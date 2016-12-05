@@ -18,6 +18,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Timer;
@@ -113,7 +114,22 @@ public class MapPanel extends javax.swing.JPanel {
     
     
     public void drawLines(List<Coordinate> route){
-        map.addMapPolygon(new MapPolygonImpl(route));
+        if(route.size() == 2){
+            route.add(route.get(1));
+        }
+        MapPolygonImpl mapPoly = new MapPolygonImpl(route);
+        mapPoly.setColor(generateRandomColor());
+         map.addMapPolygon(mapPoly);
+    }
+    
+    public Color generateRandomColor(){
+        Random rand = new Random();
+        int r = rand.nextInt(120);
+        int g =  rand.nextInt(120);
+        int b =  rand.nextInt(120);
+       
+        Color randomColor = new Color(r, g, b);
+        return randomColor;
     }
 
     public void drawCycles (ArrayList<ArrayList<Integer>>cycles)
@@ -127,6 +143,38 @@ public class MapPanel extends javax.swing.JPanel {
         }
     }
     
+    /*
+       public void drawCycles (ArrayList<ArrayList<Integer>>cycles)
+    {
+        for(ArrayList<Integer>l : cycles)
+        {
+            List<Coordinate>ac = new ArrayList<>();
+            for(int i=0; i<l.size()-1; i++){
+               // ac.add(this.parentView.model.getCoordinates().get(i));
+                try{
+                    int [] path = this.parentView.model.getShortestPaths()[i][i+1];
+                    for (int x=0;x<path.length;x++)
+                    {
+
+                        RoutingResultSegment rrs = this.parentView.model.getGraph().lookupSegment(x);
+                        int from = rrs.getSourceId();
+                        int to = rrs.getTargetId();
+                        LatLon[] lons = rrs.getLatLons();     
+                        for (LatLon lon : lons)
+                        {
+                            ac.add(new Coordinate(lon.getLat(),lon.getLon()));   
+                        }
+                    }
+                   
+                }
+                  catch(Exception e){}
+
+            }
+            drawLines(ac);
+        }
+    }
+    
+    */
     
     /**
      * This method is called from within the constructor to initialize the form.

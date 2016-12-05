@@ -5,6 +5,8 @@
  */
 package Algorithms;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Krzysztof
@@ -17,6 +19,17 @@ public static void DFS(int[][] adjMatrix, boolean [] visited, int [] results, in
         for (int j = 0; j<n;j++){
             if(!(visited[j]) && adjMatrix[i][j]==1){
                 DFS(adjMatrix, visited, results, n, j, idx);
+            }
+        }
+    }
+public static void DFS(int[][] adjMatrix, boolean [] visited, int [] results, int n, int i, ArrayList<Integer>dupa){
+        System.err.println("Visiting vertex  : " + i);
+        dupa.add(i);
+        visited[i]= true;
+        for (int j = 0; j<n;j++){
+            if(!(visited[j]) && adjMatrix[i][j]==1){
+                System.err.println("Visiting vertex  : " + i +  " Found adjacent : " + j);
+                DFS(adjMatrix, visited, results, n, j, dupa);
             }
         }
     }

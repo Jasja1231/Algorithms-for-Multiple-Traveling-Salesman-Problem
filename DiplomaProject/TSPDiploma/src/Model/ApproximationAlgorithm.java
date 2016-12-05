@@ -7,6 +7,8 @@ package Model;
 
 import Algorithms.DFS;
 import Algorithms.Kruskal;
+import java.util.ArrayList;
+import org.omg.CORBA.ACTIVITY_COMPLETED;
 
 /**
  *
@@ -20,7 +22,7 @@ public class ApproximationAlgorithm implements Algorithm {
         k.readInGraphData(adjacencyMatrix);
         k.performKruskal();
         int[][] kruskalMatrix = k.getResultAdjacencyMatrix();
-        for (int y=0;y<kruskalMatrix.length;y++)
+      /*  for (int y=0;y<kruskalMatrix.length;y++)
         {
             for (int x=0;x<kruskalMatrix[y].length;x++)
             {
@@ -30,10 +32,13 @@ public class ApproximationAlgorithm implements Algorithm {
                     kruskalMatrix[y][x] = 1;
                 }    
             }
-        }
+        }*/
         solution = new int [kruskalMatrix.length+1];
         int idx = 0;
-        DFS.DFS(kruskalMatrix, new boolean[kruskalMatrix.length], solution, kruskalMatrix.length, 0, idx);
+        ArrayList<Integer> dupa = new ArrayList<Integer>();
+        DFS.DFS(kruskalMatrix, new boolean[kruskalMatrix.length], solution, kruskalMatrix.length, 0, dupa);
+        for (int i=0;i<dupa.size();i++)
+            solution[i]=dupa.get(i);
         return solution;
     }
 }

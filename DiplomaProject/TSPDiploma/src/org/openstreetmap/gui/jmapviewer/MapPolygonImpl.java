@@ -87,7 +87,7 @@ public class MapPolygonImpl extends MapObjectImpl implements MapPolygon {
             Composite oldComposite = g2.getComposite();
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
             g2.setPaint(getBackColor());
-            g2.fillPolygon(polygon);
+            //g2.fillPolygon(polygon);
             g2.setComposite(oldComposite);
         }
         // Restore graphics
