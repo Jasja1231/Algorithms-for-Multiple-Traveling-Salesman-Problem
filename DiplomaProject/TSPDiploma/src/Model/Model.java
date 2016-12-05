@@ -64,6 +64,8 @@ public class Model extends Observable {
      * List of involved algorithms
      */
     List<Algorithm> algorithms;
+    private int selectedMetric;
+    private float[][] extendedEuclideanMatrix;
     
 
    public Model(){
@@ -131,10 +133,12 @@ public class Model extends Observable {
                
                double distance = Math.sqrt(Math.pow((x1-x2), 2) + Math.pow((y1-y2), 2));
                
+               euclideanDistanceMatrix[j][i] =(float) distance;
                euclideanDistanceMatrix[i][j] =(float) distance;
            }
        }
    }
+   
     public void buildShortestPaths(ArrayList<Coordinate>coords)
     {
        int [] vertexIDs = new int [coords.size()];
@@ -267,6 +271,7 @@ public class Model extends Observable {
         try {
             this.buildTimeMatrix((ArrayList)this.coordinates);
             this.buildShortestPaths((ArrayList)coordinates);
+            this.buildEuclideanMatrix((ArrayList)coordinates);
         } catch (Osm2poException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -274,21 +279,58 @@ public class Model extends Observable {
         if(salesmanCount>1)
         {
             extendedTimeMatrix = getExtendedMatrixForMultipleSalesmen(salesmanCount, timeMatrix.getCosts());
-            //extendedShortestPathMatrix = getExtendedMatrixForMultipleSalesmen(salesmanCount, shortestPathCostMatrix);
+            extendedShortestPathMatrix = getExtendedMatrixForMultipleSalesmen(salesmanCount, shortestPathCostMatrix);
+            extendedEuclideanMatrix = getExtendedMatrixForMultipleSalesmen(salesmanCount, euclideanDistanceMatrix);
         }
         
-        for(Algorithm a : this.algorithms)
+         int [] result;
+        if (selectedMetric == 0) //euclidean
         {
-            int [] result;
-           if(!(a instanceof BruteForceAlgorithm))
-                result = a.solveProblem(extendedTimeMatrix,this.salesmanCount);
-           else 
-                result = a.solveProblem(this.timeMatrix.getCosts(),this.salesmanCount);
-           
-           ArrayList<ArrayList<Integer>> cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result);
-            this.setChanged();
-            this.notifyObservers(cycles);
+                    for(Algorithm a : this.algorithms)
+            {
+
+               if(!(a instanceof BruteForceAlgorithm))
+                   
+                    result = a.solveProblem(euclideanDistanceMatrix,this.salesmanCount);
+               else 
+                    result = a.solveProblem(extendedEuclideanMatrix,this.salesmanCount);
+
+               ArrayList<ArrayList<Integer>> cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result);
+                this.setChanged();
+                this.notifyObservers(cycles);
+            }
         }
+        else if (selectedMetric ==1) //actual distance
+        {
+                    for(Algorithm a : this.algorithms)
+            {
+
+               if(!(a instanceof BruteForceAlgorithm))
+                    result = a.solveProblem(extendedShortestPathMatrix,this.salesmanCount);
+               else 
+                    result = a.solveProblem(shortestPathCostMatrix,this.salesmanCount);
+
+               ArrayList<ArrayList<Integer>> cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result);
+                this.setChanged();
+                this.notifyObservers(cycles);
+            }
+        }
+        else if (selectedMetric == 2) //time
+        {
+                    for(Algorithm a : this.algorithms)
+            {
+
+               if(!(a instanceof BruteForceAlgorithm))
+                    result = a.solveProblem(extendedTimeMatrix,this.salesmanCount);
+               else 
+                    result = a.solveProblem(this.timeMatrix.getCosts(),this.salesmanCount);
+
+               ArrayList<ArrayList<Integer>> cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result);
+                this.setChanged();
+                this.notifyObservers(cycles);
+            }
+        }
+
     }
 
     public List<Coordinate> getCoordinates(){
