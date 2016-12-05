@@ -48,7 +48,7 @@ public class Controller {
     }
 
     public void setSelectedMetric(int selectedMetric) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        this.model.setSelectedMetric(selectedMetric);
     }
     
 }

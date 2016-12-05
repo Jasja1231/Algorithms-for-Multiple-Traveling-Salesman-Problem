@@ -156,7 +156,10 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
     public void update(Observable o, Object arg) {
         if(arg instanceof ArrayList<?>){
             ArrayList<ArrayList<Integer>> cycles = (ArrayList<ArrayList<Integer>>) arg;
-            this.mapPanel.drawCycles(cycles);
+            if(this.model.getSelectedMetric() != 0)
+                this.mapPanel.drawCycles(cycles);
+            else
+                this.mapPanel.drawCyclesEuclideanLines(cycles);
         }
     }
 

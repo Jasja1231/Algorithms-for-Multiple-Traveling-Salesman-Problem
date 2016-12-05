@@ -352,6 +352,18 @@ public class Model extends Observable {
     public int[][][] getTimeMatrix(){
          return this.timeMatrix.getPaths();
     }
+
+     /* 0 eucledian
+           1 distance 
+           2 time
+        */
+    public void setSelectedMetric(int selectedMetric) {
+        this.selectedMetric = selectedMetric;
+    }
+
+    public int getSelectedMetric() {
+        return this.selectedMetric;
+    }
     
 }
 
