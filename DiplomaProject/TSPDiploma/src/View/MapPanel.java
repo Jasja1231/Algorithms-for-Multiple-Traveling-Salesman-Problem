@@ -179,6 +179,20 @@ public class MapPanel extends javax.swing.JPanel {
         }
     }
     
+    public void drawCyclesStraightLines (ArrayList<ArrayList<Integer>>cycles)
+    {
+          for(ArrayList<Integer>l : cycles)
+        {
+          List<Coordinate>ac = new ArrayList<>();
+
+          for (int i=0;i<l.size();i++)
+          {
+              ac.add(new Coordinate(this.parentView.model.getCoordinates().get(i).getLat(),this.parentView.model.getCoordinates().get(i).getLon()));
+          }
+          drawLines(ac);
+        } 
+    }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
