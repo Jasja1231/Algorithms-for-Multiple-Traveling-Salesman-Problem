@@ -15,7 +15,7 @@ import org.omg.CORBA.ACTIVITY_COMPLETED;
  * @author Krzysztof
  */
 public class ApproximationAlgorithm implements Algorithm {
-     public int [] solveProblem (float [][]adjacencyMatrix)
+     public int [] solveProblem (float [][]adjacencyMatrix, Object... o)
     {
         int [] solution;
         Kruskal k = new Kruskal();

@@ -5,16 +5,12 @@
  */
 package Model;
 
-import Algorithms.DFS;
-import Algorithms.DFS;
-import Algorithms.Kruskal;
 import Model.ApproximationAlgorithm;
 import Algorithms.SolutionOperations;
 import de.cm.osm2po.errors.Osm2poException;
 import de.cm.osm2po.logging.Log;
 import de.cm.osm2po.routing.Graph;
 import de.cm.osm2po.routing.PoiRouter;
-import de.cm.osm2po.routing.RoutingResultSegment;
 import de.cm.osm2po.tsp.TspDefaultMatrix;
 import java.io.File;
 import java.util.ArrayList;
@@ -25,7 +21,6 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
-import sun.nio.cs.ext.Big5_HKSCS_2001;
 
 
 /**
@@ -264,7 +259,7 @@ public class Model extends Observable {
         
         for(Algorithm a : this.algorithms)
         {
-           int [] result = a.solveProblem(extendedTimeMatrix);
+           int [] result = a.solveProblem(extendedTimeMatrix,this.salesmanCount);
            ArrayList<ArrayList<Integer>> cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result);
             this.setChanged();
             this.notifyObservers(cycles);

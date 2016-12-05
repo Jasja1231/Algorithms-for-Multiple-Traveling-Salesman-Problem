@@ -12,7 +12,7 @@ package Model;
 public class SCIPAlgorithm  implements Algorithm {
 
     @Override
-    public int[] solveProblem(float[][] adjacencyMatrix) {
+    public int[] solveProblem(float[][] adjacencyMatrix, Object... o) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     

@@ -14,7 +14,7 @@ import Algorithms.Greedy;
  */
 public class HeuristicAlgorithm implements Algorithm {
     @Override
-    public  int [] solveProblem (float [][]adjacencyMatrix)
+    public  int [] solveProblem (float [][]adjacencyMatrix, Object... a)
     {
         int [] solution = null;
         Greedy greedy = new Greedy();

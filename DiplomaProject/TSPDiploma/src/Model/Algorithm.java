@@ -11,5 +11,5 @@ package Model;
  */
 public interface Algorithm {
     
-    public/*static*/ int [] solveProblem (float [][]adjacencyMatrix);
+    public/*static*/ int [] solveProblem (float [][]adjacencyMatrix, Object... o);
 }

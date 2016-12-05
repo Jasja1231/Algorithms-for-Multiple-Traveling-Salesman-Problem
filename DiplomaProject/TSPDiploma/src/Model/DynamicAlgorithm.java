@@ -5,6 +5,10 @@
  */
 package Model;
 
+import java.util.ArrayList;
+import java.util.List;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 /**
  *
  * @author Krzysztof
@@ -12,8 +16,9 @@ package Model;
 public class DynamicAlgorithm  implements Algorithm{
 
     @Override
-    public int[] solveProblem(float[][] adjacencyMatrix) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public int[] solveProblem(float[][] adjacencyMatrix, Object... o) {
+        throw new NotImplementedException();
     }
+    
     
 }
