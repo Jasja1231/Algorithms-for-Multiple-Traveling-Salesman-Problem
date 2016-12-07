@@ -8,6 +8,7 @@ package Model;
 import Algorithms.Permutations;
 import java.util.ArrayList;
 import java.util.List;
+import org.omg.CORBA.ACTIVITY_COMPLETED;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 
 /**
@@ -41,17 +42,18 @@ public class BruteForceAlgorithm  implements Algorithm {
             for (int i=0;i<partitions.size();i++)
             {
                 //ignore partitions into less than (salesmen count) parts
-               
                 ArrayList<Integer> currentPartition = partitions.get(i);
-                if (!(currentPartition.contains(0)&&currentPartition.size()<salesmenCount))
+                if ((!currentPartition.contains(0))&&currentPartition.size()==salesmenCount)
                 {
                     ArrayList<Integer>currentPath = new ArrayList<>();
+                    for (int v=0;v<permutation.length;v++)
+                        currentPath.add(permutation[v]);
                                 
                     int sum =0;
                     
                     for (int x=0;x<currentPartition.size();x++)
                     {
-                       currentPath.add(0,sum+currentPartition.get(x));
+                       currentPath.add(sum+currentPartition.get(x),0);
                        sum +=currentPartition.get(x)+1;
                     }
                     currentPath.add(0,0); //add to begining
@@ -66,7 +68,6 @@ public class BruteForceAlgorithm  implements Algorithm {
                 }
             }
         }
-    
         
         return bestResult;
     }
@@ -118,7 +119,7 @@ public class BruteForceAlgorithm  implements Algorithm {
         double result =0.0;
         for (int i=0;i<currentPath.size()-1;i++)
         {
-            result += adjacencyMatrix[i][i+1];
+            result += adjacencyMatrix[currentPath.get(i)][currentPath.get(i+1)];
         }
         return result==0? Double.MAX_VALUE : result;
     }

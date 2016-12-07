@@ -89,6 +89,7 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
         jMenuItem1 = new javax.swing.JMenuItem();
         EditMenu = new javax.swing.JMenu();
         EditInputMenuItem = new javax.swing.JMenuItem();
+        resetMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -128,6 +129,9 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
             }
         });
         EditMenu.add(EditInputMenuItem);
+
+        resetMenuItem.setText("Reset data");
+        EditMenu.add(resetMenuItem);
 
         jMenuBar1.add(EditMenu);
 
@@ -182,6 +186,7 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem loadFilejMenuItem;
+    private javax.swing.JMenuItem resetMenuItem;
     // End of variables declaration//GEN-END:variables
 
     void addCoordinate(Coordinate coo) {
@@ -206,6 +211,10 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
 
     void setSelectedMetric(int selectedMetric) {
         this.controller.setSelectedMetric(selectedMetric);
+    }
+
+    void clearModelMapData() {
+        this.controller.clearModelMapData();
     }
 
     

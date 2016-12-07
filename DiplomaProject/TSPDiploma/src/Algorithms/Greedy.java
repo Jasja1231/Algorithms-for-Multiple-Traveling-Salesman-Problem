@@ -53,7 +53,7 @@ public class Greedy {
       if (allEdges.remove(curEdge)) {
         // successful removal from priority queue: allEdges
 
-        if (nodesAreInDifferentSets(curEdge.from, curEdge.to)/*||allNewEdges.size()!= vertexCount -2) */&& noThirdDegree(curEdge.from, curEdge.to)) {
+        if (nodesAreInDifferentSets(curEdge.from, curEdge.to) && noThirdDegree(curEdge.from, curEdge.to)) {
           // System.out.println("Nodes are in different sets ...");
           HashSet src, dst;
           int dstHashSetIndex;
@@ -241,14 +241,10 @@ public class Greedy {
         for (Object o: allNewEdges)
         {
             Edge e = (Edge)o;
-            if (e.from == from)
+            if (e.from == from  || e.to == from)
                 fromCount++;
-            else if (e.to == to)
+            if (e.to == to || e.from == to)
                 toCount++;
-            if(e.to == to)
-                toCount++;
-            else if (e.to == from)
-                fromCount++;
         }
         return (fromCount<2 && toCount <2);
     }

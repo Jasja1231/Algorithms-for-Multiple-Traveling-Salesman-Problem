@@ -117,36 +117,36 @@ public class MapPanel extends javax.swing.JPanel {
     
     
     public void drawLines(List<Coordinate> route){
-        if(route.size() == 2){
-            route.add(route.get(1));
+        Color thisRouteColor = generateRandomColor();
+
+        for(int i = 0; i < route.size()-1;i++){
+             List<Coordinate> tempRouteBetweenTwoPoints = new ArrayList<>();
+             tempRouteBetweenTwoPoints.add(route.get(i));
+             tempRouteBetweenTwoPoints.add(route.get(i+1));
+             tempRouteBetweenTwoPoints.add(route.get(i+1));
+             
+             MapPolygonImpl mapPoly = new MapPolygonImpl(tempRouteBetweenTwoPoints);
+             mapPoly.setColor(thisRouteColor);
+             map.addMapPolygon(mapPoly);
         }
-        MapPolygonImpl mapPoly = new MapPolygonImpl(route);
-        mapPoly.setColor(generateRandomColor());
-         map.addMapPolygon(mapPoly);
-    }
+    }   
     
     
     int last_used_color = 0;
     public Color generateRandomColor(){
-        Random rand = new Random();
-        int r = rand.nextInt(120);
-        int g =  rand.nextInt(120);
-        int b =  rand.nextInt(120);
-       
-        Color randomColor = new Color(r, g, b);
-        if(last_used_color == 6)
-            last_used_color = 0;
+        if(last_used_color == 5)
+            last_used_color = -1;
         
         ArrayList<Color> colors  = new ArrayList<>();
         colors.add(Color.RED);
-        colors.add(Color.YELLOW);
         colors.add(Color.CYAN);
+        colors.add(Color.YELLOW);
         colors.add(Color.MAGENTA);
         colors.add(Color.BLACK);
         colors.add(Color.GREEN);
         
-        
-        return colors.get(++last_used_color);
+        last_used_color++;
+        return colors.get(last_used_color);
     }
 
     
@@ -184,18 +184,24 @@ public class MapPanel extends javax.swing.JPanel {
     
     public void drawCyclesEuclideanLines (ArrayList<ArrayList<Integer>>cycles)
     {
-        for(ArrayList<Integer>l : cycles)
+        for(ArrayList<Integer>singleRoute : cycles)
         {
           List<Coordinate>ac = new ArrayList<>();
 
-          for (int i=0;i<l.size();i++)
+          for (int i=0;i<singleRoute.size();i++)
           {
-              ac.add(new Coordinate(this.parentView.model.getCoordinates().get(i).getLat(),this.parentView.model.getCoordinates().get(i).getLon()));
+              ac.add(new Coordinate(this.parentView.model.getCoordinates().get(singleRoute.get(i)).getLat(),this.parentView.model.getCoordinates().get((singleRoute.get(i))).getLon()));
           }
           drawLines(ac);
         } 
     }
     
+    public void clearMap(){
+        this.map.getMapMarkerList().clear();
+        this.map.getMapPolygonList().clear();
+        
+        this.parentView.clearModelMapData();
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.

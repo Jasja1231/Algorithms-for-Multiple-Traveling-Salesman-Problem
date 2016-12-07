@@ -73,13 +73,18 @@ public class MapPolygonImpl extends MapObjectImpl implements MapPolygon {
         // Prepare graphics
         Color oldColor = g.getColor();
         g.setColor(getColor());
-
+        
         Stroke oldStroke = null;
         if (g instanceof Graphics2D) {
             Graphics2D g2 = (Graphics2D) g;
             oldStroke = g2.getStroke();
             g2.setStroke(getStroke());
+            
+            
+            
         }
+        
+        
         // Draw
         g.drawPolygon(polygon);
         if (g instanceof Graphics2D && getBackColor() != null) {
@@ -89,6 +94,8 @@ public class MapPolygonImpl extends MapObjectImpl implements MapPolygon {
             g2.setPaint(getBackColor());
             //g2.fillPolygon(polygon);
             g2.setComposite(oldComposite);
+            
+            g2.setStroke(new BasicStroke(7));
         }
         // Restore graphics
         g.setColor(oldColor);

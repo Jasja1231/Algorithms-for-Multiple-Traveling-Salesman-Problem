@@ -55,6 +55,8 @@ public class InputDataPanel extends javax.swing.JPanel {
 
         jLabel7.setText("Number of salesmen :");
         add(jLabel7);
+
+        jTextField1.setText("2");
         add(jTextField1);
 
         jLabel2.setText("Used metric : ");

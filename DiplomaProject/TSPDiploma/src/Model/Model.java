@@ -285,17 +285,25 @@ public class Model extends Observable {
         
          int [] result;
         if (selectedMetric == 0) //euclidean
-        {
-                    for(Algorithm a : this.algorithms)
+        {//TODO: rewrite it , rewrite separating by 0 
+            for(Algorithm a : this.algorithms)
             {
-
-               if(!(a instanceof BruteForceAlgorithm))
-                   
+                 ArrayList<ArrayList<Integer>> cycles = null;
+               if(!(a instanceof BruteForceAlgorithm)){
+                   result = a.solveProblem(extendedEuclideanMatrix,this.salesmanCount);
+                   cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result);
+               }
+               else if (a instanceof BruteForceAlgorithm){
                     result = a.solveProblem(euclideanDistanceMatrix,this.salesmanCount);
-               else 
-                    result = a.solveProblem(extendedEuclideanMatrix,this.salesmanCount);
+                    cycles = new  ArrayList<ArrayList<Integer>>();
+                    ArrayList<Integer> temp =  new ArrayList<>();
+                    for(int k : result)
+                        temp.add(k);
+                    
+                    cycles.add(temp);
+               }
 
-               ArrayList<ArrayList<Integer>> cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result);
+              
                 this.setChanged();
                 this.notifyObservers(cycles);
             }
@@ -305,27 +313,42 @@ public class Model extends Observable {
                     for(Algorithm a : this.algorithms)
             {
 
-               if(!(a instanceof BruteForceAlgorithm))
+                ArrayList<ArrayList<Integer>> cycles;
+               if(!(a instanceof BruteForceAlgorithm)){
                     result = a.solveProblem(extendedShortestPathMatrix,this.salesmanCount);
-               else 
+                    cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result);
+               }
+               else {
                     result = a.solveProblem(shortestPathCostMatrix,this.salesmanCount);
-
-               ArrayList<ArrayList<Integer>> cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result);
+                     cycles = new  ArrayList<ArrayList<Integer>>();
+                    ArrayList<Integer> temp =  new ArrayList<>();
+                    for(int k : result)
+                        temp.add(k);
+                    
+                    cycles.add(temp);
+                }
                 this.setChanged();
                 this.notifyObservers(cycles);
             }
         }
         else if (selectedMetric == 2) //time
         {
-                    for(Algorithm a : this.algorithms)
-            {
-
-               if(!(a instanceof BruteForceAlgorithm))
+           for(Algorithm a : this.algorithms){
+                ArrayList<ArrayList<Integer>> cycles;
+               if(!(a instanceof BruteForceAlgorithm)){
                     result = a.solveProblem(extendedTimeMatrix,this.salesmanCount);
-               else 
+                    cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result);
+               }
+               else {
                     result = a.solveProblem(this.timeMatrix.getCosts(),this.salesmanCount);
+                    cycles = new  ArrayList<ArrayList<Integer>>();
+                    ArrayList<Integer> temp =  new ArrayList<>();
+                    for(int k : result)
+                        temp.add(k);
+                    
+                    cycles.add(temp);
+               }
 
-               ArrayList<ArrayList<Integer>> cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result);
                 this.setChanged();
                 this.notifyObservers(cycles);
             }
@@ -363,6 +386,10 @@ public class Model extends Observable {
 
     public int getSelectedMetric() {
         return this.selectedMetric;
+    }
+
+    public void clearModelMapData() {
+        //vhvjgvj
     }
     
 }

@@ -50,5 +50,9 @@ public class Controller {
     public void setSelectedMetric(int selectedMetric) {
         this.model.setSelectedMetric(selectedMetric);
     }
+
+    public void clearModelMapData() {
+       this.model.clearModelMapData();
+    }
     
 }
