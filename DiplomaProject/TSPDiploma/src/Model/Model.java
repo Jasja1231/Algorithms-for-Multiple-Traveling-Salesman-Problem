@@ -70,29 +70,22 @@ public class Model extends Observable {
 
    public Model(){
     init();
-    File graphFile = new File("warsaw.gph");
-    graph = new Graph(graphFile);
-    router = new PoiRouter();
-    timeMatrix = new TspDefaultMatrix();
+     
 
-    // additional params for DefaultRouter
+    // additional params for DefaultRouter where do we set it?
     Properties params = new Properties();
     params.setProperty("findShortestPath", "true");
     params.setProperty("ignoreRestrictions", "false");
     params.setProperty("ignoreOneWays", "false");
     params.setProperty("heuristicFactor", "1.0"); // 0.0 Dijkstra, 1.0 good A*
     params.setProperty("matrix.fullSearchLoops", "5");
-        try {
-             test();
-        } catch (Osm2poException e) {
-        }
-     
-  
    }
    
+   //TODO: think about minimize values to be initialized
    public void init(){
        coordinates = new ArrayList<>();
        algorithms = new ArrayList<Algorithm>();
+       
        allAlgorithms = new ArrayList<Algorithm>();
        //KEEP THE ORDER
        allAlgorithms.add(SCIPAlgorithm);
@@ -100,6 +93,12 @@ public class Model extends Observable {
        allAlgorithms.add(bruteForceAlgorithm);
        allAlgorithms.add(heuristicAlgorithm);
        allAlgorithms.add(approximationAlgorithm);
+       
+       //Routing stuff initialization
+       File graphFile = new File("warsaw.gph");  //TODO: make it static or whatever
+       graph = new Graph(graphFile);
+       router = new PoiRouter();
+       timeMatrix = new TspDefaultMatrix();
    }
 
    public void addCoordinate(Coordinate coo){
@@ -284,63 +283,33 @@ public class Model extends Observable {
         }
         
          int [] result;
+         float[][] table1 = null;
+         float[][] table2 = null;
         if (selectedMetric == 0) //euclidean
-        {//TODO: rewrite it , rewrite separating by 0 
-            for(Algorithm a : this.algorithms)
-            {
-                 ArrayList<ArrayList<Integer>> cycles = null;
-               if(!(a instanceof BruteForceAlgorithm)){
-                   result = a.solveProblem(extendedEuclideanMatrix,this.salesmanCount);
-                   cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result);
-               }
-               else if (a instanceof BruteForceAlgorithm){
-                    result = a.solveProblem(euclideanDistanceMatrix,this.salesmanCount);
-                    cycles = new  ArrayList<ArrayList<Integer>>();
-                    ArrayList<Integer> temp =  new ArrayList<>();
-                    for(int k : result)
-                        temp.add(k);
-                    
-                    cycles.add(temp);
-               }
-
-              
-                this.setChanged();
-                this.notifyObservers(cycles);
-            }
+        {//TODO: rewrite it , rewrite separating by 0  
+            table1 = extendedEuclideanMatrix;
+            table2 = euclideanDistanceMatrix; 
         }
         else if (selectedMetric ==1) //actual distance
         {
-                    for(Algorithm a : this.algorithms)
-            {
-
-                ArrayList<ArrayList<Integer>> cycles;
-               if(!(a instanceof BruteForceAlgorithm)){
-                    result = a.solveProblem(extendedShortestPathMatrix,this.salesmanCount);
-                    cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result);
-               }
-               else {
-                    result = a.solveProblem(shortestPathCostMatrix,this.salesmanCount);
-                     cycles = new  ArrayList<ArrayList<Integer>>();
-                    ArrayList<Integer> temp =  new ArrayList<>();
-                    for(int k : result)
-                        temp.add(k);
-                    
-                    cycles.add(temp);
-                }
-                this.setChanged();
-                this.notifyObservers(cycles);
-            }
+            table1 = extendedShortestPathMatrix;
+            table2 = shortestPathCostMatrix;
         }
         else if (selectedMetric == 2) //time
         {
-           for(Algorithm a : this.algorithms){
+            table1 = extendedTimeMatrix;
+            table2 = this.timeMatrix.getCosts();
+        }
+        
+        //Alg
+         for(Algorithm a : this.algorithms){
                 ArrayList<ArrayList<Integer>> cycles;
                if(!(a instanceof BruteForceAlgorithm)){
-                    result = a.solveProblem(extendedTimeMatrix,this.salesmanCount);
+                    result = a.solveProblem(table1,this.salesmanCount);
                     cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result);
                }
                else {
-                    result = a.solveProblem(this.timeMatrix.getCosts(),this.salesmanCount);
+                    result = a.solveProblem(table2,this.salesmanCount);
                     cycles = new  ArrayList<ArrayList<Integer>>();
                     ArrayList<Integer> temp =  new ArrayList<>();
                     for(int k : result)
@@ -352,7 +321,6 @@ public class Model extends Observable {
                 this.setChanged();
                 this.notifyObservers(cycles);
             }
-        }
 
     }
 
@@ -388,8 +356,9 @@ public class Model extends Observable {
         return this.selectedMetric;
     }
 
-    public void clearModelMapData() {
-        //vhvjgvj
+    public void resetData() {
+       this.coordinates.clear();
+       this.algorithms.clear();
     }
     
 }

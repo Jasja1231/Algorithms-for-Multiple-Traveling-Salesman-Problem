@@ -23,7 +23,7 @@ public class OptionsPanel extends javax.swing.JPanel {
     AlgorithmChoicesPanel algPanel;
     InputDataPanel inputDataPanel;
     JScrollPane algOptionsScrollPane;
-    JLabel algorithmChooseLabel;
+    
     
     /**
      * Creates new form OptionsPanel
@@ -38,11 +38,11 @@ public class OptionsPanel extends javax.swing.JPanel {
     }
 
     private void init(){
-        algorithmChooseLabel = new JLabel("Choose algorithms : ");
+        
         algPanel = new AlgorithmChoicesPanel(parentView);
         inputDataPanel = new InputDataPanel(parentView);
         this.contentjPanel.add(inputDataPanel);
-        this.contentjPanel.add(algorithmChooseLabel);
+        //this.contentjPanel.add(algorithmChooseLabel);
         this.contentjPanel.add(algPanel); 
     }
     

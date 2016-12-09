@@ -131,6 +131,11 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
         EditMenu.add(EditInputMenuItem);
 
         resetMenuItem.setText("Reset data");
+        resetMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetMenuItemActionPerformed(evt);
+            }
+        });
         EditMenu.add(resetMenuItem);
 
         jMenuBar1.add(EditMenu);
@@ -155,6 +160,11 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
     private void EditInputMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditInputMenuItemActionPerformed
         this.optionsPanel.setVisible(true);
     }//GEN-LAST:event_EditInputMenuItemActionPerformed
+
+    private void resetMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetMenuItemActionPerformed
+        this.mapPanel.clearMap();
+        this.controller.resetData();
+    }//GEN-LAST:event_resetMenuItemActionPerformed
 
     @Override
     public void update(Observable o, Object arg) {
@@ -214,7 +224,7 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
     }
 
     void clearModelMapData() {
-        this.controller.clearModelMapData();
+        this.controller.resetData();
     }
 
     

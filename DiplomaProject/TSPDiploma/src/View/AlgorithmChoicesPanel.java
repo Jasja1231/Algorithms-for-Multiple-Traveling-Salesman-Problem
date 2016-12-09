@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 
 /**
  *
@@ -24,6 +25,7 @@ public class AlgorithmChoicesPanel extends javax.swing.JPanel {
                 "approximation algorithm"
     };
     
+    JLabel algorithmChooseLabel = new JLabel("Choose algorithms : ");
     JCheckBox[] checkBoxes = new JCheckBox[algorithmNames.length]; 
     MainView parentView;
     /**
@@ -49,6 +51,7 @@ public class AlgorithmChoicesPanel extends javax.swing.JPanel {
     }
     
     private void addCheckBoxes(){
+        this.add(algorithmChooseLabel);
         for (JCheckBox jc  : checkBoxes){
             this.add(jc);
             jc.setVisible(true);
@@ -70,7 +73,7 @@ public class AlgorithmChoicesPanel extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(255, 255, 255));
         setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(0, 204, 204)));
-        setLayout(new java.awt.GridLayout(5, 0, 10, 10));
+        setLayout(new java.awt.GridLayout(6, 0, 10, 10));
     }// </editor-fold>//GEN-END:initComponents
 
 

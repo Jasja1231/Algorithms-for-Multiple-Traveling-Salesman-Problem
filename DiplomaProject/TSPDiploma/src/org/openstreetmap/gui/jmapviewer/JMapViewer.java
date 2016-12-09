@@ -989,13 +989,17 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         return mapPolygonList;
     }
 
+    
+    //MODIFIED YARYNA
     /**
      * Add a {@link MapMarker}.
      * @param marker map marker to add
      */
     public void addMapMarker(MapMarker marker) {
+        if(!markerExists(marker)){
         mapMarkerList.add(marker);
         repaint();
+        }
     }
 
     /**
@@ -1050,6 +1054,16 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         repaint();
     }
 
+    //ADDED YARYNA
+    public boolean markerExists(MapMarker m){
+        for(MapMarker mm  : this.mapMarkerList){
+            if(mm.getLat() == m.getLat() && mm.getLon() == m.getLon())
+                return true;
+        }
+        return false;
+    }
+    
+    
     /**
      * Remove a {@link MapPolygon}.
      * @param polygon map polygon to remove

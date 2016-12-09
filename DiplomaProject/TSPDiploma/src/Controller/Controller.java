@@ -51,8 +51,8 @@ public class Controller {
         this.model.setSelectedMetric(selectedMetric);
     }
 
-    public void clearModelMapData() {
-       this.model.clearModelMapData();
+    public void resetData() {
+       this.model.resetData();
     }
     
 }

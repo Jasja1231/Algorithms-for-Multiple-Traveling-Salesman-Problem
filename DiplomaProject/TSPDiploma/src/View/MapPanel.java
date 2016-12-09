@@ -197,10 +197,9 @@ public class MapPanel extends javax.swing.JPanel {
     }
     
     public void clearMap(){
-        this.map.getMapMarkerList().clear();
-        this.map.getMapPolygonList().clear();
-        
-        this.parentView.clearModelMapData();
+        this.map.removeAllMapMarkers();
+        this.map.removeAllMapPolygons();
+        this.map.repaint();
     }
     
     /**
