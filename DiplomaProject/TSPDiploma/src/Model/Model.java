@@ -304,7 +304,7 @@ public class Model extends Observable {
         //Alg
          for(Algorithm a : this.algorithms){
                 ArrayList<ArrayList<Integer>> cycles;
-               if(!(a instanceof BruteForceAlgorithm)){
+               if(!(a instanceof BruteForceAlgorithm || a instanceof ApproximationAlgorithm)){
                     result = a.solveProblem(table1,this.salesmanCount);
                     cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result);
                }

@@ -155,7 +155,7 @@ public class Greedy {
         }
         solution = new int [adj.length+1];
         ArrayList<Integer> dupa = new ArrayList<Integer>();
-        DFS.DFS(adj, new boolean[adj.length], solution, adj.length, 0, dupa);
+        DFS.DFS(adj, new boolean[adj.length], adj.length, 0, dupa);
         for (int i=0;i<dupa.size();i++)
             solution[i]=dupa.get(i);
         return solution;

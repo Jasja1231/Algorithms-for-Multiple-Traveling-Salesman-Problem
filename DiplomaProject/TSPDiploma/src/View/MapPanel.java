@@ -64,12 +64,12 @@ public class MapPanel extends javax.swing.JPanel {
     private void constructMap(){
         try {
             //Ysrs psth     C:\\Users\\Yaryna\\Documents\\WUT 2015-16\\Diploma\\MTSP\\DiplomaProject\\TSPDiploma\\Tiles\\
-            // map.setTileSource(new OfflineOsmTileSource("file:///C:/Users/K/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/Tiles",10,14));
+            // map.setTileSource(new OfflineOsmTileSource("C:\\Users\\Krzysztof\\Desktop\\DiplomaProject\\DiplomaProject\\TSPDiploma\\Tiles\\",10,14));
             //corrected
             map.setDisplayPosition(new Coordinate(52.2297,21.0122), 10); //center in warsaw 
             map.getPosition();
            
-            map.setTileSource(new OfflineOsmTileSource((new File("C:\\Users\\Yaryna\\Documents\\WUT 2015-16\\Diploma\\MTSP\\DiplomaProject\\TSPDiploma\\Tiles\\").toURI().toURL()).toString(), 10, 14)); 
+            map.setTileSource(new OfflineOsmTileSource((new File("C:\\Users\\Krzysztof\\Desktop\\DiplomaProject\\DiplomaProject\\TSPDiploma\\Tiles\\").toURI().toURL()).toString(), 10, 14)); 
         } catch (MalformedURLException ex) {
             Logger.
                     getLogger(MapPanel.class.getName()).log(Level.SEVERE, null, ex);
