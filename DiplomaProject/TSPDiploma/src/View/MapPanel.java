@@ -108,13 +108,13 @@ public class MapPanel extends javax.swing.JPanel {
                                     MapPanel.this.map.addMapMarker(marker);  
                                 }
                                 if(!SwingUtilities.isLeftMouseButton(e) ){
-                                        MapMarker mm = MapPanel.this.map.markerExistsWithTolerance(0.0004, coo);//.markerExists(new MapMarkerDot(coo.getLat(),coo.getLon()))){ //TODO: create separate method in JMapViewer so not to create marker every time
+                                        final MapMarker mm = MapPanel.this.map.markerExistsWithTolerance(0.0006, coo);//.markerExists(new MapMarkerDot(coo.getLat(),coo.getLon()))){ //TODO: create separate method in JMapViewer so not to create marker every time
                                         if(mm!=null){
                                             pp.item.addActionListener(new ActionListener() {
                                                @Override
                                                public void actionPerformed(ActionEvent exa) {
                                                    System.err.println("item popup action listener - EXECUTED");
-                                                   MapPanel.this.setStartingPoint((Coordinate) map.getPosition(e.getPoint()));
+                                                   MapPanel.this.setStartingPoint(mm.getCoordinate());
                                                }
                                            });
                                            pp.showPopUp(e.getX(), e.getY());
