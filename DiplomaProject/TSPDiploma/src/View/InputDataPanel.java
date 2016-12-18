@@ -18,7 +18,7 @@ public class InputDataPanel extends javax.swing.JPanel {
      */
     public InputDataPanel(MainView parentView) {
         initComponents();
-        this.setMaximumSize(new Dimension(400,90));
+        this.setMaximumSize(new Dimension(400,60));
     }
 
     public int getSelectedMetric(){
@@ -37,8 +37,6 @@ public class InputDataPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
         jLabel7 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -46,12 +44,7 @@ public class InputDataPanel extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(255, 255, 255));
         setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(0, 204, 204)));
-        setLayout(new java.awt.GridLayout(3, 1, 0, 10));
-
-        jLabel1.setText("Starting point :");
-        add(jLabel1);
-
-        add(jComboBox1);
+        setLayout(new java.awt.GridLayout(2, 1, 0, 10));
 
         jLabel7.setText("Number of salesmen :");
         add(jLabel7);
@@ -68,8 +61,6 @@ public class InputDataPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JTextField jTextField1;

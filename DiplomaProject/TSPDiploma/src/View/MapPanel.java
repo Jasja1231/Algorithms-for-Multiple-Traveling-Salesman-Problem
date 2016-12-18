@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.DefaultMapController;
@@ -39,6 +40,7 @@ public class MapPanel extends javax.swing.JPanel {
     private MainView parentView;
     private Timer mouseTimer;
     private boolean wasDoubleClick;
+    private PopUpMenuCustom pp;
     /**
      * Creates new form MapPanel
      */
@@ -55,6 +57,10 @@ public class MapPanel extends javax.swing.JPanel {
         //add map to fill the parent;
         constructMap();
         this.add(map,BorderLayout.CENTER);
+        
+        ////
+        pp = new PopUpMenuCustom(this);
+        MapPanel.this.map.setComponentPopupMenu(pp);
     }
     
     
@@ -93,15 +99,21 @@ public class MapPanel extends javax.swing.JPanel {
                                 wasDoubleClick = false; // reset flag
                             } else {
                                 Coordinate coo = (Coordinate) map.getPosition(e.getPoint());
-                                
-                                System.out.println( "  and it's a simple click!");
-                                System.out.println(e.getPoint());
-                                System.out.println(coo);
-
-                                MapPanel.this.parentView.addCoordinate(coo);
-                                MapMarkerDot marker = new MapMarkerDot(Color.RED,coo.getLat(),coo.getLon());
-                                
-                                MapPanel.this.map.addMapMarker(marker);                                                                                   
+                                if(!SwingUtilities.isRightMouseButton(e) ){    //TO DO : Check WTF is going on
+                                    MapPanel.this.parentView.addCoordinate(coo);
+                                    MapMarkerDot marker = new MapMarkerDot(Color.RED,coo.getLat(),coo.getLon());
+                                    MapPanel.this.map.addMapMarker(marker);  
+                                }
+                                if(!SwingUtilities.isLeftMouseButton(e) && MapPanel.this.map.markerExists(new MapMarkerDot(coo.getLat(),coo.getLon()))){ //TODO: create separate method in JMapViewer so not to create marker every time
+                                        pp.item.addActionListener(new ActionListener() {
+                                           @Override
+                                           public void actionPerformed(ActionEvent exa) {
+                                               System.err.println("item popup action listener - EXECUTED");
+                                               MapPanel.this.setStartingPoint((Coordinate) map.getPosition(e.getPoint()));
+                                           }
+                                       });
+                                       pp.showPopUp(e.getX(), e.getY());
+                                }
                             }
                         }    
                     });
@@ -112,6 +124,10 @@ public class MapPanel extends javax.swing.JPanel {
         };
     }
    
+    
+    private void setStartingPoint(Coordinate co){
+        this.parentView.setNewStartingPoint(co);
+    }
     
     
     public void drawLines(List<Coordinate> route){

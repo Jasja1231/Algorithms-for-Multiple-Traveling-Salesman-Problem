@@ -7,19 +7,23 @@ package Model;
 
 import Model.ApproximationAlgorithm;
 import Algorithms.SolutionOperations;
+import View.MapPanel;
 import de.cm.osm2po.errors.Osm2poException;
 import de.cm.osm2po.logging.Log;
 import de.cm.osm2po.routing.Graph;
 import de.cm.osm2po.routing.PoiRouter;
 import de.cm.osm2po.tsp.TspDefaultMatrix;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 
 
@@ -315,5 +319,28 @@ public class Model extends Observable {
        this.algorithms.clear();
     }
     
+    public void setNewStartingPoint(Coordinate co) {
+        int index = this.coordinates.indexOf(co); 
+        Collections.swap(this.coordinates, 0, index);
+        //TODO: recalculate adjecency metrix // substitute first row with index row and first columt with index column ?
+    }
+    
+    int count = 0;
+    public void saveSolutionScreenShot(MapPanel panel, File selectedFile) {
+        String filePath = selectedFile.toString();  //reading filename
+        filePath += ".";
+        filePath += File.separator;
+        filePath += count; //add  unique name, just count element now
+        count++;
+        filePath +=".png";
+        //Generate bitmap 
+       BufferedImage bufImage = new BufferedImage(panel.getSize().width, panel.getSize().height,BufferedImage.TYPE_INT_RGB);
+       panel.paint(bufImage.createGraphics());
+       File imageFile = new File(filePath);
+        try{
+            imageFile.createNewFile();
+            ImageIO.write(bufImage, "png", imageFile);
+        }catch(Exception ex){}
+    }   
 }
 

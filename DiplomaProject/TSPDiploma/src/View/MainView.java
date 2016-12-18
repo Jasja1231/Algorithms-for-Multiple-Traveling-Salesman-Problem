@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 
@@ -27,7 +28,8 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
     private MapPanel mapPanel;
     private JMenu fileMenu;
     private OptionsPanel optionsPanel;
-    
+    private final JFileChooser FILE_CHOOSER = new JFileChooser();
+      
     //MVC
     public  final Model model;
     private final Controller controller;
@@ -96,6 +98,7 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
         FileMenu = new javax.swing.JMenu();
         loadFilejMenuItem = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
+        saveSolutionScreenShotMenuItem = new javax.swing.JMenuItem();
         EditMenu = new javax.swing.JMenu();
         EditInputMenuItem = new javax.swing.JMenuItem();
         resetMenuItem = new javax.swing.JMenuItem();
@@ -127,6 +130,14 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
             }
         });
         FileMenu.add(jMenuItem1);
+
+        saveSolutionScreenShotMenuItem.setText("Save solution screenshot");
+        saveSolutionScreenShotMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveSolutionScreenShotMenuItemActionPerformed(evt);
+            }
+        });
+        FileMenu.add(saveSolutionScreenShotMenuItem);
 
         jMenuBar1.add(FileMenu);
 
@@ -188,6 +199,15 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
         this.mapPanel.clearAllRoads();
     }//GEN-LAST:event_clearAllRoadsjMenuItemActionPerformed
 
+    private void saveSolutionScreenShotMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveSolutionScreenShotMenuItemActionPerformed
+         //open directory chooser to choose which directory to open to save file into
+        FILE_CHOOSER.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int returnVal = FILE_CHOOSER.showSaveDialog(this);
+        if(returnVal == JFileChooser.APPROVE_OPTION){
+            this.controller.saveSolutionScreenShot(this.mapPanel,FILE_CHOOSER.getSelectedFile());
+        }
+    }//GEN-LAST:event_saveSolutionScreenShotMenuItemActionPerformed
+
     @Override
     public void update(Observable o, Object arg) {
         if(arg instanceof ArrayList<?>){
@@ -220,6 +240,7 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem loadFilejMenuItem;
     private javax.swing.JMenuItem resetMenuItem;
+    private javax.swing.JMenuItem saveSolutionScreenShotMenuItem;
     // End of variables declaration//GEN-END:variables
 
     void addCoordinate(Coordinate coo) {
@@ -250,5 +271,7 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
         this.controller.resetData();
     }
 
-    
+     void setNewStartingPoint(Coordinate co) {
+       this.controller.setNewStartingPoint(co);
+    }
 }

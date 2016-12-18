@@ -27,6 +27,7 @@ public class OptionsPanel extends javax.swing.JPanel {
     
     /**
      * Creates new form OptionsPanel
+     * @param pV parent view - main view of the application.
      */
     public OptionsPanel(MainView pV) {
         initComponents();

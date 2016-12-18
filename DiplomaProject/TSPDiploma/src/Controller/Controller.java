@@ -7,11 +7,13 @@ package Controller;
 
 import Model.Model;
 import View.MainView;
+import View.MapPanel;
+import java.io.File;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 
 /**
  *
- * @author K
+ * @author K old version
  */
 public class Controller {
 
@@ -55,4 +57,13 @@ public class Controller {
        this.model.resetData();
     }
     
+       public void setNewStartingPoint(Coordinate co) {
+        this.model.setNewStartingPoint(co);
+    }
+
+    public void saveSolutionScreenShot(MapPanel mapPanel, File selectedFile) {
+        this.model.saveSolutionScreenShot(mapPanel,selectedFile);
+    }
+
+   
 }
