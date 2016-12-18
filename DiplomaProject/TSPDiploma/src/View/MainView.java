@@ -99,6 +99,7 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
         EditMenu = new javax.swing.JMenu();
         EditInputMenuItem = new javax.swing.JMenuItem();
         resetMenuItem = new javax.swing.JMenuItem();
+        clearAllRoadsjMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -147,6 +148,14 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
         });
         EditMenu.add(resetMenuItem);
 
+        clearAllRoadsjMenuItem.setText("Clear all roads");
+        clearAllRoadsjMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearAllRoadsjMenuItemActionPerformed(evt);
+            }
+        });
+        EditMenu.add(clearAllRoadsjMenuItem);
+
         jMenuBar1.add(EditMenu);
 
         setJMenuBar(jMenuBar1);
@@ -175,6 +184,10 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
         this.controller.resetData();
     }//GEN-LAST:event_resetMenuItemActionPerformed
 
+    private void clearAllRoadsjMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearAllRoadsjMenuItemActionPerformed
+        this.mapPanel.clearAllRoads();
+    }//GEN-LAST:event_clearAllRoadsjMenuItemActionPerformed
+
     @Override
     public void update(Observable o, Object arg) {
         if(arg instanceof ArrayList<?>){
@@ -202,6 +215,7 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
     private javax.swing.JMenuItem EditInputMenuItem;
     private javax.swing.JMenu EditMenu;
     private javax.swing.JMenu FileMenu;
+    private javax.swing.JMenuItem clearAllRoadsjMenuItem;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem loadFilejMenuItem;

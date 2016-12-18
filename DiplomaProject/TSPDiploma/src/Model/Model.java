@@ -259,7 +259,7 @@ public class Model extends Observable {
                 ArrayList<ArrayList<Integer>> cycles;
                if(!(a instanceof BruteForceAlgorithm || a instanceof ApproximationAlgorithm)){
                     result = a.solveProblem(table1,this.salesmanCount);
-                    cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result);
+                    cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result,true);
                }
                else {
                     result = a.solveProblem(table2,this.salesmanCount);
@@ -269,6 +269,7 @@ public class Model extends Observable {
                         temp.add(k);
                     
                     cycles.add(temp);
+                    cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result,false);
                }
 
                 this.setChanged();

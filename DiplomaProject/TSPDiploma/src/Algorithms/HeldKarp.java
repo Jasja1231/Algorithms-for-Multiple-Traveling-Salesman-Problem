@@ -66,8 +66,7 @@ public class HeldKarp {
                         Key key = new Key(prev,m);
                         float distanceFromGetDistance = C.get(key).getDistance();
                         Value resValue = new Value(distanceFromGetDistance+dist,m);
-                        System.err.println("DATA : " +"prev " + prev + " m : " + m + " k:" + k + "resValue : " 
-                                + resValue.getDistance() + " " + resValue.getVertexID() );
+                        
                         res.add(resValue);
                     }
                     C.put(new Key(bits, k),getMinimumResult(res));//C[(bits, k)] = min(res);

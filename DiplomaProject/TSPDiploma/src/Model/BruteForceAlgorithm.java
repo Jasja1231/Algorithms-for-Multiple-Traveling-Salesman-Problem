@@ -56,8 +56,6 @@ public class BruteForceAlgorithm  implements Algorithm {
                        currentPath.add(sum+currentPartition.get(x),0);
                        sum +=currentPartition.get(x)+1;
                     }
-                    currentPath.add(0,0); //add to begining
-                    currentPath.add(0); //add to end
                     
                     double length = calcLength(currentPath,adjacencyMatrix);
                     if (length < bestLength)

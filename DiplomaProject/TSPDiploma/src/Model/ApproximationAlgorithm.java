@@ -45,7 +45,8 @@ public class ApproximationAlgorithm implements Algorithm {
                 return -1;
         }
     }
-         public int [] solveProblem (float [][]adjacencyMatrix, Object... o) //adjacencyMatrix 
+    
+    public int [] solveProblem (float [][]adjacencyMatrix, Object... o) //adjacencyMatrix 
      //has to be without without additional bases, integer number of salesmen as first optional parameter
     {
         int [] solution;
@@ -99,7 +100,7 @@ public class ApproximationAlgorithm implements Algorithm {
             Arrays.sort(BestReturnEdges, new whyIsThis_a_Class());
         }
         
-       solution = new int [n+numSalesmen+1];
+       solution = new int [n+numSalesmen];
     //   for (int i=0;i<solution.length;i++)
       //     solution[i] = -1;
        
@@ -128,7 +129,7 @@ public class ApproximationAlgorithm implements Algorithm {
           
           solution[i2++] = order.get(i)+1;
        }
-       solution[solution.length-1] = solution[0];
+       //solution[solution.length-1] = solution[0];
        return solution;
     }
 }
