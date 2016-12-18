@@ -66,6 +66,15 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
         //Add Map in the centre
         this.add(mapPanel,BorderLayout.CENTER);
         this.add(optionsPanel,BorderLayout.WEST);
+        
+         try {
+            for (javax.swing.UIManager.LookAndFeelInfo info :  javax.swing.UIManager.getInstalledLookAndFeels()) {
+                  if ("Nimbus".equals(info.getName())) {
+                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                     break;
+                  }
+            }
+         }catch(Exception e){}
     }
     
     

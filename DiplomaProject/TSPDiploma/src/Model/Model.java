@@ -177,58 +177,6 @@ public class Model extends Observable {
         }
     }
    
- public void test () throws Osm2poException
-   {
-      /*      Coordinate coord = new Coordinate(52.216500, 20.988080);
-          Coordinate coord2 = new Coordinate(52.131412, 21.065748);
-          Coordinate coord3 = new Coordinate(52.178953, 21.005037);
-          Coordinate coord4 = new Coordinate (52.202217, 20.954812);
-          float[][]matrix2;
-          ArrayList<Coordinate>coords = new ArrayList<Coordinate>();
-          coords.add(coord);
-          coords.add(coord2);
-          coords.add(coord3);
-          coords.add(coord4);
-
-          int [] vertexIDs = new int [coords.size()];
-          int i = 0;
-       for (Coordinate c : coords)
-       {
-           int id = graph.findClosestVertexId((float)c.getLat(), (float)c.getLon());
-           vertexIDs[i++] = id;
-       }
-       
-       buildShortestPaths(coords);
-       buildTimeMatrix(coords);
-       float[][] mext = getExtendedMatrixForMultipleSalesmen (3, shortestPathCostMatrix);
-       float[][] matrixxx = new float [4][4];
-       for (int x=0;x<4;x++)
-           for (int j=0;j<4;j++)
-               matrixxx[x][j]=Float.MAX_VALUE;
-       
-       matrixxx[0][2] = 1f;
-       matrixxx[2][1] = 1f;
-       //matrixxx[1][3] = 1f;
-       
-       //matrixxx[2][0] = 1f;
-       matrixxx [1][0] = 1f;
-       matrixxx[0][3] = 1f;
-       matrixxx[3][0] = 1f;
-       Kruskal k = new Kruskal();
-       k.readInGraphData(matrixxx);
-       k.performKruskal();
-       int[][]arr = k.getResultAdjacencyMatrix();
-       int[] order = new int [arr.length];
-       int idx = 0;
-       DFS.DFS(arr, new boolean[arr.length], order, arr.length, 0, idx);
-       float[][]ext = getExtendedMatrixForMultipleSalesmen(2,matrixxx);
-       int [] ress = this.approximationAlgorithm.solveProblem(ext);
-       int [] ressg = this.heuristicAlgorithm.solveProblem(ext);
-       
-       ArrayList<ArrayList<Integer>>resapproximate = SolutionOperations.getCyclesFromSolution(2, ress);
-      ArrayList<ArrayList<Integer>>resgreedy = SolutionOperations.getCyclesFromSolution(2, ressg);
-        //ArrayList<ArrayList<Integer>> res = SolutionOperations.getCyclesFromSolution(4, new int []{0,4,5,6,1,7,8,9,2,10,11,3,12,13});
-   */}
    
    float [][] getExtendedMatrixForMultipleSalesmen (int salesmen, float[][]matrix)
    {
@@ -280,6 +228,11 @@ public class Model extends Observable {
             extendedTimeMatrix = getExtendedMatrixForMultipleSalesmen(salesmanCount, timeMatrix.getCosts());
             extendedShortestPathMatrix = getExtendedMatrixForMultipleSalesmen(salesmanCount, shortestPathCostMatrix);
             extendedEuclideanMatrix = getExtendedMatrixForMultipleSalesmen(salesmanCount, euclideanDistanceMatrix);
+        }
+        else if(salesmanCount==1){
+            extendedTimeMatrix = timeMatrix.getCosts();
+            extendedShortestPathMatrix = shortestPathCostMatrix;
+            extendedEuclideanMatrix = euclideanDistanceMatrix;
         }
         
          int [] result;

@@ -5,6 +5,8 @@
  */
 package Model;
 
+import Algorithms.Combinations;
+import Algorithms.HeldKarp;
 import java.util.ArrayList;
 import java.util.List;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -17,8 +19,8 @@ public class DynamicAlgorithm  implements Algorithm{
 
     @Override
     public int[] solveProblem(float[][] adjacencyMatrix, Object... o) {
-        throw new NotImplementedException();
+        return HeldKarp.performHeldKarp(adjacencyMatrix);
     }
     
-    
+
 }

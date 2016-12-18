@@ -31,17 +31,17 @@ public class Permutations <T> {
    i--;
   }
 
-  if (i < 0)
-   arr = null;
-  else {   
-   int prev = permSwappings[i];
-   swap(i, prev);
-   int next = prev + 1;
-   permSwappings[i] = next;
-   swap(i, next);
-  }
-  currentPerm = res;
-  return res;
+    if (i < 0)
+      arr = null;
+     else {   
+      int prev = permSwappings[i];
+      swap(i, prev);
+      int next = prev + 1;
+      permSwappings[i] = next;
+      swap(i, next);
+    }
+    currentPerm = res;
+    return res;
  }
 
  private void swap(int i, int j) {
