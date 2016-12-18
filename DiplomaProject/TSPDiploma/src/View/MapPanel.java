@@ -66,7 +66,7 @@ public class MapPanel extends javax.swing.JPanel {
             map.setDisplayPosition(new Coordinate(52.2297,21.0122), 10); //center in warsaw 
             map.getPosition();
             //System.err.println(new File(".").getCanonicalPath());
-            map.setTileSource(new OfflineOsmTileSource((new File(".\\Tilesz").toURI().toURL()).toString(), 10, 14)); 
+            map.setTileSource(new OfflineOsmTileSource((new File(".\\Tiles").toURI().toURL()).toString(), 10, 14)); 
         } catch (Exception ex) {
             Logger.
                     getLogger(MapPanel.class.getName()).log(Level.SEVERE, null, ex);
