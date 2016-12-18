@@ -119,6 +119,7 @@ public class BruteForceAlgorithm  implements Algorithm {
         {
             result += adjacencyMatrix[currentPath.get(i)][currentPath.get(i+1)];
         }
+        result += adjacencyMatrix[currentPath.get(currentPath.size()-1)][currentPath.get(0)];
         return result==0? Double.MAX_VALUE : result;
     }
 
