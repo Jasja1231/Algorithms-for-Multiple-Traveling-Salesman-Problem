@@ -152,7 +152,7 @@ public class SolutionOperations {
            if (solution[i] < numSalesmen)
                solution[i] = 0;
            else
-               solution[i] += numSalesmen-1;
+               solution[i] -= numSalesmen-1;
        }
    }
     private static boolean isBase(int vertex, int numSalesmen)
