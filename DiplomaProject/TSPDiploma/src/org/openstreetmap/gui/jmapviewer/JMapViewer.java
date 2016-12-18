@@ -1063,6 +1063,25 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         return false;
     }
     
+    //0.0004 - best tolerance
+    /***
+     * 
+     * @param t tolerance
+     * @param coo
+     * @return null if no such marker in tolerance distance exists distance
+     */
+    public MapMarker markerExistsWithTolerance(double t,Coordinate coo){
+         for(MapMarker mm  : this.mapMarkerList){
+             if( coo.getLat()-t < mm.getLat()
+                 && mm.getLat() < coo.getLat()+t
+                 && coo.getLon()-t < mm.getLon()
+                 &&  mm.getLon() < coo.getLon()+t){
+                 return mm;
+             }
+         }
+         return null;
+    }
+    
     
     /**
      * Remove a {@link MapPolygon}.

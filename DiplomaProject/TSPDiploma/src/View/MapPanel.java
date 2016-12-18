@@ -28,6 +28,7 @@ import org.openstreetmap.gui.jmapviewer.DefaultMapController;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
 import org.openstreetmap.gui.jmapviewer.MapPolygonImpl;
+import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
 import org.openstreetmap.gui.jmapviewer.tilesources.OfflineOsmTileSource;
 
 /**
@@ -99,20 +100,25 @@ public class MapPanel extends javax.swing.JPanel {
                                 wasDoubleClick = false; // reset flag
                             } else {
                                 Coordinate coo = (Coordinate) map.getPosition(e.getPoint());
+                                System.err.println("COO : " + coo.getLat() + "   " + coo.getLon() + " E : " + e.getX() + " " + e.getY());
+                                
                                 if(!SwingUtilities.isRightMouseButton(e) ){    //TO DO : Check WTF is going on
                                     MapPanel.this.parentView.addCoordinate(coo);
                                     MapMarkerDot marker = new MapMarkerDot(Color.RED,coo.getLat(),coo.getLon());
                                     MapPanel.this.map.addMapMarker(marker);  
                                 }
-                                if(!SwingUtilities.isLeftMouseButton(e) && MapPanel.this.map.markerExists(new MapMarkerDot(coo.getLat(),coo.getLon()))){ //TODO: create separate method in JMapViewer so not to create marker every time
-                                        pp.item.addActionListener(new ActionListener() {
-                                           @Override
-                                           public void actionPerformed(ActionEvent exa) {
-                                               System.err.println("item popup action listener - EXECUTED");
-                                               MapPanel.this.setStartingPoint((Coordinate) map.getPosition(e.getPoint()));
-                                           }
-                                       });
-                                       pp.showPopUp(e.getX(), e.getY());
+                                if(!SwingUtilities.isLeftMouseButton(e) ){
+                                        MapMarker mm = MapPanel.this.map.markerExistsWithTolerance(0.0004, coo);//.markerExists(new MapMarkerDot(coo.getLat(),coo.getLon()))){ //TODO: create separate method in JMapViewer so not to create marker every time
+                                        if(mm!=null){
+                                            pp.item.addActionListener(new ActionListener() {
+                                               @Override
+                                               public void actionPerformed(ActionEvent exa) {
+                                                   System.err.println("item popup action listener - EXECUTED");
+                                                   MapPanel.this.setStartingPoint((Coordinate) map.getPosition(e.getPoint()));
+                                               }
+                                           });
+                                           pp.showPopUp(e.getX(), e.getY());
+                                        }
                                 }
                             }
                         }    
