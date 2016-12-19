@@ -5,6 +5,8 @@
  */
 package Model;
 
+import Algorithms.AlgorithmData;
+import Algorithms.Parser;
 import Model.ApproximationAlgorithm;
 import Algorithms.SolutionOperations;
 import View.MapPanel;
@@ -15,6 +17,7 @@ import de.cm.osm2po.routing.PoiRouter;
 import de.cm.osm2po.tsp.TspDefaultMatrix;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -313,6 +316,14 @@ public class Model extends Observable {
     public int getSelectedMetric() {
         return this.selectedMetric;
     }
+    
+    /***
+     * @return number of salesman for a given problem instance.
+     */
+    public int getSalesmenCount(){
+       return this.salesmanCount;
+    }
+
 
     public void resetData() {
        this.coordinates.clear();
@@ -341,5 +352,22 @@ public class Model extends Observable {
             ImageIO.write(bufImage, "png", imageFile);
         }catch(Exception ex){}
     }   
+
+    /***
+     * 
+     * @param file file to be input to be loaded from.
+     */
+    public void loadInputFile(File file) {
+        try {
+            AlgorithmData algorithmData = Parser.parseFile(file.toString());
+            this.coordinates = algorithmData.getCoordinatesAsList();
+            this.salesmanCount = algorithmData.getNumSalesmen();
+            
+            this.setChanged();
+            this.notifyObservers(1); //loaded new file
+        } catch (IOException ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
 

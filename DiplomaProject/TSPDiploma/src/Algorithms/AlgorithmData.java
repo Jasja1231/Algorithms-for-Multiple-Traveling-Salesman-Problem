@@ -5,7 +5,9 @@
  */
 package Algorithms;
 
+import java.util.ArrayList;
 import java.util.List;
+import org.openstreetmap.gui.jmapviewer.Coordinate;
 
 /**
  *
@@ -16,6 +18,16 @@ public class AlgorithmData {
     private int numSalesmen;
     
     public List<Tuple<Float,Float>> getCoords () {return coords;}
+    
+    public List<Coordinate> getCoordinatesAsList(){
+        ArrayList<Coordinate> coolist = new ArrayList<>();
+       for(Tuple tt : coords){
+           Coordinate coo = new Coordinate((float)tt.getX(),(float) tt.getY());
+           coolist.add(coo);
+       }
+        return coolist;
+    }
+    
     public int getNumSalesmen (){return numSalesmen;}
     
     public AlgorithmData( List<Tuple<Float,Float>> coords, int numSalesmen)
@@ -28,6 +40,14 @@ public class AlgorithmData {
     { 
         public final X x; 
         public final Y y; 
+
+        public X getX() {
+            return x;
+        }
+
+        public Y getY() {
+            return y;
+        }
         public Tuple(X x, Y y) 
         { 
           this.x = x; 

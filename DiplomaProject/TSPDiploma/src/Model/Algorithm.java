@@ -10,6 +10,5 @@ package Model;
  * @author Yaryna
  */
 public interface Algorithm {
-    
     public/*static*/ int [] solveProblem (float [][]adjacencyMatrix, Object... o);
 }

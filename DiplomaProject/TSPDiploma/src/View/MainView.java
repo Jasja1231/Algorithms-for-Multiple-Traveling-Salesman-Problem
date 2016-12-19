@@ -11,9 +11,13 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
@@ -36,6 +40,8 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
     
     /**
      * Creates new form MainView
+     * @param model  application model
+     * @param controller application controller
      */
     public MainView(Model model, Controller controller) {
         initComponents();
@@ -175,7 +181,17 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
     }// </editor-fold>//GEN-END:initComponents
 
     private void loadFilejMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadFilejMenuItemActionPerformed
-        // TODO add your handling code here:
+        FILE_CHOOSER.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        int returnVal = FILE_CHOOSER.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+                File file = FILE_CHOOSER.getSelectedFile();
+                this.controller.loadInputFile(file);
+            } 
+            catch (Exception ex) {
+                Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_loadFilejMenuItemActionPerformed
 
     private void FileMenuStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_FileMenuStateChanged
@@ -208,6 +224,12 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
         }
     }//GEN-LAST:event_saveSolutionScreenShotMenuItemActionPerformed
 
+    /***
+     * 
+     * @param o
+     * @param arg : arg == 1 loaded new input file
+     *              arg == ArrayList list of dots in order they should be connected
+     */
     @Override
     public void update(Observable o, Object arg) {
         if(arg instanceof ArrayList<?>){
@@ -216,6 +238,19 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
                 this.mapPanel.drawCycles(cycles);
             else
                 this.mapPanel.drawCyclesEuclideanLines(cycles);
+        }
+        int argInt = -1;
+        try{
+            argInt = (int) arg;
+        }catch(Exception e){}
+        
+        if(argInt == 1){
+            //clear map
+            this.mapPanel.clearMap();
+            //set new markers with their ids
+            this.mapPanel.setNewMarkerDots(this.model.getCoordinates());
+            // set num of salesman in checkbox
+            this.optionsPanel.inputDataPanel.setNumOfSalesmanTextField(this.model.getSalesmenCount());
         }
     }
 
@@ -258,7 +293,8 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
     void setSalesmenCount(int salesmanCount) {
         this.controller.setSalesmen(salesmanCount);
     }
-
+    
+  
     void startComputation() {
        controller.startComputation();
     }

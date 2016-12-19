@@ -258,5 +258,11 @@ public class MapPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 
-   
+    void setNewMarkerDots(List<Coordinate> coordinates) {
+        for(int count = 0 ; count < coordinates.size();count++){
+            MapMarkerDot marker = new MapMarkerDot(Color.RED,coordinates.get(count).getLat(),coordinates.get(count).getLon());
+            marker.setMapMarkerID(count);
+            MapPanel.this.map.addMapMarker(marker);  
+        }
+    }
 }

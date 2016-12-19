@@ -38,7 +38,7 @@ public class InputDataPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel7 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        salesmanCountjTextField1 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         metricCombobox = new javax.swing.JComboBox();
 
@@ -49,8 +49,8 @@ public class InputDataPanel extends javax.swing.JPanel {
         jLabel7.setText("Number of salesmen :");
         add(jLabel7);
 
-        jTextField1.setText("2");
-        add(jTextField1);
+        salesmanCountjTextField1.setText("2");
+        add(salesmanCountjTextField1);
 
         jLabel2.setText("Used metric : ");
         add(jLabel2);
@@ -63,16 +63,24 @@ public class InputDataPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JComboBox metricCombobox;
+    private javax.swing.JTextField salesmanCountjTextField1;
     // End of variables declaration//GEN-END:variables
 
     public int getSalesmanCount() {
         int i = 0;
         try{
-                i = Integer.parseInt(this.jTextField1.getText());
+                i = Integer.parseInt(this.salesmanCountjTextField1.getText());
         }
         catch(Exception e){}
         return i ;
+    }
+
+    /***
+     * Updates salesmen count in textField where salesmen count can be modified lated.
+     * @param salesmenCount current salesmen count from model.
+     */
+    public void setNumOfSalesmanTextField(int salesmenCount) {
+       this.salesmanCountjTextField1.setText(Integer.toString(salesmenCount));
     }
 }
