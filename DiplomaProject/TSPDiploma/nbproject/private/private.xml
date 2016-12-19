@@ -3,20 +3,25 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/View/MainView.java</file>
-            <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/View/MapPanel.java</file>
-            <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/Algorithms/Permutations.java</file>
-            <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/View/OptionsPanel.java</file>
-            <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/Model/Model.java</file>
-            <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/org/openstreetmap/gui/jmapviewer/MapPolygonImpl.java</file>
-            <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/Algorithms/Kruskal.java</file>
-            <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/Algorithms/Greedy.java</file>
-            <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/Controller/Controller.java</file>
-            <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/Model/ApproximationAlgorithm.java</file>
-            <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/Algorithms/DFS.java</file>
-            <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/Algorithms/SolutionOperations.java</file>
-            <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/View/AlgorithmChoicesPanel.java</file>
-            <file>file:/C:/Users/Krzysztof/Desktop/DiplomaProject/DiplomaProject/TSPDiploma/src/Model/BruteForceAlgorithm.java</file>
+            <file>file:/C:/Users/Yaryna/Documents/WUT%202015-16/Diploma/MTSP/DiplomaProject/TSPDiploma/src/Model/ApproximationAlgorithm.java</file>
+            <file>file:/C:/Users/Yaryna/Documents/WUT%202015-16/Diploma/MTSP/DiplomaProject/TSPDiploma/src/View/InputDataPanel.java</file>
+            <file>file:/C:/Users/Yaryna/Documents/WUT%202015-16/Diploma/MTSP/DiplomaProject/TSPDiploma/src/View/AlgorithmChoicesPanel.java</file>
+            <file>file:/C:/Users/Yaryna/Documents/WUT%202015-16/Diploma/MTSP/DiplomaProject/TSPDiploma/src/View/AlgorithmSolutionPanel.java</file>
+            <file>file:/C:/Users/Yaryna/Documents/WUT%202015-16/Diploma/MTSP/DiplomaProject/TSPDiploma/src/View/MapPanel.java</file>
+            <file>file:/C:/Users/Yaryna/Documents/WUT%202015-16/Diploma/MTSP/DiplomaProject/TSPDiploma/nbproject/build-impl.xml</file>
+            <file>file:/C:/Users/Yaryna/Documents/WUT%202015-16/Diploma/MTSP/DiplomaProject/TSPDiploma/src/Algorithms/AlgorithmData.java</file>
+            <file>file:/C:/Users/Yaryna/Documents/WUT%202015-16/Diploma/MTSP/DiplomaProject/TSPDiploma/src/Model/SCIPAlgorithm.java</file>
+            <file>file:/C:/Users/Yaryna/Documents/WUT%202015-16/Diploma/MTSP/DiplomaProject/TSPDiploma/src/Model/BruteForceAlgorithm.java</file>
+            <file>file:/C:/Users/Yaryna/Documents/WUT%202015-16/Diploma/MTSP/DiplomaProject/TSPDiploma/src/Model/Model.java</file>
+            <file>file:/C:/Users/Yaryna/Documents/WUT%202015-16/Diploma/MTSP/DiplomaProject/TSPDiploma/src/org/openstreetmap/gui/jmapviewer/Coordinate.java</file>
+            <file>file:/C:/Users/Yaryna/Documents/WUT%202015-16/Diploma/MTSP/DiplomaProject/TSPDiploma/src/View/MainView.java</file>
+            <file>file:/C:/Users/Yaryna/Documents/WUT%202015-16/Diploma/MTSP/DiplomaProject/TSPDiploma/src/Model/AlgorithmSolution.java</file>
+            <file>file:/C:/Users/Yaryna/Documents/WUT%202015-16/Diploma/MTSP/DiplomaProject/TSPDiploma/src/View/OptionsPanel.java</file>
+            <file>file:/C:/Users/Yaryna/Documents/WUT%202015-16/Diploma/MTSP/DiplomaProject/TSPDiploma/src/Model/DynamicAlgorithm.java</file>
+            <file>file:/C:/Users/Yaryna/Documents/WUT%202015-16/Diploma/MTSP/DiplomaProject/TSPDiploma/src/Algorithms/Parser.java</file>
+            <file>file:/C:/Users/Yaryna/Documents/WUT%202015-16/Diploma/MTSP/DiplomaProject/TSPDiploma/src/Model/Algorithm.java</file>
+            <file>file:/C:/Users/Yaryna/Documents/WUT%202015-16/Diploma/MTSP/DiplomaProject/TSPDiploma/src/Model/HeuristicAlgorithm.java</file>
+            <file>file:/C:/Users/Yaryna/Documents/WUT%202015-16/Diploma/MTSP/DiplomaProject/TSPDiploma/src/Controller/Controller.java</file>
         </group>
     </open-files>
 </project-private>

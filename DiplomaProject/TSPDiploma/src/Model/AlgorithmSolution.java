@@ -19,7 +19,6 @@ public class AlgorithmSolution {
     private ArrayList<Double> cyclesLenth;
     
     public AlgorithmSolution(){
-    
     }
 
     public ArrayList<ArrayList<Integer>> getCycles() {

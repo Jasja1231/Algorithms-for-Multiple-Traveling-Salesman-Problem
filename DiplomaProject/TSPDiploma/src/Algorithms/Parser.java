@@ -6,6 +6,7 @@
 package Algorithms;
 
 import Algorithms.AlgorithmData.Tuple;
+import Model.AlgorithmSolution;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -48,7 +49,7 @@ public class Parser {
         return parseFileContent(readFile(filename));
     }
     
-    public static boolean writeDataToFile (AlgorithmData data, String filename)
+    public static boolean writeAlgorithnDataToFile (AlgorithmData data, String filename)
     {
         String content = "";
         String newLine = System.getProperty("line.separator");
@@ -70,4 +71,41 @@ public class Parser {
         
         return true;
     }
+    
+     public static boolean writeAlgorithmSolutionToFile (AlgorithmSolution data, String filename)
+    {
+        String content = "";
+        StringBuilder sb = new StringBuilder();
+        sb.append(data.getAlgorithmName());
+         sb.append(System.getProperty("line.separator"));
+        //add routes information
+        int salesmen = 0 ; 
+        for(ArrayList<Integer> singleRoute : data.getCycles()){
+            sb.append(" ").append(Integer.toString(salesmen)).append(": ");
+           
+            for(Integer i : singleRoute){
+                sb.append("-->");
+                sb.append(i.toString());
+            }
+            sb.append("  Distance : ").append(data.getCyclesLenth().get(salesmen));
+            salesmen++;
+            sb.append(System.getProperty("line.separator"));;
+        }
+        sb.append("All distance : " + data.getAllDistance());
+        sb.append(System.getProperty("line.separator"));
+        
+        content = sb.toString();
+        try(BufferedWriter w = new BufferedWriter(new FileWriter(filename)))
+        {
+            w.write(content);
+        }
+        catch(IOException e)
+        {
+            return false;
+        }
+        
+        return true;
+    }
+     
+    
 }

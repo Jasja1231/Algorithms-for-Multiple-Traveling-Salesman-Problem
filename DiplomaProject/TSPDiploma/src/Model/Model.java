@@ -18,9 +18,11 @@ import de.cm.osm2po.tsp.TspDefaultMatrix;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Observable;
 import java.util.Properties;
@@ -283,7 +285,12 @@ public class Model extends Observable {
                solution.setCycles(cycles);
                solution.setSalesmenCount(salesmanCount);
                solution.setCyclesLenth(calculateCyclesLengths(table2, cycles)); //TODO: 
+               solution.setAllDistance(this.calculateSolutionLength(solution.getCyclesLenth()));
                
+               SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss") ;
+               Date date = new Date() ;
+
+               Parser.writeAlgorithmSolutionToFile(solution, solution.getAlgorithmName()+dateFormat.format(date));
                 this.setChanged();
                 this.notifyObservers(solution);
             }
