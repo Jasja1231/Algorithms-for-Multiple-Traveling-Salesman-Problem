@@ -291,7 +291,7 @@ public class Model extends Observable {
                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss") ;
                Date date = new Date() ;
 
-               Parser.writeAlgorithmSolutionToFile(solution, solution.getAlgorithmName()+dateFormat.format(date));
+               Parser.writeAlgorithmSolutionToFile(solution, coordinates,solution.getAlgorithmName()+dateFormat.format(date));
                 this.setChanged();
                 this.notifyObservers(solution);
             }

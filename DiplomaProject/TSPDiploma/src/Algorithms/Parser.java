@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import org.openstreetmap.gui.jmapviewer.Coordinate;
 
 /**
  *
@@ -72,12 +73,18 @@ public class Parser {
         return true;
     }
     
-     public static boolean writeAlgorithmSolutionToFile (AlgorithmSolution data, String filename)
+     public static boolean writeAlgorithmSolutionToFile (AlgorithmSolution data, List<Coordinate>coords, String filename)
     {
         String content = "";
         StringBuilder sb = new StringBuilder();
         sb.append(data.getAlgorithmName());
          sb.append(System.getProperty("line.separator"));
+         int count = 0;
+         for (Coordinate c : coords)
+         {
+             sb.append(count++).append(" ").append(c.getLon()).append(" ").append(c.getLat()).append(System.getProperty("line.separator"));
+             
+         }
         //add routes information
         int salesmen = 0 ; 
         for(ArrayList<Integer> singleRoute : data.getCycles()){
