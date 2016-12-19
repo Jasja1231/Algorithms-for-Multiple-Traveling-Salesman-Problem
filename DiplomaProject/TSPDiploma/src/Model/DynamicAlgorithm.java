@@ -14,6 +14,11 @@ import Algorithms.HeldKarp;
 public class DynamicAlgorithm  implements Algorithm{
 
     @Override
+    public String getName() {
+      return "Dynamic algorithm";
+    }
+    
+    @Override
     public int[] solveProblem(float[][] adjacencyMatrix, Object... o) {
         return HeldKarp.performHeldKarp(adjacencyMatrix);
     }

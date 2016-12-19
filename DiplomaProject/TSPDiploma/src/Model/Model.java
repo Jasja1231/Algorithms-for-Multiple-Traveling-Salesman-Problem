@@ -77,8 +77,6 @@ public class Model extends Observable {
 
    public Model(){
     init();
-     
-
     // additional params for DefaultRouter where do we set it?
     Properties params = new Properties();
     params.setProperty("findShortestPath", "true");
@@ -91,9 +89,9 @@ public class Model extends Observable {
    //TODO: think about minimize values to be initialized
    public void init(){
        coordinates = new ArrayList<>();
-       algorithms = new ArrayList<Algorithm>();
+       algorithms = new ArrayList<>();
        
-       allAlgorithms = new ArrayList<Algorithm>();
+       allAlgorithms = new ArrayList<>();
        //KEEP THE ORDER
        allAlgorithms.add(SCIPAlgorithm);
        allAlgorithms.add(dynamicAlgorithm);
@@ -261,16 +259,16 @@ public class Model extends Observable {
             table2 = this.timeMatrix.getCosts();
         }
         
-        //Alg
+        //Algotiyhm
          for(Algorithm a : this.algorithms){
-                ArrayList<ArrayList<Integer>> cycles;
+               ArrayList<ArrayList<Integer>> cycles;
                if(!(a instanceof BruteForceAlgorithm || a instanceof ApproximationAlgorithm)){
                     result = a.solveProblem(table1,this.salesmanCount);
                     cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result,true);
                }
                else {
                     result = a.solveProblem(table2,this.salesmanCount);
-                    cycles = new  ArrayList<ArrayList<Integer>>();
+                    cycles = new  ArrayList<>();
                     ArrayList<Integer> temp =  new ArrayList<>();
                     for(int k : result)
                         temp.add(k);
@@ -278,9 +276,16 @@ public class Model extends Observable {
                     cycles.add(temp);
                     cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result,false);
                }
-
+               
+               //constucting solution
+               AlgorithmSolution solution = new AlgorithmSolution();
+               solution.setAlgorithmName(a.getName());
+               solution.setCycles(cycles);
+               solution.setSalesmenCount(salesmanCount);
+               solution.setCyclesLenth(calculateCyclesLengths(table2, cycles)); //TODO: 
+               
                 this.setChanged();
-                this.notifyObservers(cycles);
+                this.notifyObservers(solution);
             }
 
     }
@@ -307,7 +312,9 @@ public class Model extends Observable {
 
      /* 0 eucledian
            1 distance 
-           2 time
+           2 timeMetric(int selectedMetric) {
+        this.selectedMetric = selectedMetric;
+    }
         */
     public void setSelectedMetric(int selectedMetric) {
         this.selectedMetric = selectedMetric;
@@ -368,6 +375,29 @@ public class Model extends Observable {
         } catch (IOException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public ArrayList<Double> calculateCyclesLengths (float [][] adjMatrix, ArrayList<ArrayList<Integer>>solution)
+    {
+        ArrayList<Double> res = new ArrayList<>();
+        for (ArrayList<Integer>cycle:solution)
+        {
+            double sum =0;
+            for (int i=0;i<cycle.size()-1;i++)
+            {
+                sum += adjMatrix[cycle.get(i)][cycle.get(i+1)];
+            }
+            res.add(sum);
+        }
+        return res;
+    }
+    
+    public double calculateSolutionLength(ArrayList<Double>solution)
+    {
+        double len = 0;
+        for (double c : solution)
+            len += c;
+        return len;
     }
 }
 

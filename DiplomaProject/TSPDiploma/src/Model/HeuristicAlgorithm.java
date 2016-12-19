@@ -23,4 +23,9 @@ public class HeuristicAlgorithm implements Algorithm {
         solution = greedy.getSolutionVertices();
         return solution;    
     }
+    
+    @Override
+    public String getName() {
+      return "Heuristic algorithm";
+    }
 }

@@ -28,7 +28,9 @@ public class AlgorithmData {
         return coolist;
     }
     
-    public int getNumSalesmen (){return numSalesmen;}
+    public int getNumSalesmen (){
+        return numSalesmen;
+    }
     
     public AlgorithmData( List<Tuple<Float,Float>> coords, int numSalesmen)
     {

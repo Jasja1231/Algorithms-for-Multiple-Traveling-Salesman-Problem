@@ -11,4 +11,6 @@ package Model;
  */
 public interface Algorithm {
     public/*static*/ int [] solveProblem (float [][]adjacencyMatrix, Object... o);
+    
+    public String getName();
 }

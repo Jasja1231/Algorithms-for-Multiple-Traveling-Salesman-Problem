@@ -35,9 +35,7 @@ public class AlgorithmSolutionPanel  extends JPanel {
         this.setPreferredSize(d);
         this.setMaximumSize(d);
         this.setMinimumSize(d);
-        
         this.setBorder(BorderFactory.createMatteBorder(3,3,3,3,Color.WHITE));
-
         textArea = new JTextArea();
         textArea.setLineWrap(true);
         textArea.setEditable(false);

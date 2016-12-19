@@ -16,6 +16,11 @@ import java.util.Comparator;
  * @author Krzysztof
  */
 public class ApproximationAlgorithm implements Algorithm {
+
+    @Override
+    public String getName() {
+      return "Approximation algorithm";
+    }
     
     private class EdgeCostPair
     {

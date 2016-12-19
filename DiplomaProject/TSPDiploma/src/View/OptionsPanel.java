@@ -46,6 +46,7 @@ public class OptionsPanel extends javax.swing.JPanel {
         this.contentjPanel.add(inputDataPanel);
         //this.contentjPanel.add(algorithmChooseLabel);
         this.contentjPanel.add(algPanel); 
+        
     }
     
    

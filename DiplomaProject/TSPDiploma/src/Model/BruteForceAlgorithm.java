@@ -18,6 +18,11 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
 public class BruteForceAlgorithm  implements Algorithm {
 
     @Override
+    public String getName() {
+      return "Brute force algorithm";
+    }
+    
+    @Override
     public int[] solveProblem(float[][] adjacencyMatrix, Object... o) {
         //read optional parameter
          int salesmenCount = (int)o[0];

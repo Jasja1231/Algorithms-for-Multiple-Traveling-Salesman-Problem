@@ -16,4 +16,9 @@ public class SCIPAlgorithm  implements Algorithm {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
+    @Override
+    public String getName() {
+      return "SCIP algorithm";
+    }
+    
 }

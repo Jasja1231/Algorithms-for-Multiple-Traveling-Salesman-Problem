@@ -6,6 +6,7 @@
 package View;
 
 import Controller.Controller;
+import Model.AlgorithmSolution;
 import Model.Model;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -232,14 +233,14 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
      */
     @Override
     public void update(Observable o, Object arg) {
-        if(arg instanceof ArrayList<?>){
-            ArrayList<ArrayList<Integer>> cycles = (ArrayList<ArrayList<Integer>>) arg;
-            this.optionsPanel.displaySolution(cycles);
+        if(arg instanceof AlgorithmSolution){
+            AlgorithmSolution algSol = (AlgorithmSolution)arg;
+            this.optionsPanel.displaySolution(algSol.getCycles()); //TODO: change to take whole solution
             
             if(this.model.getSelectedMetric() != 0)
-                this.mapPanel.drawCycles(cycles);
+                this.mapPanel.drawCycles(algSol.getCycles());
             else
-                this.mapPanel.drawCyclesEuclideanLines(cycles);
+                this.mapPanel.drawCyclesEuclideanLines(algSol.getCycles());
         }
         int argInt = -1;
         try{

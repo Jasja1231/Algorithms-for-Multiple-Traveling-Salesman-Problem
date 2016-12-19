@@ -7,7 +7,6 @@ package View;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.util.ArrayList;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 
@@ -30,6 +29,7 @@ public class AlgorithmChoicesPanel extends javax.swing.JPanel {
     MainView parentView;
     /**
      * Creates new form AlgorithmChoicesPanel
+     * @param mainView main view of the application.
      */
     public AlgorithmChoicesPanel(MainView mainView) {
         initComponents();
