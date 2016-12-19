@@ -42,6 +42,7 @@ public class MapPanel extends javax.swing.JPanel {
     private Timer mouseTimer;
     private boolean wasDoubleClick;
     private PopUpMenuCustom pp;
+    private MapMarker mm; //TODO : fix it somehow!!
     /**
      * Creates new form MapPanel
      */
@@ -103,20 +104,24 @@ public class MapPanel extends javax.swing.JPanel {
                                 System.err.println("COO : " + coo.getLat() + "   " + coo.getLon() + " E : " + e.getX() + " " + e.getY());
                                 
                                 if(!SwingUtilities.isRightMouseButton(e) ){    //TO DO : Check WTF is going on
+                                    int dotID = MapPanel.this.parentView.model.getCoordinates().size();
                                     MapPanel.this.parentView.addCoordinate(coo);
                                     MapMarkerDot marker = new MapMarkerDot(Color.RED,coo.getLat(),coo.getLon());
+                                    marker.setMapMarkerID(dotID);
                                     MapPanel.this.map.addMapMarker(marker);  
                                 }
                                 if(!SwingUtilities.isLeftMouseButton(e) ){
-                                        final MapMarker mm = MapPanel.this.map.markerExistsWithTolerance(0.0006, coo);//.markerExists(new MapMarkerDot(coo.getLat(),coo.getLon()))){ //TODO: create separate method in JMapViewer so not to create marker every time
+                                        mm = MapPanel.this.map.markerExistsWithTolerance(0.0007, coo);//.markerExists(new MapMarkerDot(coo.getLat(),coo.getLon()))){ //TODO: create separate method in JMapViewer so not to create marker every time
                                         if(mm!=null){
-                                            pp.item.addActionListener(new ActionListener() {
-                                               @Override
-                                               public void actionPerformed(ActionEvent exa) {
-                                                   System.err.println("item popup action listener - EXECUTED");
-                                                   MapPanel.this.setStartingPoint(mm.getCoordinate());
-                                               }
-                                           });
+                                            if(pp.addedListenerAlready == false){
+                                                pp.item.addActionListener(new ActionListener() {
+                                                   @Override
+                                                   public void actionPerformed(ActionEvent exa) {
+                                                      MapPanel.this.setStartingPoint(mm);
+                                                   }
+                                               });
+                                                pp.addedListenerAlready  = true;
+                                            }
                                            pp.showPopUp(e.getX(), e.getY());
                                         }
                                 }
@@ -131,8 +136,11 @@ public class MapPanel extends javax.swing.JPanel {
     }
    
     
-    private void setStartingPoint(Coordinate co){
-        this.parentView.setNewStartingPoint(co);
+    private void setStartingPoint(MapMarker mm){
+        this.parentView.setNewStartingPoint(mm.getCoordinate());
+        //swap elements in map markers list
+        int previousMMID = mm.getMapMarkerId();
+        this.map.swapMapDods(previousMMID);
     }
     
     
@@ -182,8 +190,8 @@ public class MapPanel extends javax.swing.JPanel {
                     for (int x=0;x < path.length;x++)
                     {
                         RoutingResultSegment rrs = this.parentView.model.getGraph().lookupSegment(path[x]);
-                        int from = rrs.getSourceId();
-                        int to = rrs.getTargetId();
+                        rrs.getSourceId();
+                        rrs.getTargetId();
                         LatLon[] lons = rrs.getLatLons();     
                         for (LatLon lon : lons)
                         {
@@ -191,9 +199,7 @@ public class MapPanel extends javax.swing.JPanel {
                         }
                     } 
                 }
-                catch(Exception e){
-                    System.out.println("exception azsxdcfvgkbjh,hgxfzgsxdfkglh;lgyrdesdcfvkglbh");
-                }
+                catch(Exception e){}
             }
             drawLines(ac);
        }
@@ -206,10 +212,9 @@ public class MapPanel extends javax.swing.JPanel {
         {
           List<Coordinate>ac = new ArrayList<>();
 
-          for (int i=0;i<singleRoute.size();i++)
-          {
-              ac.add(new Coordinate(this.parentView.model.getCoordinates().get(singleRoute.get(i)).getLat(),this.parentView.model.getCoordinates().get((singleRoute.get(i))).getLon()));
-          }
+            for (Integer singleRoute1 : singleRoute) {
+                ac.add(new Coordinate(this.parentView.model.getCoordinates().get(singleRoute1).getLat(), this.parentView.model.getCoordinates().get(singleRoute1).getLon()));
+            }
           drawLines(ac);
         } 
     }

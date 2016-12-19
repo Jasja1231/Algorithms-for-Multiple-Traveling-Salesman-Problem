@@ -30,8 +30,9 @@ import javax.swing.event.PopupMenuListener;
 public class PopUpMenuCustom extends JPopupMenu {
 
   public JPopupMenu popup;
-  public  JMenuItem item;
+  public JMenuItem item;
   public JPanel parent;
+  public boolean addedListenerAlready = false;
 
   public PopUpMenuCustom(MapPanel parentMapView) {
     popup = new JPopupMenu();

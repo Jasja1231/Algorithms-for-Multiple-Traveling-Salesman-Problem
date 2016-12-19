@@ -89,6 +89,15 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
     protected JButton zoomInButton;
     protected JButton zoomOutButton;
 
+    public void swapMapDods(int previousMMID) {                                 //ADDED YARYNA
+       System.err.println("====== MAP :   swapping  " + previousMMID + " with element zero");
+       Collections.swap(mapMarkerList, 0, previousMMID);
+       mapMarkerList.get(previousMMID).setMapMarkerID(previousMMID);
+       mapMarkerList.get(0).setMapMarkerID(0);
+       System.err.println("AT zero id : " +  mapMarkerList.get(0).getMapMarkerId() + " At "+ previousMMID + " " + mapMarkerList.get(previousMMID).getMapMarkerId());
+       repaint();
+    }
+
     /**
      * Apparence of zoom controls.
      */
@@ -1080,6 +1089,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
                  && mm.getLat() < coo.getLat()+t
                  && coo.getLon()-t < mm.getLon()
                  &&  mm.getLon() < coo.getLon()+t){
+                 
                  return mm;
              }
          }

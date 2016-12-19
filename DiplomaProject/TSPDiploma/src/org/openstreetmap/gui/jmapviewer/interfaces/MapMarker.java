@@ -57,4 +57,16 @@ public interface MapMarker extends MapObject, ICoordinate {
      * @param radius radius
      */
     void paint(Graphics g, Point position, int radius);
+    
+    
+    /***
+     * Sets MapMarket object id.
+     * @param mapMarkerCircleID id to be set for the marker 
+     */
+    void setMapMarkerID(int mapMarkerCircleID);
+    
+     /***
+     * Get MapMarket object id.
+     */
+    int getMapMarkerId();
 }

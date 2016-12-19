@@ -221,8 +221,8 @@ public class Model extends Observable {
     public void startComputation() {
         try {
             this.buildTimeMatrix((ArrayList)this.coordinates);
-            this.buildShortestPaths((ArrayList)coordinates);
-            this.buildEuclideanMatrix((ArrayList)coordinates);
+            this.buildShortestPaths((ArrayList)this.coordinates);
+            this.buildEuclideanMatrix((ArrayList)this.coordinates);
         } catch (Osm2poException ex) {
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -322,7 +322,6 @@ public class Model extends Observable {
     public void setNewStartingPoint(Coordinate co) {
         int index = this.coordinates.indexOf(co); 
         Collections.swap(this.coordinates, 0, index);
-        //TODO: recalculate adjecency metrix // substitute first row with index row and first columt with index column ?
     }
     
     int count = 0;

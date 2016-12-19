@@ -23,6 +23,17 @@ public class MapMarkerCircle extends MapObjectImpl implements MapMarker {
     private Coordinate coord;
     private double radius;
     private STYLE markerStyle;
+    private int mapMarkerCircleID; 
+
+    public int getMapMarkerId() {
+        return mapMarkerCircleID;
+    }
+
+    public void setMapMarkerID(int mapMarkerCircleID) {
+        this.mapMarkerCircleID = mapMarkerCircleID;
+    }
+    
+    
 
     /**
      * Constructs a new {@code MapMarkerCircle}.
@@ -136,12 +147,17 @@ public class MapMarkerCircle extends MapObjectImpl implements MapMarker {
             Composite oldComposite = g2.getComposite();
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
             g2.setPaint(getBackColor());
+            
+            if(this.getMapMarkerId()==0){//ADDED YARYNA
+                g.setColor(Color.RED);
+            }
+            
             g.fillOval(position.x - sizeH, position.y - sizeH, size, size);
             g2.setComposite(oldComposite);
         }
-        g.setColor(getColor());
+        g.setColor(this.getColor());
         g.drawOval(position.x - sizeH, position.y - sizeH, size, size);
-
+        g.drawString(mapMarkerCircleID + "", position.x+sizeH, position.y+sizeH);                                                      //ADDED YARYNA
         if (getLayer() == null || getLayer().isVisibleTexts()) paintText(g, position);
     }
 
