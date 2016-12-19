@@ -9,6 +9,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.util.ArrayList;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -133,4 +134,12 @@ public class OptionsPanel extends javax.swing.JPanel {
      public int  getSalesmanCount(){
        return this.inputDataPanel.getSalesmanCount();
    }
+
+    void displaySolution(ArrayList<ArrayList<Integer>> cycles) {
+       AlgorithmSolutionPanel alpP = new AlgorithmSolutionPanel(this.parentView, cycles);
+       this.contentjPanel.add(alpP);
+       alpP.setVisible(true);
+       this.revalidate();
+       this.repaint();
+    }
 }
