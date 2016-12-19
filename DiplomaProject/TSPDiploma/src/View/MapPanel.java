@@ -138,7 +138,6 @@ public class MapPanel extends javax.swing.JPanel {
     
     public void drawLines(List<Coordinate> route){
         Color thisRouteColor = generateRandomColor();
-
         for(int i = 0; i < route.size()-1;i++){
              List<Coordinate> tempRouteBetweenTwoPoints = new ArrayList<>();
              tempRouteBetweenTwoPoints.add(route.get(i));
@@ -147,6 +146,7 @@ public class MapPanel extends javax.swing.JPanel {
              
              MapPolygonImpl mapPoly = new MapPolygonImpl(tempRouteBetweenTwoPoints);
              mapPoly.setColor(thisRouteColor);
+             //mapPoly.setBackColor(thisRouteColor);
              map.addMapPolygon(mapPoly);
         }
     }   
@@ -172,17 +172,15 @@ public class MapPanel extends javax.swing.JPanel {
     
     public void drawCycles (ArrayList<ArrayList<Integer>>cycles)
     {
-        for(ArrayList<Integer>l : cycles)
+        for(ArrayList<Integer> l : cycles)
         {
-            List<Coordinate>ac = new ArrayList<>();
-            
-            for(int i=0; i<l.size()-1; i++){
+            ArrayList<Coordinate>ac = new ArrayList<>();
+            for(int i=0; i < l.size()-1; i++){
                // ac.add(this.parentView.model.getCoordinates().get(i));
                 try{
-                    int [] path = this.parentView.model.getTimeMatrix()[i][i+1];
-                    for (int x=0;x<path.length;x++)
+                    int [] path = this.parentView.model.getTimeMatrix()[l.get(i)][l.get(i+1)];
+                    for (int x=0;x < path.length;x++)
                     {
-
                         RoutingResultSegment rrs = this.parentView.model.getGraph().lookupSegment(path[x]);
                         int from = rrs.getSourceId();
                         int to = rrs.getTargetId();
@@ -193,10 +191,12 @@ public class MapPanel extends javax.swing.JPanel {
                         }
                     } 
                 }
-                  catch(Exception e){}
+                catch(Exception e){
+                    System.out.println("exception azsxdcfvgkbjh,hgxfzgsxdfkglh;lgyrdesdcfvkglbh");
+                }
             }
             drawLines(ac);
-        }
+       }
     }
     
     

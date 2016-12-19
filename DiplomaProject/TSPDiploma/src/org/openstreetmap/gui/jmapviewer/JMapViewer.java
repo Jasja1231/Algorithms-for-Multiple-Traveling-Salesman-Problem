@@ -1,6 +1,7 @@
 // License: GPL. For details, see Readme.txt file.
 package org.openstreetmap.gui.jmapviewer;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -658,8 +659,11 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         if (mapPolygonsVisible && mapPolygonList != null) {
             synchronized (this) {
                 for (MapPolygon polygon : mapPolygonList) {
-                    if (polygon.isVisible())
+                    if (polygon.isVisible()){
+                        //MapPolygonImpl mm = (MapPolygonImpl)polygon; /*ADDED YARYNA*/
+                        g.setColor(polygon.getColor());
                         paintPolygon(g, polygon);
+                    }
                 }
             }
         }
@@ -997,8 +1001,8 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
      */
     public void addMapMarker(MapMarker marker) {
         if(!markerExists(marker)){
-        mapMarkerList.add(marker);
-        repaint();
+            mapMarkerList.add(marker);
+            repaint();
         }
     }
 
@@ -1053,7 +1057,7 @@ public class JMapViewer extends JPanel implements TileLoaderListener {
         mapPolygonList.add(polygon);
         repaint();
     }
-
+    
     //ADDED YARYNA
     public boolean markerExists(MapMarker m){
         for(MapMarker mm  : this.mapMarkerList){
