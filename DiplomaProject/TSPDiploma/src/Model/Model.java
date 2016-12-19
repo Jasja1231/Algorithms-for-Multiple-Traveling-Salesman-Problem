@@ -6,6 +6,7 @@
 package Model;
 
 import Algorithms.AlgorithmData;
+import Algorithms.Haversine;
 import Algorithms.Parser;
 import Model.ApproximationAlgorithm;
 import Algorithms.SolutionOperations;
@@ -137,8 +138,8 @@ public class Model extends Observable {
                double y1 = coords.get(i).getLon();;
                double y2 = coords.get(j).getLon();
                
-               double distance = Math.sqrt(Math.pow((x1-x2), 2) + Math.pow((y1-y2), 2));
-               
+               //double distance = Math.sqrt(Math.pow((x1-x2), 2) + Math.pow((y1-y2), 2));
+               double distance = Haversine.haversine(y1, x1, y2, x2);
                euclideanDistanceMatrix[j][i] =(float) distance;
                euclideanDistanceMatrix[i][j] =(float) distance;
            }
