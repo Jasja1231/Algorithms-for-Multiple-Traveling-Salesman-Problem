@@ -103,7 +103,7 @@ public class Model extends Observable {
        allAlgorithms.add(approximationAlgorithm);
        
        //Routing stuff initialization
-       File graphFile = new File("warsaw.gph");  //TODO: make it static or whatever
+       File graphFile = new File("warsaw3.gph");  //TODO: make it static or whatever
        graph = new Graph(graphFile);
        router = new PoiRouter();
        timeMatrix = new TspDefaultMatrix();
@@ -265,9 +265,21 @@ public class Model extends Observable {
         //Algotiyhm
          for(Algorithm a : this.algorithms){
                ArrayList<ArrayList<Integer>> cycles;
-               if(!(a instanceof BruteForceAlgorithm || a instanceof ApproximationAlgorithm)){
+               if(!(a instanceof BruteForceAlgorithm || a instanceof ApproximationAlgorithm || a instanceof HeuristicAlgorithm)){
+                    if (!(a instanceof SCIPAlgorithm))
+                    {
                     result = a.solveProblem(table1,this.salesmanCount);
                     cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result,true);
+                    }
+                    else
+                    {
+                    result  = a.solveProblem(table2, this.salesmanCount, this.coordinates);
+                    //cycles = SolutionOperations.getCyclesFromSolution(1, result, false
+                    cycles = new ArrayList<>();
+                    cycles.add(new ArrayList<Integer>());
+                    for (int i=0;i<result.length;i++)
+                        cycles.get(0).add(result[i]);
+                    }
                }
                else {
                     result = a.solveProblem(table2,this.salesmanCount);

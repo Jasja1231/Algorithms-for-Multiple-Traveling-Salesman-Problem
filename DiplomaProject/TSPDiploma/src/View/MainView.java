@@ -131,6 +131,7 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
         FileMenu.add(loadFilejMenuItem);
 
         jMenuItem1.setText("Generate multiple random files");
+        jMenuItem1.setVisible(false);
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);

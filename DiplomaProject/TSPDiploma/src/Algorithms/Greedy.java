@@ -17,6 +17,11 @@ public class Greedy {
     allEdges = new TreeSet(new Edge());  // Create empty priority queue
     allNewEdges = new Vector(MAX_NODES); // Create vector for MST edges
   }
+  
+  public Vector getSolutionEdges()
+  {
+      return allNewEdges;
+  }
 
   public void readInGraphData(float[][]matrix)
   {
@@ -250,7 +255,7 @@ public class Greedy {
     }
     
 
-  class Edge implements Comparator {
+  public class Edge implements Comparator {
     // Inner class for representing edge+end-points
     public int from, to, cost;
     public Edge() {
