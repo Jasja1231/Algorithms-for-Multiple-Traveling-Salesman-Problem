@@ -14,6 +14,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+import org.openstreetmap.gui.jmapviewer.Coordinate;
 
 /**
  *
@@ -21,7 +24,10 @@ import java.util.List;
  */
 public class Parser {
    
-    
+    public static double minLat;
+    public static double minLon;
+    public static double maxLat;
+    public static double maxLon;
     public static AlgorithmData parseFileContent(String fileContent)
     {
         ArrayList<Tuple<Float,Float>> coords = new ArrayList<>();
@@ -37,6 +43,25 @@ public class Parser {
             coords.add(t);
         }
         return new AlgorithmData(coords,numSalesmen);
+    }
+    
+    public static AlgorithmData generateRandomData(int numSalesmen, int numPoints) 
+    {
+        Random r = new Random(System.currentTimeMillis());
+        String newLine = System.getProperty("line.separator");
+        List<AlgorithmData.Tuple<Float,Float>> coords = new ArrayList<>();
+        for (int i=0;i<numPoints;i++)
+        {
+            double lat = ThreadLocalRandom.current().nextDouble(minLat,maxLat);
+            double lon = ThreadLocalRandom.current().nextDouble(minLon,maxLon);
+            coords.add(new Tuple<Float,Float>((float)lon,(float)lat));
+        }
+        return new AlgorithmData(coords, numSalesmen);
+    }
+    
+    public boolean writeRandomFile(String filename, int numSalesmen, int numPoints)
+    {
+        return(writeAlgorithnDataToFile(generateRandomData(numSalesmen,numPoints),filename));
     }
     
     public static String readFile (String filename) throws IOException 
@@ -75,7 +100,34 @@ public class Parser {
         return true;
     }
     
-     public static boolean writeAlgorithmSolutionToFile (AlgorithmSolution data, String filename)
+    public static List<Integer> parseZimpl (String zimplOut)
+    {
+        ArrayList<Integer>result = new ArrayList<>();
+        String newLine = System.getProperty("line.separator");
+        String []parts = zimplOut.split("objective value");
+        String meaningfulPart = parts[parts.length-1];
+        String [] lines = meaningfulPart.split(newLine);
+        for (int i=1;i<lines.length;i++)
+        {
+            try
+            {
+                String line = lines[i];
+                String [] split = line.split("\\$");
+                int idx1,idx2;
+                idx1 = Integer.parseInt(split[1]);
+                idx2 = Integer.parseInt(split[2].split(" ")[0]);
+                result.add(idx1);
+                result.add(idx2);
+            }
+            catch (Exception e)
+            {
+                break;
+            }
+        }
+        return result;
+    }
+    
+     public static boolean writeAlgorithmSolutionToFile (AlgorithmSolution data, List<Coordinate>coords, String filename)
     {
           if(!filename.endsWith(".txt")){
             filename += ".txt";
@@ -85,6 +137,12 @@ public class Parser {
         StringBuilder sb = new StringBuilder();
         sb.append(data.getAlgorithmName());
          sb.append(System.getProperty("line.separator"));
+         int count = 0;
+         for (Coordinate c : coords)
+         {
+             sb.append(count++).append(" ").append(c.getLon()).append(" ").append(c.getLat()).append(System.getProperty("line.separator"));
+             
+         }
         //add routes information
         int salesmen = 0 ; 
         for(ArrayList<Integer> singleRoute : data.getCycles()){
@@ -114,5 +172,19 @@ public class Parser {
         return true;
     }
      
+    public static boolean writeFile (String filename, String content)
+    {
+        try(BufferedWriter w = new BufferedWriter(new FileWriter(filename)))
+        {
+            w.write(content);
+        }
+        catch(IOException e)
+        {
+            return false;
+        }
+        
+        return true;
+    }
+    
     
 }

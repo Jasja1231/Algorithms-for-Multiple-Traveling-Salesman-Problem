@@ -6,6 +6,7 @@
 package Model;
 
 import Algorithms.AlgorithmData;
+import Algorithms.Haversine;
 import Algorithms.Parser;
 import Model.ApproximationAlgorithm;
 import Algorithms.SolutionOperations;
@@ -102,7 +103,7 @@ public class Model extends Observable {
        allAlgorithms.add(approximationAlgorithm);
        
        //Routing stuff initialization
-       File graphFile = new File("warsaw.gph");  //TODO: make it static or whatever
+       File graphFile = new File("warsaw3.gph");  //TODO: make it static or whatever
        graph = new Graph(graphFile);
        router = new PoiRouter();
        timeMatrix = new TspDefaultMatrix();
@@ -137,8 +138,8 @@ public class Model extends Observable {
                double y1 = coords.get(i).getLon();;
                double y2 = coords.get(j).getLon();
                
-               double distance = Math.sqrt(Math.pow((x1-x2), 2) + Math.pow((y1-y2), 2));
-               
+               //double distance = Math.sqrt(Math.pow((x1-x2), 2) + Math.pow((y1-y2), 2));
+               double distance = Haversine.haversine(y1, x1, y2, x2);
                euclideanDistanceMatrix[j][i] =(float) distance;
                euclideanDistanceMatrix[i][j] =(float) distance;
            }
@@ -264,9 +265,21 @@ public class Model extends Observable {
         //Algotiyhm
          for(Algorithm a : this.algorithms){
                ArrayList<ArrayList<Integer>> cycles;
-               if(!(a instanceof BruteForceAlgorithm || a instanceof ApproximationAlgorithm)){
+               if(!(a instanceof BruteForceAlgorithm || a instanceof ApproximationAlgorithm || a instanceof HeuristicAlgorithm)){
+                    if (!(a instanceof SCIPAlgorithm))
+                    {
                     result = a.solveProblem(table1,this.salesmanCount);
                     cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result,true);
+                    }
+                    else
+                    {
+                    result  = a.solveProblem(table2, this.salesmanCount, this.coordinates);
+                    //cycles = SolutionOperations.getCyclesFromSolution(1, result, false
+                    cycles = new ArrayList<>();
+                    cycles.add(new ArrayList<Integer>());
+                    for (int i=0;i<result.length;i++)
+                        cycles.get(0).add(result[i]);
+                    }
                }
                else {
                     result = a.solveProblem(table2,this.salesmanCount);
@@ -290,7 +303,7 @@ public class Model extends Observable {
                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss") ;
                Date date = new Date() ;
 
-               Parser.writeAlgorithmSolutionToFile(solution, solution.getAlgorithmName()+dateFormat.format(date));
+               Parser.writeAlgorithmSolutionToFile(solution, coordinates,solution.getAlgorithmName()+dateFormat.format(date));
                 this.setChanged();
                 this.notifyObservers(solution);
             }
