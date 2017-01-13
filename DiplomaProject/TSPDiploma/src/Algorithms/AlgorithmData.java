@@ -13,7 +13,7 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
  *
  * @author Krzysztof
  */
-public class AlgorithmData {
+public final class AlgorithmData {
     private List<Tuple<Float,Float>> coords; //lon,lat
     private int numSalesmen;
     
@@ -28,6 +28,15 @@ public class AlgorithmData {
         return coolist;
     }
     
+     public List<Tuple<Float,Float>> getAsTuples(List<Coordinate> cords){
+         List<Tuple<Float,Float>> list = new ArrayList<Tuple<Float,Float>>();
+       for(Coordinate tt : cords){
+           Tuple<Float,Float> coo = new Tuple((float)tt.getLat(),(float) tt.getLon());
+           list.add(coo);
+       }
+       return list;
+    }
+     
     public int getNumSalesmen (){
         return numSalesmen;
     }
@@ -36,6 +45,17 @@ public class AlgorithmData {
     {
         this.numSalesmen = numSalesmen;
         this.coords = coords;    
+    }
+    
+    /**
+     *
+     * @param coords
+     * @param salesmanCount
+     */
+    public AlgorithmData(int salesmanCount,ArrayList<Coordinate> coords)
+    {
+        this.numSalesmen = salesmanCount;
+        this.coords = getAsTuples(coords);    
     }
     
     public static class Tuple<X, Y> 

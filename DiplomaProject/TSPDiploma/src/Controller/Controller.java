@@ -69,5 +69,13 @@ public class Controller {
         this.model.loadInputFile(file);
     }
 
+    /***
+     * 
+     * @param selectedFile 
+     */
+    public void saveInputFile(File selectedFile) {
+       this.model.saveInputFile(selectedFile);
+    }
+
    
 }

@@ -51,6 +51,9 @@ public class Parser {
     
     public static boolean writeAlgorithnDataToFile (AlgorithmData data, String filename)
     {
+        if(!filename.endsWith(".txt")){
+            filename += ".txt";
+        }
         String content = "";
         String newLine = System.getProperty("line.separator");
         content +=data.getNumSalesmen() +  newLine;
@@ -74,6 +77,10 @@ public class Parser {
     
      public static boolean writeAlgorithmSolutionToFile (AlgorithmSolution data, String filename)
     {
+          if(!filename.endsWith(".txt")){
+            filename += ".txt";
+        }
+      
         String content = "";
         StringBuilder sb = new StringBuilder();
         sb.append(data.getAlgorithmName());

@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
+import javax.swing.JTextField;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 
 /**
@@ -60,6 +61,7 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
         controller.setMainView(this);
 
         this.constructMenu();
+        this.fileMenu.add(new JTextField("   Seach ....  "));
         
         this.pack();
     }
@@ -106,6 +108,7 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
         loadFilejMenuItem = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
         saveSolutionScreenShotMenuItem = new javax.swing.JMenuItem();
+        saveinputMenuItem = new javax.swing.JMenuItem();
         EditMenu = new javax.swing.JMenu();
         EditInputMenuItem = new javax.swing.JMenuItem();
         resetMenuItem = new javax.swing.JMenuItem();
@@ -145,6 +148,14 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
             }
         });
         FileMenu.add(saveSolutionScreenShotMenuItem);
+
+        saveinputMenuItem.setText("Save input file");
+        saveinputMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveinputMenuItemActionPerformed(evt);
+            }
+        });
+        FileMenu.add(saveinputMenuItem);
 
         jMenuBar1.add(FileMenu);
 
@@ -225,6 +236,16 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
         }
     }//GEN-LAST:event_saveSolutionScreenShotMenuItemActionPerformed
 
+    private void saveinputMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveinputMenuItemActionPerformed
+        //open file chooser to choose direcrtory
+        this.model.setSalesmenCount(this.optionsPanel.getSalesmanCount());
+         FILE_CHOOSER.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int returnVal = FILE_CHOOSER.showSaveDialog(this);
+        if(returnVal == JFileChooser.APPROVE_OPTION){
+            this.controller.saveInputFile(FILE_CHOOSER.getSelectedFile());
+        }
+    }//GEN-LAST:event_saveinputMenuItemActionPerformed
+
     /***
      * 
      * @param o
@@ -257,11 +278,6 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
         }
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     /**
      * @param args the command line arguments
      */
@@ -279,6 +295,7 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
     private javax.swing.JMenuItem loadFilejMenuItem;
     private javax.swing.JMenuItem resetMenuItem;
     private javax.swing.JMenuItem saveSolutionScreenShotMenuItem;
+    private javax.swing.JMenuItem saveinputMenuItem;
     // End of variables declaration//GEN-END:variables
 
     void addCoordinate(Coordinate coo) {
@@ -312,5 +329,10 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
 
      void setNewStartingPoint(Coordinate co) {
        this.controller.setNewStartingPoint(co);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

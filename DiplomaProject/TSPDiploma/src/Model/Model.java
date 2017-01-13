@@ -406,5 +406,10 @@ public class Model extends Observable {
             len += c;
         return len;
     }
+
+    public void saveInputFile(File selectedFile) {
+        //read num of salesman to model
+        Parser.writeAlgorithnDataToFile(new AlgorithmData(salesmanCount,(ArrayList)coordinates), selectedFile.getPath());
+    }
 }
 
