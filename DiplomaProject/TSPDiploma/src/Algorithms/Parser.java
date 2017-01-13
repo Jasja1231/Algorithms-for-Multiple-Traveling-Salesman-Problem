@@ -23,11 +23,12 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
  * @author Krzysztof
  */
 public class Parser {
-   
-    public static double minLat;
-    public static double minLon;
-    public static double maxLat;
-    public static double maxLon;
+    
+    public static double minLat = 52.04053;
+    public static double minLon = 20.65320;
+    public static double maxLat = 52.44973;
+    public static double maxLon = 21.39557;
+    
     public static AlgorithmData parseFileContent(String fileContent)
     {
         ArrayList<Tuple<Float,Float>> coords = new ArrayList<>();
@@ -37,9 +38,9 @@ public class Parser {
         {
             float lat, lon;
             String [] line = lines[i].split("\\s+");
-            lon = Float.parseFloat(line[0]);
-            lat = Float.parseFloat(line[1]);
-            Tuple <Float,Float> t = new Tuple<>(lon,lat);
+            lat = Float.parseFloat(line[0]);
+            lon = Float.parseFloat(line[1]);
+            Tuple <Float,Float> t = new Tuple<>(lat,lon);
             coords.add(t);
         }
         return new AlgorithmData(coords,numSalesmen);
@@ -54,7 +55,7 @@ public class Parser {
         {
             double lat = ThreadLocalRandom.current().nextDouble(minLat,maxLat);
             double lon = ThreadLocalRandom.current().nextDouble(minLon,maxLon);
-            coords.add(new Tuple<Float,Float>((float)lon,(float)lat));
+            coords.add(new Tuple<Float,Float>((float)lat,(float)lon));
         }
         return new AlgorithmData(coords, numSalesmen);
     }
@@ -140,7 +141,7 @@ public class Parser {
          int count = 0;
          for (Coordinate c : coords)
          {
-             sb.append(count++).append(" ").append(c.getLon()).append(" ").append(c.getLat()).append(System.getProperty("line.separator"));
+             sb.append(count++).append(" ").append(c.getLat()).append(" ").append(c.getLon()).append(System.getProperty("line.separator"));
              
          }
         //add routes information

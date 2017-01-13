@@ -77,5 +77,9 @@ public class Controller {
        this.model.saveInputFile(selectedFile);
     }
 
+    public void generateAndSaveFiles(int numOffiles, String directoryName,int maxPoints, int maxSalesmen) {
+        this.model.generateAndSaveFiles(numOffiles,directoryName, maxPoints, maxSalesmen); 
+    }
+
    
 }
