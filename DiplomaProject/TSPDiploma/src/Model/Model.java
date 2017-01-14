@@ -8,7 +8,6 @@ package Model;
 import Algorithms.AlgorithmData;
 import Algorithms.Haversine;
 import Algorithms.Parser;
-import Model.ApproximationAlgorithm;
 import Algorithms.SolutionOperations;
 import View.MapPanel;
 import de.cm.osm2po.errors.Osm2poException;
@@ -70,6 +69,9 @@ public class Model extends Observable {
      */
     List<Coordinate> coordinates;
     
+    /***
+     * Number of salesman
+     */
     int salesmanCount = 0 ;
     
     /***
@@ -79,6 +81,14 @@ public class Model extends Observable {
     private int selectedMetric;
     private float[][] extendedEuclideanMatrix;
     
+    /***
+     * Boolean value representing whether user loaded a single file or a directory with files
+     */
+    private boolean loadedSingleFile = true;
+    
+    public void isLoadedSingleFile(boolean b){
+        this.loadedSingleFile = b;
+    }
 
    public Model(){
     init();
@@ -463,6 +473,10 @@ public class Model extends Observable {
         }
     }
     
+    public void loadDirectory(File selectedDirectory) {
+        
+    }
+    
     public ArrayList<Double> calculateCyclesLengths (float [][] adjMatrix, ArrayList<ArrayList<Integer>>solution)
     {
         ArrayList<Double> res = new ArrayList<>();
@@ -510,5 +524,7 @@ public class Model extends Observable {
             Parser.writeAlgorithnDataToFile(algData, filename);
         }
     }
+
+    
 }
 

@@ -69,6 +69,10 @@ public class Controller {
         this.model.loadInputFile(file);
     }
 
+    public void loadDirectoryInputSet(File selectedFile) {
+       this.model.loadDirectory(selectedFile);
+    }
+
     /***
      * 
      * @param selectedFile 
@@ -81,5 +85,6 @@ public class Controller {
         this.model.generateAndSaveFiles(numOffiles,directoryName, maxPoints, maxSalesmen); 
     }
 
+   
    
 }
