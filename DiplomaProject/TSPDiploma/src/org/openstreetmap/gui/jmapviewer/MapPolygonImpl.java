@@ -80,8 +80,9 @@ public class MapPolygonImpl extends MapObjectImpl implements MapPolygon {
             oldStroke = g2.getStroke();
             g2.setStroke(getStroke());
             
-            
-            
+            Stroke st = new BasicStroke(6,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND);
+           
+            g2.setStroke(st); ///YARYNA ADDED
         }
         
         
@@ -95,7 +96,7 @@ public class MapPolygonImpl extends MapObjectImpl implements MapPolygon {
             //g2.fillPolygon(polygon);
             g2.setComposite(oldComposite);
             
-            g2.setStroke(new BasicStroke(7));
+            g2.setStroke(new BasicStroke(15)); ///YARYNA ADDED
         }
         // Restore graphics
         g.setColor(oldColor);

@@ -27,6 +27,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Observable;
 import java.util.Properties;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -482,6 +484,31 @@ public class Model extends Observable {
         for (double c : solution)
             len += c;
         return len;
+    }
+
+    public void saveInputFile(File selectedFile) {
+        //read num of salesman to model
+        Parser.writeAlgorithnDataToFile(new AlgorithmData(salesmanCount,(ArrayList)coordinates), selectedFile.getPath());
+    }
+
+    public void generateAndSaveFiles(int numOffiles, String directoryName, int maxPoints, int maxSalesmen) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss") ;
+        Date date = new Date();
+        directoryName = directoryName + "\\"+ "RandomSetTSP"+ dateFormat.format(date);
+        
+        //Create directory
+        new File(directoryName).mkdir();
+        
+        for(int i=0;i<numOffiles;i++){
+            Random r = new Random(System.currentTimeMillis());
+            int salesmen =ThreadLocalRandom.current().nextInt(1, maxSalesmen + 1);// r.nextInt(maxSalesmen);
+            int points = ThreadLocalRandom.current().nextInt(1, maxPoints + 1);//r.nextInt(maxPoints);
+            
+            AlgorithmData algData  = Parser.generateRandomData(salesmen,points); 
+            
+            String filename = directoryName + "\\" + "randomFile" + i + ".txt";
+            Parser.writeAlgorithnDataToFile(algData, filename);
+        }
     }
 }
 

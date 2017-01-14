@@ -69,5 +69,17 @@ public class Controller {
         this.model.loadInputFile(file);
     }
 
+    /***
+     * 
+     * @param selectedFile 
+     */
+    public void saveInputFile(File selectedFile) {
+       this.model.saveInputFile(selectedFile);
+    }
+
+    public void generateAndSaveFiles(int numOffiles, String directoryName,int maxPoints, int maxSalesmen) {
+        this.model.generateAndSaveFiles(numOffiles,directoryName, maxPoints, maxSalesmen); 
+    }
+
    
 }
