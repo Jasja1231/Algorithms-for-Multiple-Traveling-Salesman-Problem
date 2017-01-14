@@ -24,10 +24,10 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
  */
 public class Parser {
    
-    public static double minLat;
-    public static double minLon;
-    public static double maxLat;
-    public static double maxLon;
+    public static double minLat = 52.04053;
+    public static double minLon = 20.65320;
+    public static double maxLat = 52.44973;
+    public static double maxLon = 21.39557;
     public static AlgorithmData parseFileContent(String fileContent)
     {
         ArrayList<Tuple<Float,Float>> coords = new ArrayList<>();
@@ -97,6 +97,8 @@ public class Parser {
         return true;
     }
     
+    
+    
     public static List<Integer> parseZimpl (String zimplOut)
     {
         ArrayList<Integer>result = new ArrayList<>();
@@ -123,6 +125,31 @@ public class Parser {
         }
         return result;
     }
+    
+    public static boolean writeReportFileForMultipleAlgorithmsHorizontal (List<AlgorithmSolution>data, String filename)
+    {
+        String content = "";
+        StringBuilder sb = new StringBuilder();
+        String newLine = (System.getProperty("line.separator"));
+        for (AlgorithmSolution s : data)
+        {
+            sb.append(s.getAlgorithmName()).append(" time: ");
+            sb.append(s.getCalculationTime()).append(" s");
+            sb.append(" distance: ").append(s.getAllDistance()).append(" km").append(newLine);
+        }
+        content = sb.toString();
+        try(BufferedWriter w = new BufferedWriter(new FileWriter(filename)))
+        {
+            w.write(content);
+        }
+        catch(IOException e)
+        {
+            return false;
+        }
+
+        return true;
+    }
+    
     
      public static boolean writeAlgorithmSolutionToFile (AlgorithmSolution data, List<Coordinate>coords, String filename)
     {

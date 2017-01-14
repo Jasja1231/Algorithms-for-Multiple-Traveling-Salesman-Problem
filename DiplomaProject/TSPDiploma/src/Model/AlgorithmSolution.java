@@ -17,6 +17,7 @@ public class AlgorithmSolution {
     private int salesmenCount;
     private double allDistance;
     private ArrayList<Double> cyclesLenth;
+    public double calculationTime;
     
     public AlgorithmSolution(){
     }
@@ -59,6 +60,20 @@ public class AlgorithmSolution {
 
     public void setCyclesLenth(ArrayList<Double> cyclesLenth) {
         this.cyclesLenth = cyclesLenth;
+    }
+
+    /**
+     * @return the calculationTime
+     */
+    public double getCalculationTime() {
+        return calculationTime;
+    }
+
+    /**
+     * @param calculationTime the calculationTime to set
+     */
+    public void setCalculationTime(double calculationTime) {
+        this.calculationTime = calculationTime;
     }
     
     

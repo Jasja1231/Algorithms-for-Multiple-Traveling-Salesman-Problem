@@ -82,7 +82,7 @@ public class SolutionOperations {
         for (int i=0,l=0;i<solution.length;i++)
         {
            int val = solution[i];
-             if (val == 0)
+             if (val == 0 && i !=0)
                  l++;
              else
                  result.get(l).add(solution[i]);

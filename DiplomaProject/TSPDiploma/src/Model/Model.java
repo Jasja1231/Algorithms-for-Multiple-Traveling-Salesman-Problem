@@ -82,11 +82,11 @@ public class Model extends Observable {
     init();
     // additional params for DefaultRouter where do we set it?
     Properties params = new Properties();
-    params.setProperty("findShortestPath", "true");
+    params.setProperty("findShortestPath", "false");
     params.setProperty("ignoreRestrictions", "false");
     params.setProperty("ignoreOneWays", "false");
-    params.setProperty("heuristicFactor", "1.0"); // 0.0 Dijkstra, 1.0 good A*
-    params.setProperty("matrix.fullSearchLoops", "5");
+    params.setProperty("heuristicFactor", "0.0"); // 0.0 Dijkstra, 1.0 good A*
+    params.setProperty("matrix.fullSearchLoops", "100");
    }
    
    //TODO: think about minimize values to be initialized
@@ -122,7 +122,7 @@ public class Model extends Observable {
            int id = graph.findClosestVertexId((float)c.getLat(), (float)c.getLon());
            vertexIDs[i++] = id;
        }
-       timeMatrix.build(graph, vertexIDs, Float.MAX_VALUE, Log.stdout(Log.LEVEL_LOG), params);
+       timeMatrix.build(graph, vertexIDs, Float.MAX_VALUE, Log.stderr(Log.LEVEL_LOG), params);
    }
     
    public void buildEuclideanMatrix(ArrayList<Coordinate>coords)
@@ -133,13 +133,13 @@ public class Model extends Observable {
        {
            for (int j=0;j<coords.size();j++)
            {
-               double x1 = coords.get(i).getLat();
-               double x2 = coords.get(j).getLat();
-               double y1 = coords.get(i).getLon();;
-               double y2 = coords.get(j).getLon();
+               double lat1 = coords.get(i).getLat();
+               double lat2 = coords.get(j).getLat();
+               double lon1 = coords.get(i).getLon();;
+               double lon2 = coords.get(j).getLon();
                
                //double distance = Math.sqrt(Math.pow((x1-x2), 2) + Math.pow((y1-y2), 2));
-               double distance = Haversine.haversine(y1, x1, y2, x2);
+               double distance = Haversine.haversine(lat1, lon1, lat2, lon2);
                euclideanDistanceMatrix[j][i] =(float) distance;
                euclideanDistanceMatrix[i][j] =(float) distance;
            }
@@ -221,13 +221,77 @@ public class Model extends Observable {
     public void clearAlgorithms() {
        this.algorithms.clear();
     }
+    
+    private List<Integer> getUnreachableVertices (float[][] ... matrices)
+    {
+        ArrayList<Integer> vertices = new ArrayList<>();
+        for (float[][] m : matrices)
+        {
+            for (int idx = 0 ; idx < m.length ; idx++)
+            {
+                int cnt = 0;
+                
+                for (int i=0;i<m.length;i++)
+                {
+                   if (m[i][idx]==Float.MAX_VALUE && idx!=i)
+                       cnt++;
+                   if (m[idx][i]==Float.MAX_VALUE && idx!=i)
+                       cnt++;
+                }
+                if (cnt >= 2 * m.length-2)
+                    vertices.add(idx);
+            }   
+        }
+        return vertices;
+    }
 
     public void startComputation() {
         try {
             this.buildTimeMatrix((ArrayList)this.coordinates);
             this.buildShortestPaths((ArrayList)this.coordinates);
             this.buildEuclideanMatrix((ArrayList)this.coordinates);
+            for (int i=0 ; i < 4; i++)
+            {
+              List<Integer> unreachableVertices = getUnreachableVertices(this.shortestPathCostMatrix,this.timeMatrix.getCosts());
+              for (int unreachable : unreachableVertices)
+              {
+               Coordinate current =  coordinates.get(unreachable);
+               Coordinate newCoord;   
+                switch (i)
+                {
+                    //up
+                    case 0:
+                     newCoord = new Coordinate (current.getLat(),current.getLon()+0.002);
+                    coordinates.set(unreachable, newCoord);
+                    break;         
+                    //down    
+                    case 1:
+                    newCoord = new Coordinate (current.getLat(),current.getLon()-0.004);
+                    coordinates.set(unreachable, newCoord);
+                    break;
+                    //left    
+                    case 2:
+                    newCoord = new Coordinate (current.getLat()+0.002,current.getLon()+0.002);
+                    coordinates.set(unreachable, newCoord);
+                    break;
+                    //right
+                    case 3:
+                    newCoord = new Coordinate (current.getLat()-0.004,current.getLon());
+                    coordinates.set(unreachable, newCoord);
+                    break;                
+                }
+              }
+            if (unreachableVertices.size()>0)
+            {
+            this.buildTimeMatrix((ArrayList)this.coordinates);
+            this.buildShortestPaths((ArrayList)this.coordinates);
+            this.buildEuclideanMatrix((ArrayList)this.coordinates);
+            System.err.println(i);
+            }
+            }
+            
         } catch (Osm2poException ex) {
+            System.out.println("exception\n");
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
         }
         

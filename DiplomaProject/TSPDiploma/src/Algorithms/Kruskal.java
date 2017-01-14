@@ -4,7 +4,7 @@ import java.util.*;
 
 
 public class Kruskal {
-  private final int MAX_NODES = 50;
+  private final int MAX_NODES = 500;
   private HashSet nodes[];               // Array of connected components
   private TreeSet allEdges;              // Priority queue of Edge objects
   private Vector allNewEdges;            // Edges in Minimal-Spanning Tree
@@ -18,6 +18,34 @@ public class Kruskal {
     allNewEdges = new Vector(MAX_NODES); // Create vector for MST edges
   }
 
+  
+  
+      public void ReadInGraphDataIgnoreBase(float[][] matrix) {
+        vertexCount = matrix.length-1;
+      
+      for (int y=1;y<matrix.length;y++)
+      {
+          for (int x=1;x<matrix[y].length;x++)
+          {
+            int from = x;
+            int to   = y;
+            int cost = (int)(1000*matrix[x][y]);
+            if(cost!=0 && from != to)
+            allEdges.add(new Edge(from-1, to-1, cost));  // Update priority queue
+            if (nodes[from-1] == null) {
+              // Create set of connect components [singleton] for this node
+              nodes[from-1] = new HashSet(2*MAX_NODES);
+              nodes[from-1].add(new Integer(from-1));
+            }
+
+            if (nodes[to-1] == null) {
+              // Create set of connect components [singleton] for this node
+              nodes[to-1] = new HashSet(2*MAX_NODES);
+              nodes[to-1].add(new Integer(to-1));
+            }
+          }   
+      }
+    }
   public void readInGraphData(float[][]matrix)
   {
       vertexCount = matrix.length;

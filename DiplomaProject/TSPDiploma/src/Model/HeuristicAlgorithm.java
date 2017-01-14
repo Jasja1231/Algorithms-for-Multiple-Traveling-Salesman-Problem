@@ -32,7 +32,8 @@ public class HeuristicAlgorithm implements Algorithm {
         int[][] adjMatrix = new int[adjacencyMatrix.length][adjacencyMatrix.length];
         int [] solution = null;
         Greedy greedy = new Greedy();
-        greedy.readInGraphData(reducedMatrix);
+        greedy.ReadInGraphDataIgnoreBase(adjacencyMatrix);
+        //greedy.readInGraphData(reducedMatrix);
         greedy.GreedySearch();
         Vector edges = greedy.getSolutionEdges();
         for (int i = 0; i < edges.size()-numSalesmen+1;i++)//there are n-1 edges already
@@ -51,19 +52,19 @@ public class HeuristicAlgorithm implements Algorithm {
                 firstDegree[i]=true;
             else firstDegree[i] = false;
         }       
-        //visited[0] = true; //we don't want to visit the base
+        //visited[0] = true; 
         
-        DFS.DFS(adjMatrix, visited, adjMatrix.length, 1, order);
-        order.add(0);
-        visited[0] = true;
+        //DFS.DFS(adjMatrix, visited, adjMatrix.length, 1, order);
+        //order.add(0);
+        visited[0] = true; //we don't want to visit the base
         boolean unvisited = true;
         while(unvisited)
         {
             int index = findFirstDegreeIndex(visited,firstDegree);
             if (index>0)
             {
-            DFS.DFS(adjMatrix, visited, adjMatrix.length, index, order);
             order.add(0);
+            DFS.DFS(adjMatrix, visited, adjMatrix.length, index, order);
             }
             else
                 unvisited = false;
@@ -92,18 +93,16 @@ public class HeuristicAlgorithm implements Algorithm {
     {
         int rowCount = 0, columnCount = 0;
         
-        // check the matrix row
         for (int i=0;i<adjMatrix[index].length;i++)
         {
-            if (adjMatrix[index][i]>0)
+            if (adjMatrix[index][i]>0)        // check the matrix row
+
                 rowCount++;
-        }
-        // check the matrix column
-        for (int i=0;i<adjMatrix.length;i++)
-        {
-            if (adjMatrix[i][index]>0)
+            if (adjMatrix[i][index]>0)        // check the matrix column
                 columnCount++;
-        }    
+        }
+
+   
         return (!(rowCount>=2&&columnCount>=2));
     }
 

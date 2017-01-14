@@ -24,17 +24,21 @@ public class ApproximationAlgorithm implements Algorithm {
     
     private class EdgeCostPair
     {
-        private int index;
+        private int fromIndex;
+        private int toIndex;
         private float cost;
-        public int getIndex () {return index;}
+        public int getfomIndex () {return fromIndex;}
+        public int gettoIndex () {return toIndex;}
         public float getCost(){return cost;}
-        public EdgeCostPair(int index, float cost)
+        public EdgeCostPair(int from, int to, float cost)
         {
-            this.index = index;
+            this.fromIndex = from;
+            this.toIndex = to;
             this.cost = cost;
         }
         public void setCost(float cost){this.cost = cost;}
-        public void setIndex(int index){this.index = index;}
+        public void setfromIndex(int index){this.fromIndex = index;}
+        public void settoIndex(int index){this.toIndex = index;}
     }
     
     class whyIsThis_a_Class implements Comparator<EdgeCostPair>
@@ -55,22 +59,14 @@ public class ApproximationAlgorithm implements Algorithm {
      //has to be without without additional bases, integer number of salesmen as first optional parameter
     {
         int [] solution;
-        float [][] reducedMatrix = new float[adjacencyMatrix.length-1][adjacencyMatrix.length-1];
-        for (int i=1;i<adjacencyMatrix.length;i++)
-        {
-            for (int j=1;j<adjacencyMatrix.length;j++)
-            {
-                reducedMatrix[i-1][j-1] = adjacencyMatrix[i][j];
-            }
-        }
         int numSalesmen = (int)o[0]; //0 if not changed  FIX IT
-        float bestBaseReturnCosts [] = new float [numSalesmen+1];
-        EdgeCostPair[]BestReturnEdges = new EdgeCostPair[numSalesmen+1];
+       // float bestBaseReturnCosts [] = new float [numSalesmen+1];
+        EdgeCostPair[]BestReturnEdges = new EdgeCostPair[numSalesmen];
         for (int i=0;i<BestReturnEdges.length;i++)
-            BestReturnEdges[i] = new EdgeCostPair(-1,Float.MAX_VALUE);
-        int bestBaseReturnPoints [] = new int[numSalesmen+1];
+            BestReturnEdges[i] = new EdgeCostPair(-1,-1,Float.MAX_VALUE);
+        //int bestBaseReturnPoints [] = new int[numSalesmen+1];
         Kruskal k = new Kruskal();
-        k.readInGraphData(reducedMatrix);
+        k.ReadInGraphDataIgnoreBase(adjacencyMatrix);
         k.performKruskal();
         int[][] kruskalMatrix = k.getResultAdjacencyMatrix();
         int idx = 0;
@@ -79,8 +75,9 @@ public class ApproximationAlgorithm implements Algorithm {
         boolean [] visited = new boolean [n];
         //visited[0] = true; //we don't want to visit the base
         DFS.DFS(kruskalMatrix, visited, n, 0, order);
-        float[] backToBaseCostsForEdges = new float [n];
-        EdgeCostPair[]AllReturnEdgesCosts = new EdgeCostPair[n];
+        order.add(0);
+        //float[] backToBaseCostsForEdges = new float [n];
+        EdgeCostPair[]AllReturnEdgesCosts = new EdgeCostPair[n+1];
         idx = 0;
         for (int i=0;i<order.size();i++)
         {
@@ -97,44 +94,52 @@ public class ApproximationAlgorithm implements Algorithm {
                 to = order.get(0);
             }
             cost = adjacencyMatrix[from+1][0] + adjacencyMatrix[0][to+1];
-            AllReturnEdgesCosts[idx++] = new EdgeCostPair(from,cost);
+            AllReturnEdgesCosts[idx++] = new EdgeCostPair(from,to,cost);
         }
-        for (int i=0;i<AllReturnEdgesCosts.length;i++)
-        {
-            BestReturnEdges[numSalesmen] =  AllReturnEdgesCosts[i];
-            Arrays.sort(BestReturnEdges, new whyIsThis_a_Class());
-        }
+        order.remove(order.size()-1);
+        Arrays.sort(AllReturnEdgesCosts, new whyIsThis_a_Class());
+
         
        solution = new int [n+numSalesmen];
-    //   for (int i=0;i<solution.length;i++)
-      //     solution[i] = -1;
        
-      /* for (int i=0,placedPoints=0;i<BestReturnEdges.length-1;i++)
+       for (int i=0,i2=0;i<order.size();i++)
        {
-           solution[order.indexOf(BestReturnEdges[i].getIndex())+placedPoints++] = 0;
-       }
-       for (int i=0,i2=0;i<solution.length;i++)
-       {
-           if(solution[i]!=0 && i!=solution.length-1)
+           boolean isReturnEdge = false;
+           int from,to;
+           if (i<order.size()-1)
+            {
+                from  = order.get(i);
+                to = order.get(i+1);
+            }
+            else
+            {
+                from  = order.get(i);
+                to = order.get(0);
+            }
+           for (int j=0;j<numSalesmen;j++)
            {
-               solution[i] = (order.get(i2++))+1;
-           }
+               EdgeCostPair current = AllReturnEdgesCosts[j];
+               if (from == current.getfomIndex() && to == current.gettoIndex())
+                   isReturnEdge = true;
+           }  
+           solution[i2++] = order.get(i)+1;
+           if (isReturnEdge)
+              i2++;
        }
-       */
+/*
        for (int i=0,i2=0;i<order.size();i++)
        {
           boolean contains = false;
-          for (int j=0;j<BestReturnEdges.length-1;j++)
+          for (int j=0;j<numSalesmen;j++)
           {
-           if (order.get(i)==BestReturnEdges[j].getIndex())
+           if (order.get(i)==AllReturnEdgesCosts[j].getIndex())
                contains = true;
           }
           if(contains)
               i2++;
           
           solution[i2++] = order.get(i)+1;
-       }
-       //solution[solution.length-1] = solution[0];
+       }*/
        return solution;
     }
 }
