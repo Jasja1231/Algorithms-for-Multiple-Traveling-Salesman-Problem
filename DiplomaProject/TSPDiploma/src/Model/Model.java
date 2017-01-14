@@ -88,7 +88,7 @@ public class Model extends Observable {
     params.setProperty("ignoreRestrictions", "false");
     params.setProperty("ignoreOneWays", "false");
     params.setProperty("heuristicFactor", "0.0"); // 0.0 Dijkstra, 1.0 good A*
-    params.setProperty("matrix.fullSearchLoops", "100");
+    params.setProperty("matrix.fullSearchLoops", "1000000");
    }
    
    //TODO: think about minimize values to be initialized
@@ -248,11 +248,14 @@ public class Model extends Observable {
     }
 
     public void startComputation() {
+         
+        float[][] timeMatrixWithoutUnreachableVertices = null; 
         try {
             this.buildTimeMatrix((ArrayList)this.coordinates);
             this.buildShortestPaths((ArrayList)this.coordinates);
             this.buildEuclideanMatrix((ArrayList)this.coordinates);
-            for (int i=0 ; i < 4; i++)
+            timeMatrixWithoutUnreachableVertices = this.timeMatrix.getCosts();
+            /*for (int i=0 ; i < 4; i++)
             {
               List<Integer> unreachableVertices = getUnreachableVertices(this.shortestPathCostMatrix,this.timeMatrix.getCosts());
               for (int unreachable : unreachableVertices)
@@ -290,6 +293,32 @@ public class Model extends Observable {
             this.buildEuclideanMatrix((ArrayList)this.coordinates);
             System.err.println(i);
             }
+            }*/
+            List<Integer> unreachableVerticesDistance = getUnreachableVertices(this.shortestPathCostMatrix);
+            List<Integer> unreachableVerticesTime = getUnreachableVertices(this.timeMatrix.getCosts());
+            
+            if (unreachableVerticesDistance.size()>0)
+            {
+                for (int unreachable : unreachableVerticesDistance)
+                {
+                    for (int i = 0 ; i < this.shortestPathCostMatrix.length; i ++)
+                    {
+                        shortestPathCostMatrix[unreachable][i] = euclideanDistanceMatrix [unreachable][i];
+                        shortestPathCostMatrix[i][unreachable] = euclideanDistanceMatrix [i][unreachable];
+                    }
+                }
+            }
+            if (unreachableVerticesTime.size()>0)
+            {
+               
+                for (int unreachable : unreachableVerticesDistance)
+                {
+                    for (int i = 0 ; i < this.shortestPathCostMatrix.length; i ++)
+                    {
+                        timeMatrixWithoutUnreachableVertices[unreachable][i] = euclideanDistanceMatrix [unreachable][i];
+                        timeMatrixWithoutUnreachableVertices[i][unreachable] = euclideanDistanceMatrix [i][unreachable];
+                    }
+                }
             }
             
         } catch (Osm2poException ex) {
@@ -299,12 +328,12 @@ public class Model extends Observable {
         
         if(salesmanCount>1)
         {
-            extendedTimeMatrix = getExtendedMatrixForMultipleSalesmen(salesmanCount, timeMatrix.getCosts());
+            extendedTimeMatrix = getExtendedMatrixForMultipleSalesmen(salesmanCount, timeMatrixWithoutUnreachableVertices);
             extendedShortestPathMatrix = getExtendedMatrixForMultipleSalesmen(salesmanCount, shortestPathCostMatrix);
             extendedEuclideanMatrix = getExtendedMatrixForMultipleSalesmen(salesmanCount, euclideanDistanceMatrix);
         }
         else if(salesmanCount==1){
-            extendedTimeMatrix = timeMatrix.getCosts();
+            extendedTimeMatrix = timeMatrixWithoutUnreachableVertices;
             extendedShortestPathMatrix = shortestPathCostMatrix;
             extendedEuclideanMatrix = euclideanDistanceMatrix;
         }
