@@ -115,7 +115,7 @@ public class Parser {
             try
             {
                 String line = lines[i];
-                String [] split = line.split("\\$");
+                String [] split = line.split("[\\$#]");
                 int idx1,idx2;
                 idx1 = Integer.parseInt(split[1]);
                 idx2 = Integer.parseInt(split[2].split(" ")[0]);

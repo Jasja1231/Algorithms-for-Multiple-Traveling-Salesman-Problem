@@ -36,6 +36,7 @@ public class SCIPAlgorithm  implements Algorithm {
     public static String ZimplFile ="tsp";
     public static String ZimplExtension= ".zpl";
     public static String dataFilename ="tsp.dat";
+    public static String data2Filename ="tsp2.dat";
     public static String SCIPExtension = ".lp";
 
 
@@ -49,11 +50,30 @@ public class SCIPAlgorithm  implements Algorithm {
         ArrayList<Coordinate>coords = (ArrayList<Coordinate>)o[1];
         String result = "";
         String data ="";
+        String data2 = "";
         
-        for (int i=0;i<coords.size();i++)
-            data += i + " " + coords.get(i).getLon() + " " + coords.get(i).getLat() + newLine;
+        for (int i=0;i<coords.size()+numSalesmen-1;i++)
+            data+= i + newLine;
+        //data += i + " " + coords.get(i).getLon() + " " + coords.get(i).getLat() + newLine;
+        
+        for (int i=0;i<adjacencyMatrix.length -1;i++)
+        {
+            for (int j=i+1;j<adjacencyMatrix[i].length;j++)
+            {
+                if (adjacencyMatrix[i][j]<Float.MAX_VALUE)
+                {
+                     data2+= adjacencyMatrix[i][j] + newLine;
+                }
+                else
+                {
+                    data2+= "999" + newLine;
+                }
+            }
+        }
         
         if (!Algorithms.Parser.writeFile(dataDir+dataFilename, data))
+            return null;
+        if (!Algorithms.Parser.writeFile(dataDir+data2Filename, data2))
             return null;
         
         try 
@@ -130,21 +150,23 @@ public class SCIPAlgorithm  implements Algorithm {
 
     private int[] getCyclefromZimplPairs(ArrayList<Integer> res, int n) {
         int [][] adjMatrix = new int [n][n];
-        int[] result = new int [n+1];
+        int[] result;
         for (int i=0;i<res.size()-1;i+=2)
         {
             adjMatrix[res.get(i)][res.get(i+1)] = 1;
             adjMatrix[res.get(i+1)][res.get(i)] = 1;
         }
-        int startIdx = findFirstDegree(adjMatrix);
+        //int startIdx = findFirstDegree(adjMatrix);
      /*   if (startIdx<0)
             return null;
        */
-        startIdx = 0; ////////////////////////////TERAZ TYLKO BO POTEM BEDZIE WIELE SALESMANOW
+       int startIdx = 0; ////////////////////////////TERAZ TYLKO BO POTEM BEDZIE WIELE SALESMANOW
         ArrayList<Integer> order = new ArrayList<>();
         boolean [] visited = new boolean [adjMatrix.length];
         DFS.DFS(adjMatrix, visited, adjMatrix.length, startIdx, order);
-        order.add(0);
+        result = new int[order.size()];
+
+        //order.add(0);
         for (int i=0;i<order.size();i++)
             result[i] = order.get(i);
         
@@ -164,10 +186,6 @@ public class SCIPAlgorithm  implements Algorithm {
             {
                 if (adjMatrix[j][i]>0)
                     rowCount++;
-            }
-            // check the matrix column
-            for (int i=0;i<adjMatrix.length;i++)
-            {
                 if (adjMatrix[i][j]>0)
                     columnCount++;
             }    

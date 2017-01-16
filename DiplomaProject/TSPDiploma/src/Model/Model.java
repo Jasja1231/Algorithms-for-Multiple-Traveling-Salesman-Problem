@@ -36,7 +36,7 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
 
 /**
  *
- * @author K
+ * @author Yaryna
  */
 public class Model extends Observable {
     
@@ -94,11 +94,11 @@ public class Model extends Observable {
     init();
     // additional params for DefaultRouter where do we set it?
     Properties params = new Properties();
-    params.setProperty("findShortestPath", "false");
+    params.setProperty("findShortestPath", "true");
     params.setProperty("ignoreRestrictions", "false");
     params.setProperty("ignoreOneWays", "false");
     params.setProperty("heuristicFactor", "0.0"); // 0.0 Dijkstra, 1.0 good A*
-    params.setProperty("matrix.fullSearchLoops", "1000000");
+    params.setProperty("matrix.fullSearchLoops", "10");
    }
    
    //TODO: think about minimize values to be initialized
@@ -370,23 +370,17 @@ public class Model extends Observable {
         //Algotiyhm
          for(Algorithm a : this.algorithms){
                ArrayList<ArrayList<Integer>> cycles;
-               if(!(a instanceof BruteForceAlgorithm || a instanceof ApproximationAlgorithm || a instanceof HeuristicAlgorithm)){
-                    if (!(a instanceof SCIPAlgorithm))
-                    {
-                    result = a.solveProblem(table1,this.salesmanCount);
-                    cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result,true);
-                    }
-                    else
-                    {
-                    result  = a.solveProblem(table2, this.salesmanCount, this.coordinates);
-                    //cycles = SolutionOperations.getCyclesFromSolution(1, result, false
-                    cycles = new ArrayList<>();
+               if(a instanceof SCIPAlgorithm || a instanceof DynamicAlgorithm){
+
+                    result  = a.solveProblem(table1, this.salesmanCount, this.coordinates);
+                    cycles = SolutionOperations.getCyclesFromSolution(salesmanCount, result, true);
+                   /* cycles = new ArrayList<>();
                     cycles.add(new ArrayList<Integer>());
                     for (int i=0;i<result.length;i++)
-                        cycles.get(0).add(result[i]);
-                    }
+                        cycles.get(0).add(result[i]);*/
                }
-               else {
+               else
+               {
                     result = a.solveProblem(table2,this.salesmanCount);
                     cycles = new  ArrayList<>();
                     ArrayList<Integer> temp =  new ArrayList<>();
