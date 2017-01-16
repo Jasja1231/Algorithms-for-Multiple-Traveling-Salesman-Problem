@@ -105,10 +105,12 @@ public class MapPanel extends javax.swing.JPanel {
                                 
                                 if(!SwingUtilities.isRightMouseButton(e) ){    //TO DO : Check WTF is going on
                                     int dotID = MapPanel.this.parentView.model.getCoordinates().size();
-                                    MapPanel.this.parentView.addCoordinate(coo);
-                                    MapMarkerDot marker = new MapMarkerDot(Color.RED,coo.getLat(),coo.getLon());
-                                    marker.setMapMarkerID(dotID);
-                                    MapPanel.this.map.addMapMarker(marker);  
+                                    if(MapPanel.this.parentView.model.identicaVertexIDexists(coo)==false){
+                                        MapPanel.this.parentView.addCoordinate(coo);
+                                        MapMarkerDot marker = new MapMarkerDot(Color.RED,coo.getLat(),coo.getLon());
+                                        marker.setMapMarkerID(dotID);
+                                        MapPanel.this.map.addMapMarker(marker);
+                                    }  
                                 }
                                 if(!SwingUtilities.isLeftMouseButton(e) ){
                                         mm = MapPanel.this.map.markerExistsWithTolerance(0.0007, coo);//.markerExists(new MapMarkerDot(coo.getLat(),coo.getLon()))){ //TODO: create separate method in JMapViewer so not to create marker every time

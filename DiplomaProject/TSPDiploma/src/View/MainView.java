@@ -214,6 +214,7 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
 
     private void loadFilejMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadFilejMenuItemActionPerformed
         this.model.isLoadedSingleFile(true);  //tell model that single file was loaded
+        this.model.vertexIDS.clear();
         
         FILE_CHOOSER.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         int returnVal = FILE_CHOOSER.showOpenDialog(this);
@@ -243,6 +244,7 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
     private void resetMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetMenuItemActionPerformed
         this.mapPanel.clearMap();
         this.controller.resetData();
+        this.model.vertexIDS.clear();
     }//GEN-LAST:event_resetMenuItemActionPerformed
 
     private void clearAllRoadsjMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearAllRoadsjMenuItemActionPerformed
@@ -270,6 +272,7 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
 
     private void loadDirectoryjMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadDirectoryjMenuItemActionPerformed
         //Notify model that directory with with multiple input files was choosen as an input
+        this.model.vertexIDS.clear();
         this.model.isLoadedSingleFile(false);  
         FILE_CHOOSER.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
           int returnVal = FILE_CHOOSER.showSaveDialog(this);
