@@ -137,6 +137,7 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
         });
         FileMenu.add(loadFilejMenuItem);
 
+        loadDirectoryjMenuItem.setBackground(new java.awt.Color(255, 255, 255));
         loadDirectoryjMenuItem.setText("Load directory ");
         loadDirectoryjMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -268,7 +269,9 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
     }//GEN-LAST:event_saveinputMenuItemActionPerformed
 
     private void loadDirectoryjMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadDirectoryjMenuItemActionPerformed
-          FILE_CHOOSER.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        //Notify model that directory with with multiple input files was choosen as an input
+        this.model.isLoadedSingleFile(false);  
+        FILE_CHOOSER.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
           int returnVal = FILE_CHOOSER.showSaveDialog(this);
           if(returnVal == JFileChooser.APPROVE_OPTION){
             this.controller.loadDirectoryInputSet(FILE_CHOOSER.getSelectedFile());

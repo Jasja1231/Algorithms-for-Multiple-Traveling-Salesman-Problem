@@ -104,7 +104,6 @@ public class OptionsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void computeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_computeButtonActionPerformed
-
         //Clear previous algorithms
         this.parentView.clearAlgorithms();
        //Read selected algorithms
