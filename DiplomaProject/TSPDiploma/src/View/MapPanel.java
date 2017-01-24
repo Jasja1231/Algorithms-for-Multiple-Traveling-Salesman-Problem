@@ -101,8 +101,6 @@ public class MapPanel extends javax.swing.JPanel {
                                 wasDoubleClick = false; // reset flag
                             } else {
                                 Coordinate coo = (Coordinate) map.getPosition(e.getPoint());
-                                System.err.println("COO : " + coo.getLat() + "   " + coo.getLon() + " E : " + e.getX() + " " + e.getY());
-                                
                                 if(!SwingUtilities.isRightMouseButton(e) ){    //TO DO : Check WTF is going on
                                     int dotID = MapPanel.this.parentView.model.getCoordinates().size();
                                     if(MapPanel.this.parentView.model.identicaVertexIDexists(coo)==false){

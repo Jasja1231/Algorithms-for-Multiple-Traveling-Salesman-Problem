@@ -23,14 +23,12 @@ public static void DFS(int[][] adjMatrix, boolean [] visited, int [] results, in
         }
     }
 public static void DFS(int[][] adjMatrix, boolean [] visited, int n, int i, ArrayList<Integer>order){
-        System.err.println("Visiting vertex  : " + i);
         if (!visited[i])
         {
             order.add(i);
             visited[i]= true;
             for (int j = 0; j<n;j++){
                 if(!(visited[j]) && adjMatrix[i][j]==1){
-                    System.err.println("Visiting vertex  : " + i +  " Found adjacent : " + j);
                     DFS(adjMatrix, visited,n, j, order);
                 }
             }

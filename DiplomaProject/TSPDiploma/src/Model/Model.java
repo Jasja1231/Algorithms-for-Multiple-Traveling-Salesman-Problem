@@ -47,7 +47,7 @@ public class Model extends Observable {
     final BruteForceAlgorithm bruteForceAlgorithm = new BruteForceAlgorithm();
     final ApproximationAlgorithm approximationAlgorithm = new ApproximationAlgorithm();
     final DynamicAlgorithm dynamicAlgorithm = new DynamicAlgorithm();
-    final static String graphFilePath = "warsaw3.gph";
+    final static String graphFilePath = ".\\warsaw3.gph";
     
     Graph graph;
     PoiRouter  router;
@@ -89,6 +89,7 @@ public class Model extends Observable {
      * Boolean value representing whether user loaded a single file or a directory with files
      */
     private boolean loadedSingleFile = true;
+    public ArrayList<Integer> vertexIDS;
     
     public void isLoadedSingleFile(boolean b){
         this.loadedSingleFile = b;
@@ -109,7 +110,7 @@ public class Model extends Observable {
    public void init(){
        coordinates = new ArrayList<>();
        algorithms = new ArrayList<>();
-       
+       vertexIDS = new ArrayList<>();
        allAlgorithms = new ArrayList<>();
        //KEEP THE ORDER
        allAlgorithms.add(SCIPAlgorithm);
@@ -123,6 +124,8 @@ public class Model extends Observable {
        graph = new Graph(graphFile);
        router = new PoiRouter();
        timeMatrix = new TspDefaultMatrix();
+       
+       
    }
 
    public void addCoordinate(Coordinate coo){
@@ -574,6 +577,21 @@ public class Model extends Observable {
             String filename = directoryName + "\\" + "randomFile" + i + ".txt";
             Parser.writeAlgorithnDataToFile(algData, filename);
         }
+    }
+
+    /**
+     * Check if identical vertex already exists
+     * @param coo the coordinate for being tested.
+     * @return true- if same vertex id exists
+     */
+    public boolean identicaVertexIDexists(Coordinate coo) {
+        int vertexID = graph.findClosestVertexId((float)coo.getLat(), (float)coo.getLon());
+        if(!this.vertexIDS.contains(vertexID)){
+            this.vertexIDS.add(vertexID);
+            return false;
+        }
+        else
+            return true;
     }
 
     
