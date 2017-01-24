@@ -1,20 +1,19 @@
-# $Id: tsp.zpl,v 1.9 2009/09/13 16:15:54 bzfkocht Exp $
 #
-# Generic formulation of the Travelling Salesmen Problem
+# Travelling Salesmen Problem with weights given in tsp2.dat and vertices in tsp.dat
 #
-set V   := { read "tsp.dat" as "<1s>" comment "#" };
+set V   := { read "tsp.dat" as "<1n>" comment "#" };
 set E   := { <i,j> in V * V with i < j };
 set P[] := powerset(V \ { ord(V,1,1) });
 set K   := indexset(P) \ { 0 };
 
-param px[V] := read "tsp.dat" as "<1s> 2n" comment "#";
-param py[V] := read "tsp.dat" as "<1s> 3n" comment "#";
-
-defnumb dist(a,b) := sqrt((px[a] - px[b])^2 + (py[a] - py[b])^2);
+param dist [E] := read "tsp2.dat" as "1n" comment "#";
+do print E;
+#file contains distances between vertices in separate lines:
+# d(0,1) ; d(0,2) ...; d(1,2) ; d(1,3); ... ; d(n-1,n) 
 
 var x[E] binary;
 
-minimize cost: sum <i,j> in E : dist(i,j) * x[i, j];
+minimize cost: sum <i,j> in E : dist[i,j] * x[i, j];
 
 subto two_connected:
    forall <v> in V do

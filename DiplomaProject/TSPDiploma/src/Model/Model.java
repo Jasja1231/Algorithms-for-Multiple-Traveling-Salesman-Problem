@@ -47,6 +47,7 @@ public class Model extends Observable {
     final BruteForceAlgorithm bruteForceAlgorithm = new BruteForceAlgorithm();
     final ApproximationAlgorithm approximationAlgorithm = new ApproximationAlgorithm();
     final DynamicAlgorithm dynamicAlgorithm = new DynamicAlgorithm();
+    final static String graphFilePath = "warsaw3.gph";
     
     Graph graph;
     PoiRouter  router;
@@ -118,7 +119,7 @@ public class Model extends Observable {
        allAlgorithms.add(approximationAlgorithm);
        
        //Routing stuff initialization
-       File graphFile = new File("warsaw3.gph");  //TODO: make it static or whatever
+       File graphFile = new File(graphFilePath);  //TODO: make it static or whatever
        graph = new Graph(graphFile);
        router = new PoiRouter();
        timeMatrix = new TspDefaultMatrix();
@@ -565,10 +566,10 @@ public class Model extends Observable {
         
         for(int i=0;i<numOffiles;i++){
             Random r = new Random(System.currentTimeMillis());
-            int salesmen =ThreadLocalRandom.current().nextInt(1, maxSalesmen + 1);// r.nextInt(maxSalesmen);
-            int points = ThreadLocalRandom.current().nextInt(1, maxPoints + 1);//r.nextInt(maxPoints);
+            int salesmen = maxSalesmen;// r.nextInt(maxSalesmen);
+            //int points = ThreadLocalRandom.current().nextInt(1, maxPoints + 1);//r.nextInt(maxPoints);
             
-            AlgorithmData algData  = Parser.generateRandomData(salesmen,points); 
+            AlgorithmData algData  = Parser.generateRandomData(salesmen,maxPoints); 
             
             String filename = directoryName + "\\" + "randomFile" + i + ".txt";
             Parser.writeAlgorithnDataToFile(algData, filename);
