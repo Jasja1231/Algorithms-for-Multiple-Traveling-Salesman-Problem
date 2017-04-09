@@ -33,7 +33,14 @@ public class Parser {
     {
         ArrayList<Tuple<Float,Float>> coords = new ArrayList<>();
         String lines[] = fileContent.split("\\r?\\n");
-        int numSalesmen = Integer.parseInt(lines[0]);
+         int numSalesmen = 0; 
+        try {
+             numSalesmen = Integer.parseInt(lines[0]);
+        } catch (Exception e) {
+            return null;
+        }
+        
+        
         for (int i=1;i<lines.length;i++)
         {
             float lat, lon;
@@ -43,6 +50,7 @@ public class Parser {
             Tuple <Float,Float> t = new Tuple<>(lat,lon);
             coords.add(t);
         }
+       
         return new AlgorithmData(coords,numSalesmen);
     }
     
@@ -59,8 +67,10 @@ public class Parser {
         }
         return new AlgorithmData(coords, numSalesmen);
     }
+
+   
     
-    public boolean writeRandomFile(String filename, int numSalesmen, int numPoints)
+    public static boolean writeRandomFile(String filename, int numSalesmen, int numPoints)
     {
         return(writeAlgorithnDataToFile(generateRandomData(numSalesmen,numPoints),filename));
     }
@@ -154,6 +164,47 @@ public class Parser {
         return true;
     }
     
+    /**
+     * Constructs a repot for a single problem.
+     * @param singleFileSoluition all solutions as a list 
+     * @param filename the filename the report will be saved into.
+     * @return 
+     */
+     public static boolean writeReportForSingleProblem(ArrayList<AlgorithmSolution> singleFileSoluition, String filename) {
+          if(!filename.endsWith(".txt")){
+            filename += ".txt";
+        }
+          
+          StringBuilder sb = new StringBuilder();
+          String newLine = (System.getProperty("line.separator"));
+          String content ="";
+          
+          //appending : n k
+          sb.append(singleFileSoluition.get(0).getPointsCount()).append(" ");
+          sb.append(singleFileSoluition.get(0).getSalesmenCount()).append(newLine);
+          //AlgName dist km time s
+          
+        for (AlgorithmSolution s : singleFileSoluition)
+        {
+            sb.append(s.getAlgorithmName()).append(" ");
+            sb.append(s.getAllDistance()).append(" km ");
+            sb.append(s.getCalculationTime()).append(" ns");
+            sb.append(newLine);
+        }
+          
+         content = sb.toString();
+        try(BufferedWriter w = new BufferedWriter(new FileWriter(filename)))
+        {
+            w.write(content);
+        }
+        catch(IOException e)
+        {
+            return false;
+        }
+
+        return true;
+    }
+    
     
      public static boolean writeAlgorithmSolutionToFile (AlgorithmSolution data, List<Coordinate>coords, String filename)
     {
@@ -185,6 +236,9 @@ public class Parser {
             sb.append(System.getProperty("line.separator"));;
         }
         sb.append("All distance : " + data.getAllDistance());
+        sb.append(System.getProperty("line.separator"));
+        
+        sb.append("All time : " + data.getCalculationTime());
         sb.append(System.getProperty("line.separator"));
         
         content = sb.toString();

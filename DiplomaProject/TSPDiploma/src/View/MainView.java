@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 
@@ -310,6 +311,10 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
             this.mapPanel.setNewMarkerDots(this.model.getCoordinates());
             // set num of salesman in checkbox
             this.optionsPanel.inputDataPanel.setNumOfSalesmanTextField(this.model.getSalesmenCount());
+        }
+        else if(argInt == 2){
+            //No solution. Probably multiple vertex id
+           JOptionPane.showMessageDialog(this, "No solution. Probably multiple vertex id");
         }
     }
 

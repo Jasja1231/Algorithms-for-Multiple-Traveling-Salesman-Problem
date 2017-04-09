@@ -19,7 +19,7 @@ public class ApproximationAlgorithm implements Algorithm {
 
     @Override
     public String getName() {
-      return "Approximation algorithm";
+      return "ApproximationAlgorithm";
     }
     
     private class EdgeCostPair
@@ -73,11 +73,10 @@ public class ApproximationAlgorithm implements Algorithm {
         int n = kruskalMatrix.length;
         ArrayList<Integer> order = new ArrayList<>();
         boolean [] visited = new boolean [n];
-        //visited[0] = true; //we don't want to visit the base
+        //order.add(0);
         DFS.DFS(kruskalMatrix, visited, n, 0, order);
-        order.add(0);
         //float[] backToBaseCostsForEdges = new float [n];
-        EdgeCostPair[]AllReturnEdgesCosts = new EdgeCostPair[n+1];
+        EdgeCostPair[]AllReturnEdgesCosts = new EdgeCostPair[n];
         idx = 0;
         for (int i=0;i<order.size();i++)
         {
@@ -93,10 +92,10 @@ public class ApproximationAlgorithm implements Algorithm {
                 from = order.get(i);
                 to = order.get(0);
             }
-            cost = adjacencyMatrix[from+1][0] + adjacencyMatrix[0][to+1];
+            cost = (adjacencyMatrix[from+1][0] + adjacencyMatrix[0][to+1]) - adjacencyMatrix[from+1][to+1];
             AllReturnEdgesCosts[idx++] = new EdgeCostPair(from,to,cost);
         }
-        order.remove(order.size()-1);
+       // order.remove(order.size()-1);
         Arrays.sort(AllReturnEdgesCosts, new whyIsThis_a_Class());
 
         

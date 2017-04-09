@@ -74,7 +74,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Maximum number of salesman : "/>
+            <Property name="text" type="java.lang.String" value="number of salesman : "/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="salesmenMaxjTextField1">
@@ -84,7 +84,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Maximum number of points : "/>
+            <Property name="text" type="java.lang.String" value="number of points : "/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="pointsMaxjTextField2">

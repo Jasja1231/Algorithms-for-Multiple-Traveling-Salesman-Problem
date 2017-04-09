@@ -15,7 +15,7 @@ public class DynamicAlgorithm  implements Algorithm{
 
     @Override
     public String getName() {
-      return "Dynamic algorithm";
+      return "DynamicAlgorithm";
     }
     
     @Override

@@ -15,9 +15,10 @@ public class AlgorithmSolution {
     private  ArrayList<ArrayList<Integer>> cycles;
     private String AlgorithmName;
     private int salesmenCount;
+    private int pointsCount;
     private double allDistance;
     private ArrayList<Double> cyclesLenth;
-    public double calculationTime;
+    public long calculationTime;
     
     public AlgorithmSolution(){
     }
@@ -46,6 +47,15 @@ public class AlgorithmSolution {
         this.salesmenCount = salesmenCount;
     }
 
+    public int getPointsCount() {
+        return pointsCount;
+    }
+
+    public void setPointsCount(int pointsCount) {
+        this.pointsCount = pointsCount;
+    }
+
+    
     public double getAllDistance() {
         return allDistance;
     }
@@ -65,14 +75,14 @@ public class AlgorithmSolution {
     /**
      * @return the calculationTime
      */
-    public double getCalculationTime() {
+    public long getCalculationTime() {
         return calculationTime;
     }
 
     /**
      * @param calculationTime the calculationTime to set
      */
-    public void setCalculationTime(double calculationTime) {
+    public void setCalculationTime(long calculationTime) {
         this.calculationTime = calculationTime;
     }
     

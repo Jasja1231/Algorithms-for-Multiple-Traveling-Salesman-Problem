@@ -5,8 +5,6 @@
  */
 package View;
 
-import javax.swing.JFileChooser;
-
 /**
  *
  * @author Yaryna
@@ -76,13 +74,13 @@ public class GenerateMultipleRandomFiles extends javax.swing.JDialog {
         });
         jPanel1.add(directoryChooser);
 
-        jLabel3.setText("Maximum number of salesman : ");
+        jLabel3.setText("number of salesman : ");
         jPanel1.add(jLabel3);
 
         salesmenMaxjTextField1.setText("3");
         jPanel1.add(salesmenMaxjTextField1);
 
-        jLabel4.setText("Maximum number of points : ");
+        jLabel4.setText("number of points : ");
         jPanel1.add(jLabel4);
 
         pointsMaxjTextField2.setText("10");

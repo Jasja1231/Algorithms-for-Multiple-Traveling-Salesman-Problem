@@ -8,8 +8,6 @@ package Model;
 import Algorithms.Permutations;
 import java.util.ArrayList;
 import java.util.List;
-import org.omg.CORBA.ACTIVITY_COMPLETED;
-import org.openstreetmap.gui.jmapviewer.Coordinate;
 
 /**
  *
@@ -19,7 +17,7 @@ public class BruteForceAlgorithm  implements Algorithm {
 
     @Override
     public String getName() {
-      return "Brute force algorithm";
+      return "BruteForceAlgorithm";
     }
     
     @Override
@@ -31,19 +29,19 @@ public class BruteForceAlgorithm  implements Algorithm {
          //best path
          int [] bestResult = null;
          double bestLength = Double.MAX_VALUE;
-         
+         //Generate all partitions of the number of points with the number of elements equal to the number of salesmen. 
         ArrayList<ArrayList<Integer>> partitions = generatePartitions(adjacencyMatrix.length-1, salesmenCount, adjacencyMatrix.length-1);
         Integer[] indexes = new Integer[numOfDestinations];
         for(int i=0; i < numOfDestinations ;i++)
             indexes[i] = i+1;
+        //Calculate all possible permutations of destination points
+        Permutations<Integer> perm = new Permutations<>(indexes);
         
-        Permutations<Integer> perm = new Permutations<Integer>(indexes);
-        
-        
+        //For every permutation  of destination points 
         while(perm.next()!=null)
         {
             Integer [] permutation = perm.currentPerm;
-             
+             //For every points division (partition) between salesmen 
             for (int i=0;i<partitions.size();i++)
             {
                 //ignore partitions into less than (salesmen count) parts
@@ -56,8 +54,10 @@ public class BruteForceAlgorithm  implements Algorithm {
                                 
                     int sum =0;
                     
+                    //For every points division (partition) between salesmen 
                     for (int x=0;x<currentPartition.size();x++)
                     {
+                        //separates paths with 0 point
                        currentPath.add(sum+currentPartition.get(x),0);
                        sum +=currentPartition.get(x)+1;
                     }

@@ -42,8 +42,7 @@ public class SCIPAlgorithm  implements Algorithm {
 
     @Override
     public int[] solveProblem(float[][] adjacencyMatrix, Object... o)
-    {
-              
+    {     
         int [] solution = null;
         String newLine = System.getProperty("line.separator");
         int numSalesmen = (int)o[0];
@@ -140,12 +139,11 @@ public class SCIPAlgorithm  implements Algorithm {
             return null;
         }
         return solution;
-
     }
     
     @Override
     public String getName() {
-      return "SCIP algorithm";
+      return "SCIPAlgorithm";
     }
 
     private int[] getCyclefromZimplPairs(ArrayList<Integer> res, int n) {
@@ -156,11 +154,8 @@ public class SCIPAlgorithm  implements Algorithm {
             adjMatrix[res.get(i)][res.get(i+1)] = 1;
             adjMatrix[res.get(i+1)][res.get(i)] = 1;
         }
-        //int startIdx = findFirstDegree(adjMatrix);
-     /*   if (startIdx<0)
-            return null;
-       */
-       int startIdx = 0; ////////////////////////////TERAZ TYLKO BO POTEM BEDZIE WIELE SALESMANOW
+       
+       int startIdx = 0; 
         ArrayList<Integer> order = new ArrayList<>();
         boolean [] visited = new boolean [adjMatrix.length];
         DFS.DFS(adjMatrix, visited, adjMatrix.length, startIdx, order);

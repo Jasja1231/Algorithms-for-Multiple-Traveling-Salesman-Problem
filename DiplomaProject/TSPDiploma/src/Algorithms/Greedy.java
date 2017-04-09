@@ -4,7 +4,7 @@ import java.util.*;
 
 
 public class Greedy {
-  private final int MAX_NODES = 500;
+  private final int MAX_NODES = 250000;
   private HashSet nodes[];               // Array of connected components
   private TreeSet allEdges;              // Priority queue of Edge objects
   private Vector allNewEdges;            // Edges in Minimal-Spanning Tree

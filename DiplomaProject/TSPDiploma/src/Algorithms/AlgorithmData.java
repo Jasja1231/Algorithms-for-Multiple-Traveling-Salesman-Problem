@@ -29,7 +29,7 @@ public final class AlgorithmData {
     }
     
      public List<Tuple<Float,Float>> getAsTuples(List<Coordinate> cords){
-         List<Tuple<Float,Float>> list = new ArrayList<Tuple<Float,Float>>();
+         List<Tuple<Float,Float>> list = new ArrayList<>();
        for(Coordinate tt : cords){
            Tuple<Float,Float> coo = new Tuple((float)tt.getLat(),(float) tt.getLon());
            list.add(coo);
@@ -43,7 +43,7 @@ public final class AlgorithmData {
     
     public AlgorithmData( List<Tuple<Float,Float>> coords, int numSalesmen)
     {
-        this.numSalesmen = numSalesmen;
+        this.numSalesmen = numSalesmen; 
         this.coords = coords;    
     }
     

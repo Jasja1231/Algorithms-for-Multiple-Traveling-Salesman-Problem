@@ -20,20 +20,10 @@ public class HeuristicAlgorithm implements Algorithm {
     {
         int numSalesmen = (int)a[0];
         
-        float [][] reducedMatrix = new float[adjacencyMatrix.length-1][adjacencyMatrix.length-1];
-        for (int i=1;i<adjacencyMatrix.length;i++)
-        {
-            for (int j=1;j<adjacencyMatrix.length;j++)
-            {
-                reducedMatrix[i-1][j-1] = adjacencyMatrix[i][j];
-            }
-        }
-        
         int[][] adjMatrix = new int[adjacencyMatrix.length][adjacencyMatrix.length];
         int [] solution = null;
         Greedy greedy = new Greedy();
         greedy.ReadInGraphDataIgnoreBase(adjacencyMatrix);
-        //greedy.readInGraphData(reducedMatrix);
         greedy.GreedySearch();
         Vector edges = greedy.getSolutionEdges();
         for (int i = 0; i < edges.size()-numSalesmen+1;i++)//there are n-1 edges already
@@ -45,12 +35,11 @@ public class HeuristicAlgorithm implements Algorithm {
         
         ArrayList<Integer> order = new ArrayList<>();
         boolean [] visited = new boolean [adjMatrix.length];
-        boolean [] firstDegree = new boolean[adjMatrix.length];
-        for (int i=0;i<firstDegree.length;i++)
+        int [] firstDegree = new int[numSalesmen*2];
+        for (int i=0, k=0;i<adjMatrix[0].length;i++)
         {
             if (isFirstDegree(i,adjMatrix))
-                firstDegree[i]=true;
-            else firstDegree[i] = false;
+                firstDegree[k++]=i;
         }       
         //visited[0] = true; 
         
@@ -74,42 +63,38 @@ public class HeuristicAlgorithm implements Algorithm {
             solution[i] = order.get(i);
         return solution;    
     }
-    
-    private int findIndex (boolean[]visited)
-    {
-        for (int i=0;i<visited.length;i++)
-            if (!visited[i])
-                return i;
-        return -1;
-    }
+ 
     
     
     @Override
     public String getName() {
-      return "Heuristic algorithm";
+      return "HeuristicAlgorithm";
     }
 
     private boolean isFirstDegree(int index, int[][] adjMatrix) 
     {
         int rowCount = 0, columnCount = 0;
-        
+        if (index == 0)
+            return false;
         for (int i=0;i<adjMatrix[index].length;i++)
         {
             if (adjMatrix[index][i]>0)        // check the matrix row
-
                 rowCount++;
             if (adjMatrix[i][index]>0)        // check the matrix column
                 columnCount++;
+            
+           if (rowCount>=2&&columnCount>=2)
+               return false;           
         }
-
-   
-        return (!(rowCount>=2&&columnCount>=2));
+        
+        
+        return true;
     }
 
-    private int findFirstDegreeIndex(boolean[] visited, boolean[] firstDegree) {
-        for (int i=0;i<visited.length;i++)
-            if (visited[i]==false&&firstDegree[i]==true)
-                return i;
+    private int findFirstDegreeIndex(boolean[] visited, int[] firstDegree) {
+        for (int i=0;i<firstDegree.length;i++)
+            if (visited[firstDegree[i]]==false)
+                return firstDegree[i];
         return -1;
     }
 }

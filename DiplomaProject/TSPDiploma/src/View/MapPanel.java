@@ -68,7 +68,7 @@ public class MapPanel extends javax.swing.JPanel {
     
     private void constructMap(){
         try {
-            //Ysrs psth     C:\\Users\\Yaryna\\Documents\gith\WUT 2015-16\\Diploma\\MTSP\\DiplomaProject\\TSPDiploma\\Tiles\\
+            //Ysrs psth     C:\\Users\\Yaryna\\Documents\\WUT 2015-16\\Diploma\\MTSP\\DiplomaProject\\TSPDiploma\\Tiles\\
             // map.setTileSource(new OfflineOsmTileSource("C:\\Users\\Krzysztof\\Desktop\\DiplomaProject\\DiplomaProject\\TSPDiploma\\Tiles\\",10,14));
             //corrected
             map.setDisplayPosition(new Coordinate(52.2297,21.0122), 10); //center in warsaw 
@@ -88,7 +88,6 @@ public class MapPanel extends javax.swing.JPanel {
             @Override
             public void mouseClicked(final MouseEvent e) {
                 if (e.getClickCount()== 2 ) {
-                       System.out.println("double click");
                        wasDoubleClick = true;
                 }
                 else {
