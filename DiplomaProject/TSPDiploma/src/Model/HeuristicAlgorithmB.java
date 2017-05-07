@@ -6,47 +6,44 @@
 package Model;
 
 import Algorithms.DFS;
-import Algorithms.Kruskal;
+import Algorithms.GreedyHeuristic;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
+import java.util.Vector;
 
 /**
  *
- * @author Krzysztof
+ * @author Yaryna
  */
-public class ApproximationAlgorithm implements Algorithm {
-
+public class HeuristicAlgorithmB implements Algorithm {
     @Override
-    public String getName() {
-      return "ApproximationAlgorithm";
-    }
-  
-    
-    @Override
-    public int [] solveProblem (float [][]adjacencyMatrix, Object... o) //adjacencyMatrix 
-    //has to be without without additional bases, integer number of salesmen as first optional parameter
+    public  int [] solveProblem (float [][]adjacencyMatrix, Object... a)
     {
-        int [] solution;
-        int numSalesmen = (int)o[0]; //0 if not changed  FIX IT
-       // float bestBaseReturnCosts [] = new float [numSalesmen+1];
+        int numSalesmen = (int)a[0];
+        
         EdgeCostPair[]BestReturnEdges = new EdgeCostPair[numSalesmen];
         for (int i=0;i<BestReturnEdges.length;i++)
             BestReturnEdges[i] = new EdgeCostPair(-1,-1,Float.MAX_VALUE);
-        //int bestBaseReturnPoints [] = new int[numSalesmen+1];
-        Kruskal k = new Kruskal();
-        k.ReadInGraphDataIgnoreBase(adjacencyMatrix);
-        k.performKruskal();
-        int[][] kruskalMatrix = k.getResultAdjacencyMatrix();
-        int idx = 0;
-        int n = kruskalMatrix.length;
+        int n = adjacencyMatrix[0].length;
+        int[][] adjMatrix = new int[adjacencyMatrix.length][adjacencyMatrix.length];
+        int [] solution = null;
+        GreedyHeuristic greedy = new GreedyHeuristic();
+        greedy.ReadInGraphDataIgnoreBase(adjacencyMatrix);
+        greedy.GreedySearch();
+        Vector edges = greedy.getSolutionEdges();
+        for (int i = 0; i < edges.size();i++)
+        {
+            GreedyHeuristic.Edge edge = (GreedyHeuristic.Edge)edges.get(i);
+            adjMatrix[edge.from+1][edge.to+1] = 1;
+            adjMatrix[edge.to+1][edge.from+1] = 1;
+        }
+        
         ArrayList<Integer> order = new ArrayList<>();
         boolean [] visited = new boolean [n];
-        //order.add(0);
-        DFS.DFS(kruskalMatrix, visited, n, 0, order);
-        //float[] backToBaseCostsForEdges = new float [n];
-        EdgeCostPair[]AllReturnEdgesCosts = new EdgeCostPair[n];
-        idx = 0;
+        visited[0] = true;
+        DFS.DFS(adjMatrix, visited, n, 1, order);
+        EdgeCostPair[]AllReturnEdgesCosts = new EdgeCostPair[n-1];
+        int idx = 0;
         for (int i=0;i<order.size();i++)
         {
             int from = 0, to = 0;
@@ -61,14 +58,14 @@ public class ApproximationAlgorithm implements Algorithm {
                 from = order.get(i);
                 to = order.get(0);
             }
-            cost = (adjacencyMatrix[from+1][0] + adjacencyMatrix[0][to+1]) - adjacencyMatrix[from+1][to+1];
+            cost = (adjacencyMatrix[from][0] + adjacencyMatrix[0][to]) - adjacencyMatrix[from][to];
             AllReturnEdgesCosts[idx++] = new EdgeCostPair(from,to,cost);
         }
        // order.remove(order.size()-1);
         Arrays.sort(AllReturnEdgesCosts, new EdgeComparator());
 
         
-       solution = new int [n+numSalesmen];
+       solution = new int [n+numSalesmen-1];
        
        for (int i=0,i2=0;i<order.size();i++)
        {
@@ -90,7 +87,7 @@ public class ApproximationAlgorithm implements Algorithm {
                if (from == current.getfomIndex() && to == current.gettoIndex())
                    isReturnEdge = true;
            }  
-           solution[i2++] = order.get(i)+1;
+           solution[i2++] = order.get(i);
            if (isReturnEdge)
               i2++;
        }
@@ -110,4 +107,11 @@ public class ApproximationAlgorithm implements Algorithm {
        }*/
        return solution;
     }
-}
+
+    @Override
+    public String getName() {
+        return "HeuristicAlgorithmB";
+    }
+    
+  }
+    

@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Properties;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -41,12 +40,6 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
 public class Model extends Observable {
     
     //Algorithms
-    //TODO: change that caz these classes are static with one static method
-    final HeuristicAlgorithm heuristicAlgorithm = new HeuristicAlgorithm();
-    final SCIPAlgorithm SCIPAlgorithm = new SCIPAlgorithm();
-    final BruteForceAlgorithm bruteForceAlgorithm = new BruteForceAlgorithm();
-    final ApproximationAlgorithm approximationAlgorithm = new ApproximationAlgorithm();
-    final DynamicAlgorithm dynamicAlgorithm = new DynamicAlgorithm();
     final static String graphFilePath = ".\\warsaw3.gph";
     
     Graph graph;
@@ -59,11 +52,6 @@ public class Model extends Observable {
     float[][]extendedTimeMatrix;
     float[][]euclideanDistanceMatrix;
     
-    
-    /***
-     * Table with all possible algorithms
-     */
-    List<Algorithm> allAlgorithms;
     
     /***
      * List of coordinates algorithms will calculate for.
@@ -86,7 +74,8 @@ public class Model extends Observable {
     private float[][] extendedEuclideanMatrix;
     
     /***
-     * Boolean value representing whether user loaded a single file or a directory with files
+     * Boolean value representing whether user loaded 
+     * a single file or a directory with files.
      */
     private boolean loadedSingleFile = true;
     public ArrayList<Integer> vertexIDS;
@@ -98,12 +87,12 @@ public class Model extends Observable {
    public Model(){
     init();
     // additional params for DefaultRouter where do we set it?
-    Properties params = new Properties();
-    params.setProperty("findShortestPath", "true");
-    params.setProperty("ignoreRestrictions", "false");
-    params.setProperty("ignoreOneWays", "false");
-    params.setProperty("heuristicFactor", "0.0"); // 0.0 Dijkstra, 1.0 good A*
-    params.setProperty("matrix.fullSearchLoops", "10");
+    Properties parameters = new Properties();
+    parameters.setProperty("findShortestPath", "true");
+    parameters.setProperty("ignoreRestrictions", "false");
+    parameters.setProperty("ignoreOneWays", "false");
+    parameters.setProperty("heuristicFactor", "0.0"); // 0.0 Dijkstra, 1.0 good A*
+    parameters.setProperty("matrix.fullSearchLoops", "10");
    }
    
    //TODO: think about minimize values to be initialized
@@ -111,14 +100,7 @@ public class Model extends Observable {
        coordinates = new ArrayList<>();
        algorithms = new ArrayList<>();
        vertexIDS = new ArrayList<>();
-       allAlgorithms = new ArrayList<>();
-       //KEEP THE ORDER
-       allAlgorithms.add(SCIPAlgorithm);
-       allAlgorithms.add(dynamicAlgorithm);
-       allAlgorithms.add(bruteForceAlgorithm);
-       allAlgorithms.add(heuristicAlgorithm);
-       allAlgorithms.add(approximationAlgorithm);
-       //Routing stuff initialization
+       //Routing  initialization
        File graphFile = new File(graphFilePath);  //TODO: make it static or whatever
        graph = new Graph(graphFile);
        router = new PoiRouter();
@@ -144,7 +126,6 @@ public class Model extends Observable {
     
    public void buildEuclideanMatrix(ArrayList<Coordinate>coords)
    {
-       int [] vertexIDs = new int [coords.size()];
        this.euclideanDistanceMatrix = new float[coords.size()][coords.size()];
        for (int i=0;i<coords.size();i++)
        {
@@ -202,7 +183,6 @@ public class Model extends Observable {
         }
     }
    
-   
    float [][] getExtendedMatrixForMultipleSalesmen (int salesmen, float[][]matrix)
    {
        float[][] extended = new float [matrix.length+salesmen-1][matrix.length+salesmen-1];
@@ -231,8 +211,32 @@ public class Model extends Observable {
        return extended;
    }
 
+   /***
+    * 
+    * @param i index of the algorithms where : 
+    * 0 - SCIP 
+    * 1 - dynamic 
+    * 2 - bruteForce
+    * 3 - heuristic
+    * 4 - approximating 
+    */
     public void addAlgorithm(int i) {
-        this.algorithms.add(this.allAlgorithms.get(i));
+        Algorithm newInvolvedAlgorithm = null;
+        switch(i){
+            case 0 :newInvolvedAlgorithm = new SCIPAlgorithm();
+                break;
+            case 1 :newInvolvedAlgorithm = new DynamicAlgorithm();
+                break;
+            case 2 :newInvolvedAlgorithm = new BruteForceAlgorithm();
+                break;
+            case 3 :newInvolvedAlgorithm = new HeuristicAlgorithmA(); 
+                break;
+            case 4 :newInvolvedAlgorithm = new HeuristicAlgorithmB(); 
+                break;
+            case 5 :newInvolvedAlgorithm = new ApproximationAlgorithm();
+                break;         
+        }
+        this.algorithms.add(newInvolvedAlgorithm);
     }
 
     public void clearAlgorithms() {
@@ -269,8 +273,7 @@ public class Model extends Observable {
     public void startComputation() {
         if(this.loadedSingleFile==true){
             ArrayList<AlgorithmSolution> singleFileSoluition = startComputationForSingleFile(null);
-            
-            if(this.inputFiles[0]!=null)
+            if(null!=this.inputFiles[0])
                 Parser.writeReportForSingleProblem(singleFileSoluition,this.inputFiles[0].getAbsolutePath()+"_report.txt");
             else{
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss") ;
@@ -278,7 +281,6 @@ public class Model extends Observable {
                 String directoryName =  ".."+"\\"+ "RandomSetTSP"+ dateFormat.format(date);
                 Parser.writeReportForSingleProblem(singleFileSoluition,directoryName+"_report.txt");
             }
-               
             if(singleFileSoluition == null){
                 this.setChanged();
                 this.notifyObservers(2);
@@ -300,6 +302,8 @@ public class Model extends Observable {
             }
             Parser.writeReportFileForMultipleAlgorithmsHorizontal(solutions,dirFile.getAbsolutePath()+"\\"+"Solution_report.txt");
         }
+        //Clears involved algorithm - release the memory 
+        this.algorithms.clear();
     }
     
     /***
@@ -308,18 +312,18 @@ public class Model extends Observable {
      *                     order to save the solutions into it and later will be user to generate a report file.
      * @param filenameToSaveAS optional parameter 
      */
-    private ArrayList<AlgorithmSolution> startComputationForSingleFile(List<AlgorithmSolution>  solutionList,String ... filenameToSaveAS) {
+   private ArrayList<AlgorithmSolution> startComputationForSingleFile(List<AlgorithmSolution>  solutionList,String ... filenameToSaveAS) {
         float[][] timeMatrixWithoutUnreachableVertices = null; 
-        ArrayList<AlgorithmSolution> algorithmSolution = new ArrayList<AlgorithmSolution>();
+        ArrayList<AlgorithmSolution> algorithmSolution = new ArrayList<>();
         try {
-            //this.buildTimeMatrix((ArrayList)this.coordinates);  \\--UNCOMMENT
-            //this.buildShortestPaths((ArrayList)this.coordinates);
+            this.buildTimeMatrix((ArrayList)this.coordinates); 
+            this.buildShortestPaths((ArrayList)this.coordinates);
             this.buildEuclideanMatrix((ArrayList)this.coordinates);
-            //timeMatrixWithoutUnreachableVertices = this.timeMatrix.getCosts();    \\--UNCOMMENT
-            //List<Integer> unreachableVerticesDistance = getUnreachableVertices(this.shortestPathCostMatrix);
-            //List<Integer> unreachableVerticesTime = getUnreachableVertices(this.timeMatrix.getCosts()); \\--UNCOMMENT
+            timeMatrixWithoutUnreachableVertices = this.timeMatrix.getCosts(); 
+            List<Integer> unreachableVerticesDistance = getUnreachableVertices(this.shortestPathCostMatrix);
+            List<Integer> unreachableVerticesTime = getUnreachableVertices(this.timeMatrix.getCosts()); 
             
-           /* if (unreachableVerticesDistance.size()>0)//-UNCOMMENT
+            if (unreachableVerticesDistance.size()>0)//-UNCOMMENT
             {
                 for (int unreachable : unreachableVerticesDistance)
                 {
@@ -329,8 +333,8 @@ public class Model extends Observable {
                         shortestPathCostMatrix[i][unreachable] = euclideanDistanceMatrix [i][unreachable];
                     }
                 }
-            }*/
-            /*if (unreachableVerticesTime.size()>0)  \\--UNCOMMENT
+            }
+            if (unreachableVerticesTime.size()>0)
             {
                for (int unreachable : unreachableVerticesDistance)
                 {
@@ -340,7 +344,7 @@ public class Model extends Observable {
                         timeMatrixWithoutUnreachableVertices[i][unreachable] = euclideanDistanceMatrix [i][unreachable];
                     }
                 }
-            } */  
+            }
         } catch (Exception/*Osm2poException */ex) {
             System.out.println("exception\n");
             Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
@@ -349,12 +353,12 @@ public class Model extends Observable {
         
         if(salesmanCount>1)
         {
-            //extendedTimeMatrix = getExtendedMatrixForMultipleSalesmen(salesmanCount, timeMatrixWithoutUnreachableVertices); //-UNCOMMENT
-            //extendedShortestPathMatrix = getExtendedMatrixForMultipleSalesmen(salesmanCount, shortestPathCostMatrix); //-UNCOMMENT
+            extendedTimeMatrix = getExtendedMatrixForMultipleSalesmen(salesmanCount, timeMatrixWithoutUnreachableVertices); //-UNCOMMENT
+            extendedShortestPathMatrix = getExtendedMatrixForMultipleSalesmen(salesmanCount, shortestPathCostMatrix); //-UNCOMMENT
             extendedEuclideanMatrix = getExtendedMatrixForMultipleSalesmen(salesmanCount, euclideanDistanceMatrix);
         }else if(salesmanCount==1){
-           // extendedTimeMatrix = timeMatrixWithoutUnreachableVertices;//-UNCOMMENT
-            extendedShortestPathMatrix = shortestPathCostMatrix;
+            extendedTimeMatrix = timeMatrixWithoutUnreachableVertices;//-UNCOMMENT
+            extendedShortestPathMatrix = shortestPathCostMatrix; //-UNCOMMENT
             extendedEuclideanMatrix = euclideanDistanceMatrix;
         }
         float[][] extendedSizeTable = null; // extended data matrix
@@ -391,12 +395,11 @@ public class Model extends Observable {
                    Parser.writeAlgorithmSolutionToFile(solution, coordinates,filename[0]+"SOL_"+solution.getAlgorithmName()+".txt");
                }
             }
-         
          return algorithmSolution;
     }
-    
+   
     /***
-     * problem instance
+     * Problem instance
      */
     private AlgorithmSolution getAlgorithmSolution(Algorithm a,float[][] table1,float[][] table2){
         int [] result;
@@ -528,7 +531,9 @@ public class Model extends Observable {
                 this.coordinates = algorithmData.getCoordinatesAsList();
                 this.salesmanCount = algorithmData.getNumSalesmen();
                 this.setChanged();
-                this.notifyObservers(1); //loaded new file
+                if(loadedSingleFile == true) //single file loaded
+                     this.notifyObservers(1); 
+                
                 return 1;
             }
         } catch (IOException ex) {

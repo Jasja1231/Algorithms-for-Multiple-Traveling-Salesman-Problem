@@ -3,15 +3,16 @@ package Algorithms;
 import java.util.*;
 
 
-public class Greedy {
+public class GreedyHeuristic {
   private final int MAX_NODES = 250000;
   private HashSet nodes[];               // Array of connected components
   private TreeSet allEdges;              // Priority queue of Edge objects
   private Vector allNewEdges;            // Edges in Minimal-Spanning Tree
+  private int vertexDegrees [];
   int vertexCount;
 
 
-  public Greedy() {
+  public GreedyHeuristic() {
     // Constructor
     nodes = new HashSet[MAX_NODES];      // Create array for components
     allEdges = new TreeSet(new Edge());  // Create empty priority queue
@@ -26,7 +27,8 @@ public class Greedy {
   public void readInGraphData(float[][]matrix)
   {
       vertexCount = matrix.length;
-      
+      vertexDegrees = new int [matrix[0].length];
+
       for (int y=0;y<matrix.length;y++)
       {
           for (int x=0;x<matrix[y].length;x++)
@@ -58,8 +60,9 @@ public class Greedy {
       if (allEdges.remove(curEdge)) {
         // successful removal from priority queue: allEdges
 
-        if (nodesAreInDifferentSets(curEdge.from, curEdge.to) && noThirdDegree(curEdge.from, curEdge.to)) {
-          // System.out.println("Nodes are in different sets ...");
+        if (nodesAreInDifferentSets(curEdge.from, curEdge.to) && notThirdDegree(curEdge.from, curEdge.to)) {
+          vertexDegrees[curEdge.from]++;
+          vertexDegrees[curEdge.to]++;
           HashSet src, dst;
           int dstHashSetIndex;
 
@@ -253,10 +256,16 @@ public class Greedy {
         }
         return (fromCount<2 && toCount <2);
     }
+    
+    private boolean notThirdDegree (int from, int to)
+    {
+        return vertexDegrees[from]<2&&vertexDegrees[to]<2;
+    }
 
     public void ReadInGraphDataIgnoreBase(float[][] matrix) {
         vertexCount = matrix.length-1;
-      
+        vertexDegrees = new int [matrix[0].length];
+
       for (int y=1;y<matrix.length;y++)
       {
           for (int x=1;x<matrix[y].length;x++)

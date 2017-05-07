@@ -43,7 +43,7 @@ public final class AlgorithmData {
     
     public AlgorithmData( List<Tuple<Float,Float>> coords, int numSalesmen)
     {
-        this.numSalesmen = numSalesmen; 
+        this.numSalesmen =  numSalesmen; 
         this.coords = coords;    
     }
     

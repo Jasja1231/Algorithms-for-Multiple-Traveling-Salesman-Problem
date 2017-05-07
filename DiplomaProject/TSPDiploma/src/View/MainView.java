@@ -13,23 +13,16 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 
-/**
- *
- * @author K
- */
+
 public class MainView extends javax.swing.JFrame implements Observer , ActionListener{
 
     //elements
@@ -284,8 +277,8 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
 
     /***
      * 
-     * @param o
-     * @param arg : arg == 1 loaded new input file
+     * @param o observable object
+     * @param arg : arg == 1 loaded new input file, update map
      *              arg == ArrayList list of dots in order they should be connected
      */
     @Override

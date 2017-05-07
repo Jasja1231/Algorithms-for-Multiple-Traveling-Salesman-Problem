@@ -6,7 +6,7 @@
 package Model;
 
 import Algorithms.DFS;
-import Algorithms.Greedy;
+import Algorithms.GreedyHeuristic;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -14,7 +14,7 @@ import java.util.Vector;
  *
  * @author Krzysztof
  */
-public class HeuristicAlgorithm implements Algorithm {
+public class HeuristicAlgorithmA implements Algorithm {
     @Override
     public  int [] solveProblem (float [][]adjacencyMatrix, Object... a)
     {
@@ -22,13 +22,13 @@ public class HeuristicAlgorithm implements Algorithm {
         
         int[][] adjMatrix = new int[adjacencyMatrix.length][adjacencyMatrix.length];
         int [] solution = null;
-        Greedy greedy = new Greedy();
+        GreedyHeuristic greedy = new GreedyHeuristic();
         greedy.ReadInGraphDataIgnoreBase(adjacencyMatrix);
         greedy.GreedySearch();
         Vector edges = greedy.getSolutionEdges();
         for (int i = 0; i < edges.size()-numSalesmen+1;i++)//there are n-1 edges already
         {
-            Greedy.Edge edge = (Greedy.Edge)edges.get(i);
+            GreedyHeuristic.Edge edge = (GreedyHeuristic.Edge)edges.get(i);
             adjMatrix[edge.from+1][edge.to+1] = 1;
             adjMatrix[edge.to+1][edge.from+1] = 1;
         }
@@ -68,7 +68,7 @@ public class HeuristicAlgorithm implements Algorithm {
     
     @Override
     public String getName() {
-      return "HeuristicAlgorithm";
+      return "HeuristicAlgorithmA";
     }
 
     private boolean isFirstDegree(int index, int[][] adjMatrix) 

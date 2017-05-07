@@ -7,6 +7,9 @@ package View;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.util.ArrayList;
+import java.util.Iterator;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 
@@ -20,22 +23,24 @@ public class AlgorithmChoicesPanel extends javax.swing.JPanel {
                 "mixed integer programming algorithm",
                 "dynamic programming algorithm",
                 "brute-force algorithm",
-                "heuristic",
+                "heuristic algorithm A",
+                "heuristic algorithm B",
                 "approximation algorithm"
     };
     
     JLabel algorithmChooseLabel = new JLabel("Choose algorithms : ");
+    
     JCheckBox[] checkBoxes = new JCheckBox[algorithmNames.length]; 
-    MainView parentView;
     /**
      * Creates new form AlgorithmChoicesPanel
      * @param mainView main view of the application.
      */
     public AlgorithmChoicesPanel(MainView mainView) {
         initComponents();
-        this.parentView = mainView;
         this.setBackground(Color.WHITE);
-        this.setMaximumSize(new Dimension(400,150));
+        this.setMaximumSize(new Dimension(800,200));
+        //algorithmChooseLabel.setFont(new Font("Papyrus", Font.ROMAN_BASELINE, 20)); 
+    
         createCheckBoxes();
         addCheckBoxes();
     }
@@ -73,19 +78,30 @@ public class AlgorithmChoicesPanel extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(255, 255, 255));
         setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(0, 204, 204)));
-        setLayout(new java.awt.GridLayout(6, 0, 10, 10));
+        setLayout(new java.awt.GridLayout(7, 0, 10, 10));
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 
-    void readSelectedAlgorithms() {
+    int[] readSelectedAlgorithms() {
+       ArrayList<Integer> list = new ArrayList<>();
        for(int i = 0; i < checkBoxes.length; i++){
            if(checkBoxes[i].isSelected()){
-               this.parentView.addAlgorithm(i);
-           }
+               list.add(i);           }
        }
+       return convertIntegers(list);
     }
 
+    public static int[] convertIntegers(ArrayList<Integer> integers)
+{
+    int[] ret = new int[integers.size()];
+    Iterator<Integer> iterator = integers.iterator();
+    for (int i = 0; i < ret.length; i++)
+    {
+        ret[i] = iterator.next().intValue();
+    }
+    return ret;
+}
 }
