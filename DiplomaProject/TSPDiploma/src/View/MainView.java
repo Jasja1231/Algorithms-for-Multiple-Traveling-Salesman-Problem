@@ -207,7 +207,9 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
     }// </editor-fold>//GEN-END:initComponents
 
     private void loadFilejMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadFilejMenuItemActionPerformed
-        this.model.isLoadedSingleFile(true);  //tell model that single file was loaded
+        //tell model that single file was loaded
+        this.model.setLoadedSingleFile(true); 
+        
         this.model.vertexIDS.clear();
         
         FILE_CHOOSER.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
@@ -215,7 +217,15 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
                 File file = FILE_CHOOSER.getSelectedFile();
-                this.controller.loadInputFile(file);
+                int fileLoadedResult  = this.controller.loadInputFile(file);
+                String resultMesage = "";
+                if(fileLoadedResult == 0 || fileLoadedResult == -1 ){//Failed to lode file
+                    resultMesage = "Failed to load file : " + file.getName();
+                }
+                else if (fileLoadedResult == 1){
+                    resultMesage = "Loaded successfully : " + file.getName();
+                }
+                JOptionPane.showMessageDialog(this, resultMesage);
             } 
             catch (Exception ex) {
                 Logger.getLogger(MainView.class.getName()).log(Level.SEVERE, null, ex);
@@ -265,9 +275,15 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
     }//GEN-LAST:event_saveinputMenuItemActionPerformed
 
     private void loadDirectoryjMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadDirectoryjMenuItemActionPerformed
+        //Clear map from previous points and solutions
+        this.mapPanel.clearMap();
+        
         //Notify model that directory with with multiple input files was choosen as an input
         this.model.vertexIDS.clear();
-        this.model.isLoadedSingleFile(false);  
+        
+        //Tell model that now works on multiple data set.
+        this.model.setLoadedSingleFile(false);  
+        
         FILE_CHOOSER.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
           int returnVal = FILE_CHOOSER.showSaveDialog(this);
           if(returnVal == JFileChooser.APPROVE_OPTION){
@@ -279,7 +295,13 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
      * 
      * @param o observable object
      * @param arg : arg == 1 loaded new input file, update map
-     *              arg == ArrayList list of dots in order they should be connected
+     *              arg == 2  No solution. Probably multiple vertex id
+     *              arg == 3 Clears map without redrawing anything
+     *              arg == 4 When user was in loaded multiple set mode and switched
+     *                        to choose points from the map.
+     *              arg == 5 When user selected directory notify user that directory is now set.
+     *              arg == 6 When user selected file notify user that file is now set.
+     *              arg == (AlgorithmSolution)ArrayList list of dots in order they should be connected
      */
     @Override
     public void update(Observable o, Object arg) {
@@ -309,6 +331,22 @@ public class MainView extends javax.swing.JFrame implements Observer , ActionLis
             //No solution. Probably multiple vertex id
            JOptionPane.showMessageDialog(this, "No solution. Probably multiple vertex id");
         }
+        else if(argInt == 3){
+             //clear map
+            this.mapPanel.clearMap();
+        }
+        else if(argInt == 4){
+            JOptionPane.showMessageDialog(this, "You are now providing input manually.");
+        }
+        else if(argInt == 5){
+            //When user selected directory notify user that directory is now set.
+            JOptionPane.showMessageDialog(this, "Directory selected");
+        }
+        else if(argInt == 6){
+            //When user selected file notify user that file is now set.
+            JOptionPane.showMessageDialog(this, "File selected");
+        }
+        
     }
 
     /**

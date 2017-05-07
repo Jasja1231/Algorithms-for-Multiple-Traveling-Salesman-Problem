@@ -65,8 +65,8 @@ public class Controller {
         this.model.saveSolutionScreenShot(mapPanel,selectedFile);
     }
 
-    public void loadInputFile(File file) {
-        this.model.loadInputFile(file);
+    public int  loadInputFile(File file) {
+       return this.model.loadInputFile(file);
     }
 
     public void loadDirectoryInputSet(File selectedFile) {

@@ -76,11 +76,13 @@ public class Model extends Observable {
     /***
      * Boolean value representing whether user loaded 
      * a single file or a directory with files.
+     * In the beginning treats start computation as on the single file. 
+     * When no file is loaded but provided manually - also treated as single file.
      */
     private boolean loadedSingleFile = true;
     public ArrayList<Integer> vertexIDS;
     
-    public void isLoadedSingleFile(boolean b){
+    public void setLoadedSingleFile(boolean b){
         this.loadedSingleFile = b;
     }
 
@@ -108,7 +110,14 @@ public class Model extends Observable {
    }
 
    public void addCoordinate(Coordinate coo){
-       this.coordinates.add(coo);
+       if(loadedSingleFile==false){
+           this.setLoadedSingleFile(true);
+           this.setChanged();
+           //notify uset that now he switched to provide input manually
+           this.notifyObservers(4);
+       }
+        this.coordinates.add(coo); 
+       
    }   
    
    public void buildTimeMatrix(ArrayList<Coordinate>coords) throws Osm2poException
@@ -530,10 +539,10 @@ public class Model extends Observable {
             else{
                 this.coordinates = algorithmData.getCoordinatesAsList();
                 this.salesmanCount = algorithmData.getNumSalesmen();
-                this.setChanged();
-                if(loadedSingleFile == true) //single file loaded
+                if(loadedSingleFile == true){ //single file loaded
+                     this.setChanged();
                      this.notifyObservers(1); 
-                
+                }
                 return 1;
             }
         } catch (IOException ex) {
@@ -543,7 +552,10 @@ public class Model extends Observable {
     }
     
     public void loadDirectory(File selectedDirectory) {
-        this.inputFiles = selectedDirectory.listFiles();  
+        this.inputFiles = selectedDirectory.listFiles();
+        //NOtify user that directory selected
+        this.setChanged();
+        this.notifyObservers(5);
     }
     
     public ArrayList<Double> calculateCyclesLengths (float [][] adjMatrix, ArrayList<ArrayList<Integer>>solution)
